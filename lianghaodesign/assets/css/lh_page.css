@@ -1,0 +1,225 @@
+body {
+  color: #FFFFFF;
+}
+
+header {
+  font-size: 1.2em;
+}
+
+footer a, footer a:visited, footer a:hover {
+  color: #FFFFFF;
+  text-decoration: none;
+}
+
+nav {
+  font-weight: bold;
+}
+
+p {
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+.lhd a {
+  color: #FFFFFF;
+  text-decoration: none;
+}
+
+.lhd .background-primary {
+  background-color: #E93D1B;
+}
+
+.lhd .background-stress {
+  background-color: #E81206;
+  padding: 0.05em 0.1em;
+}
+
+.lhd nav .background-stress {
+  border-bottom: 1px solid #FFFFFF;
+}
+
+.lhd .brand-text span {
+  font-weight: bold;
+  font-size: 3em;
+  position: absolute;
+  z-index: 100;
+}
+
+.lhd .brand-text-1 {
+  top: 50%;
+  left: 20%;
+}
+
+.lhd .brand-text-2 {
+  top: 20%;
+  left: 40%;
+}
+
+.lhd .brand-text-3 {
+  top: 30%;
+  left: 48%;
+}
+
+.lhd .brand-text-4 {
+  top: 70%;
+  left: 48%;
+}
+
+.lhd .brand-text-5 {
+  top: 60%;
+  left: 55%;
+}
+
+.lhd .brand-text-6 {
+  top: 30%;
+  right: 38%;
+}
+
+.lhd .brand-text-7 {
+  top: 32%;
+  right: 30%;
+}
+
+.lhd .brand-text-8 {
+  top: 16%;
+  right: 10%;
+}
+
+.lhd .main-content {
+  margin: 10.5em auto;
+}
+
+.lhd .header-fixed, .lhd .footer-fixed, .lhd .menu-fixed {
+  position: fixed;
+  z-index: 99;
+}
+
+.lhd .header-fixed, .lhd .footer-fixed {
+  left: 0;
+  right: 0;
+  width: 100%;
+}
+
+.lhd .header-fixed {
+  background-color: #E93D1B;
+  padding-top: 2.5em;
+  top: 0;
+}
+
+.lhd .menu-item {
+  cursor: pointer;
+}
+
+.lhd footer ul {
+  list-style-type: none;
+}
+
+.lhd footer ul li {
+  line-height: 1.6;
+}
+
+.lhd footer label {
+  font-weight: bold;
+  margin-right: 0.5em;
+}
+
+.lhd .footer-fixed {
+  background-color: #E81206;
+  bottom: 0;
+  padding-bottom: 0.5em;
+  padding-top: 0.5em;
+  margin-bottom: 0;
+}
+
+.lhd .footer-fixed .marker {
+  height: 1em;
+}
+
+.lhd .loading {
+  position: absolute;
+  z-index: 100;
+  top: 50%;
+  left: 50%;
+  margin-top: -130px;
+  margin-left: -150px;
+}
+
+.lhd .loading .image {
+  display: block;
+  max-width: 100%;
+  width: 300px;
+  overflow: hidden;
+}
+
+.lhd .loading img {
+  height: 200px;
+  width: 300px;
+}
+
+.lhd .loading .text {
+  font-size: 1em;
+  font-weight: bold;
+}
+
+.lhd .loading .image .text {
+  position: absolute;
+  bottom: 1px;
+  z-index: 101;
+}
+
+.lhd .design-list h3 {
+  margin-top: 0;
+}
+
+.lhd .design-list .content {
+  position: relative;
+}
+
+.lhd .design-list .content.content-detail {
+  background-color: #E81206;
+  display: none;
+}
+
+.lhd .design-list .close-btn {
+  cursor: pointer;
+  font-size: 1.8em;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 98;
+}
+
+.lhd .design-list .close-btn.close-btn-in {
+  font-size: 3em;
+}
+
+.lhd .design-list .item {
+  overflow: hidden;
+  margin-bottom: 1.5em;
+  position: relative;
+}
+
+.lhd .design-list-left .item:nth-child(odd), .lhd .design-list-right .item:nth-child(even) {
+  float: left;
+}
+
+.lhd .design-list-left .item:nth-child(even), .lhd .design-list-right .item:nth-child(odd) {
+  float: right;
+}
+
+.lhd .design-list .item:last-child {
+  margin-bottom: 0;
+}
+
+.lhd .design-list .item .image {
+  overflow: hidden;
+  position: relative;
+}
+
+.lhd .design-list .item .desc {
+  line-height: 1.6;
+}
+
+.lhd .profile .item img {
+  width: 160px;
+}

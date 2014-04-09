@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html class="lhd">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Lianghao Management System</title>
+    <script type="text/javascript" src="assets/js/lib/thinkmvc.js" data-config="assets/js/app_config.js" async></script>
+    <link href="assets/css/tm_base.css" rel="stylesheet">
+    <link href="assets/css/lh_admin.css" rel="stylesheet">
+</head>
+<body class="background-primary" data-page="adminLogin">
+    <header class="header">
+        <div class="header-inner brand">Lianghao Management System</div>
+    </header>
+    <div class="tm-container">
+        <div class="tm-width-big login-form">
+            <h3>Log in</h3>
+            <form id="loginForm" class="tm-box background-clear tm-spacing-base" action="/login" method="post">
+                <div id="loginAlert" class="tm-alert tm-alert-error tm-hidden tm-spacing-base"></div>
+                <div class="tm-input-group tm-row">
+                    <label class="tm-input-label tm-row-col3">User ID</label>
+                    <input class="tm-input-control tm-row-col9 tm-row-col-last" type="text" name="logID" autofocus>
+                </div>
+                <div class="tm-input-group tm-row">
+                    <label class="tm-input-label tm-row-col3">Password</label>
+                    <input class="tm-input-control tm-row-col9 tm-row-col-last" type="password" name="password">
+                </div>
+                <div class="tm-input-group tm-text-right">
+                    <input class="tm-button tm-button-primary" type="submit" value="Confirm">
+                    <button class="tm-button tm-hidden" disabled>
+                        <span class="tm-icon tm-icon-processing"></span>
+                        <span>Processing...</span>
+                    </button>
+                </div>
+            </form>
+            <div class="tm-alert tm-alert-info">
+                Note: please make sure you are using advanced browsers such as IE9 or greater, Firefox, Chrome, Safari, etc.
+            </div>
+        </div>
+    </div>
+</body>
+</html>
