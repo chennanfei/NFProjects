@@ -49,7 +49,7 @@ TM.declare('lh.controller.SharedController').inherit('thinkmvc.Controller').exte
     // scroll the block to top
     var firstTop = el.$firstList.offset().top,
       offset = $('#' + $target.data('itemId')).offset();
-    $('html body').animate({scrollTop: offset.top - firstTop}, 500);
+    $('html,body').animate({scrollTop: offset.top - firstTop}, 500);
   },
 
   renderItemContent:function(event) {
