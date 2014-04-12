@@ -103,6 +103,7 @@ p {
 .lhd .header-fixed {
   background-color: #E93D1B;
   padding-top: 2.5em;
+  padding-bottom: 0.5em;
   top: 0;
 }
 
@@ -157,8 +158,11 @@ p {
 }
 
 .lhd .loading .text {
-  font-size: 1em;
-  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.lhd .loading .text a {
+  padding: 0.2em 0.5em;
 }
 
 .lhd .loading .image .text {

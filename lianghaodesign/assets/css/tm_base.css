@@ -146,6 +146,10 @@ img {
   border: none !important;
 }
 
+.tm-size-medium {
+  font-size: 1.4em;
+}
+
 .tm-spacing-base {
   margin-bottom: 1em;
 }
