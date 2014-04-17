@@ -20,6 +20,14 @@ p {
   margin-top: 0;
 }
 
+.lhd *::-moz-selection {
+  background-color: #E81206;
+}
+
+.lhd *::selection {
+  background-color: #E81206;
+}
+
 .lhd a {
   color: #FFFFFF;
   text-decoration: none;
@@ -31,10 +39,14 @@ p {
 
 .lhd .background-stress {
   background-color: #E81206;
-  padding: 0.05em 0.1em;
 }
 
-.lhd nav .background-stress {
+.lhd .nav-menu-item {
+  padding: 0.2em;
+}
+
+.lhd .nav-menu-item:hover, .lhd .nav-menu-item.background-stress {
+  background-color: #E81206;
   border-bottom: 1px solid #FFFFFF;
 }
 
@@ -167,7 +179,7 @@ p {
 
 .lhd .loading .image .text {
   position: absolute;
-  bottom: 1px;
+  bottom: 0;
   z-index: 101;
 }
 
@@ -222,6 +234,13 @@ p {
 
 .lhd .design-list .item .desc {
   line-height: 1.6;
+}
+
+.lhd .design-list .item .image-float .image-panel {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 10;
 }
 
 .lhd .profile .item img {

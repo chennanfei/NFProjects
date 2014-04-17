@@ -1,13 +1,13 @@
 TM.declare('lh.controller.BaseController').inherit('thinkmvc.Controller').extend({
-  preventedActions:{},
-  slideTimeSlow:500,
-  slideTimeNormal:300,
-  selectedClass:'background-stress',
+  preventedActions: {},
+  slideTimeSlow: 500,
+  slideTimeNormal: 300,
+  selectedClass: 'background-stress',
 
-  preventDoubleAction:function(action) {
+  preventDoubleAction: function(action) {
     var self = this;
     if (!self.preventedActions[action]) {
-      self.preventedActions[action]= true;
+      self.preventedActions[action] = true;
 
       setTimeout(function() {
         self.preventedActions[action] = false;
@@ -19,7 +19,7 @@ TM.declare('lh.controller.BaseController').inherit('thinkmvc.Controller').extend
   }
 });
 
-TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseController').extend((function(){
+TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseController').extend((function() {
   function expandSubMenu($menuItem) {
     // When clicking menu items, the window will scroll. prevent this function being executed twice in short time.
     if (this.preventDoubleAction('window-scroll') || $menuItem.hasClass(this.selectedClass)) {
@@ -40,26 +40,28 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
   function scrollContentToTop($menuItem) {
     var mainTop = this._el.$mainContent.offset().top,
       offset = $('#' + $menuItem.data('itemId')).offset();
-    $('html,body').animate({scrollTop: offset.top - mainTop}, this.slideTimeNormal);
+    if (offset) {
+      $('html,body').animate({scrollTop: offset.top - mainTop}, this.slideTimeNormal);
+    }
   }
 
   return {
-    events:{
-      'click .close-btn':'close',
-      'click .menu-item':'renderSubMenu',
-      'click .sub-menu-item':'renderItemContent',
-      'scroll window':'updateMenu'
+    events: {
+      'click .close-btn': 'close',
+      'click .menu-item': 'renderSubMenu',
+      'click .sub-menu-item': 'renderItemContent',
+      'scroll window': 'updateMenu'
     },
 
-    selectors:{
+    selectors: {
       designList: '.design-list',
-      itemContents:'.design-list .content',
+      itemContents: '.design-list .content',
       mainContent: '#mainContent',
-      menuItems:'#menu .menu-item',
-      subMenuItems:'#menu .sub-menu-item'
+      menuItems: '#menu .menu-item',
+      subMenuItems: '#menu .sub-menu-item'
     },
 
-    close:function(event) {
+    close: function(event) {
       var el = this._el, $target = $(event.currentTarget), selected = this.selectedClass, selectedEl = '.' + selected;
       $target.parents('.content').fadeOut(this.slideTimeNormal, function() {
         el.$subMenuItems.filter(selectedEl).removeClass(selected);
@@ -67,7 +69,7 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
       });
     },
 
-    renderSubMenu:function(event) {
+    renderSubMenu: function(event) {
       var $target = $(event.currentTarget), self = this;
       if ($target.hasClass(this.selectedClass)) {
         return;
@@ -80,7 +82,7 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
       scrollContentToTop.call(this, $target);
     },
 
-    renderItemContent:function(event) {
+    renderItemContent: function(event) {
       var $target = $(event.currentTarget), contentId = $target.data('contentId'),
         selected = this.selectedClass, selectedEl = '.' + selected;
       if (!contentId || $target.hasClass(selected)) {
@@ -100,9 +102,9 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
     },
 
     /*
-    * When window scrolls, update left menu according to first visible content
-    * */
-    updateMenu:function() {
+     * When window scrolls, update left menu according to first visible content
+     * */
+    updateMenu: function() {
       var el = this._el, $list = el.$designList, $win = $(window), firstId,
         mainTop = el.$mainContent.offset().top;
       $list.each(function(index, el) {
@@ -120,29 +122,29 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
 })());
 
 TM.declare('lh.controller.PageController').inherit('lh.controller.BaseController').extend({
-  events:{
-    'mouseenter .close-btn':'toggleCloseBtn',
-    'mouseenter #footMarker':'toggleFooter',
-    'mouseleave .close-btn':'toggleCloseBtn',
-    'mouseleave #realFooter':'toggleFooter',
+  events: {
+    'mouseenter .close-btn': 'toggleCloseBtn',
+    'mouseenter #footMarker': 'toggleFooter',
+    'mouseleave .close-btn': 'toggleCloseBtn',
+    'mouseleave #realFooter': 'toggleFooter',
     'scroll window': 'toggleFooter'
   },
 
-  selectors:{
-    footer:'#footer',
-    realFooter:'#realFooter'
+  selectors: {
+    footer: '#footer',
+    realFooter: '#realFooter'
   },
 
-  toggleCloseBtn:function(event) {
+  toggleCloseBtn: function(event) {
     var $target = $(event.currentTarget);
     if (event.type === 'mouseenter') {
-      $target.animate({'font-size':'2.8em'}, 200);
+      $target.animate({'font-size': '2.8em'}, 200);
     } else {
-      $target.animate({'font-size':'1.8em'}, 200);
+      $target.animate({'font-size': '1.8em'}, 200);
     }
   },
 
-  toggleFooter:function(event) {
+  toggleFooter: function(event) {
     var $footer = this._el.$footer, $win = $(window), $doc = $(document),
       $marker = $footer.find('#footMarker'),
       $realFooter = $footer.find('#realFooter'),
@@ -168,7 +170,9 @@ TM.declare('lh.controller.LoadingController').inherit('lh.controller.BaseControl
     var $images, el = this._el;
     this._el.$preloadedImages.each(function(index, img) {
       var $img = $("<img>").hide().attr('src', $(img).attr('src'))
-        .load(function(event) { $(this).data('ready', 1); });
+        .load(function(event) {
+          $(this).data('ready', 1);
+        });
       $images = $images ? $images.add($img) : $img;
     });
 
@@ -184,7 +188,7 @@ TM.declare('lh.controller.LoadingController').inherit('lh.controller.BaseControl
 
     setInterval(function() {
       var $img, count = 0;
-      while(true) {
+      while (true) {
         $img = $images.eq(index++ % $images.length);
         if ($img.data('ready')) {
           break;
@@ -209,14 +213,14 @@ TM.declare('lh.controller.LoadingController').inherit('lh.controller.BaseControl
   return {
     rootNode: '#loadingImages',
 
-    selectors:{
-      imgList:'.image',
-      loadingTitle:'#loadingTitle',
-      preloadedImages:'object',
-      realTitle:'#realTitle'
+    selectors: {
+      imgList: '.image',
+      loadingTitle: '#loadingTitle',
+      preloadedImages: 'object',
+      realTitle: '#realTitle'
     },
 
-    initialize:function() {
+    initialize: function() {
       this.invoke('lh.controller.BaseController:initialize');
       initImageList.call(this);
       switchShowImages.call(this);
@@ -224,16 +228,64 @@ TM.declare('lh.controller.LoadingController').inherit('lh.controller.BaseControl
   };
 });
 
-TM.declare('lh.controller.WorksController').inherit('lh.controller.BaseController').extend({
-  initialize:function() {
+TM.declare('lh.controller.WorkController').inherit('lh.controller.BaseController').extend({
+  events: {
+    'load .preview-content .image img:first': 'initImageList',
+    'mouseenter .preview-content .image': 'switchImages'
+  },
+
+  selectors: {
+    previews: '#mainContent .preview-content'
+  },
+
+  initialize: function() {
     this.U.createInstance('lh.controller.PageController');
     this.U.createInstance('lh.controller.ItemMenuController');
+    this.invoke('lh.controller.BaseController:initialize');
+  },
+
+  initImageList: function(event) {
+    var $firstImg = $(event.currentTarget),
+      $container = $firstImg.closest('.image'),
+      $images = $container.find('img'),
+      size = {width: $firstImg.width(), height: $firstImg.height()},
+      imgCount = $images.length;
+    if (!imgCount) {
+      return;
+    }
+
+    $container.css(size).addClass('image-float').data('ready', 1);
+    $images.css(size).show().parent().width(size.width * imgCount);
+  },
+
+  /* show next image when the mouse enters into image container */
+  switchImages: function(event) {
+    if (this.preventDoubleAction('switch-images')) {
+      return;
+    }
+
+    var $target = $(event.currentTarget), $images = $target.find('img');
+    if (!$target.data('ready')) {
+      this.initImageList({currentTarget: $images[0]});
+    }
+
+    // get next image and compute position of the image container
+    var imgCount = $images.length, width = $images.eq(0).width(),
+      nextImg = ($target.data('index') || 0) + 1;
+    if (nextImg >= imgCount) {
+      nextImg = 0;
+    }
+
+    var left = -1 * nextImg * width;
+    $images.parent().animate({left: left}, this.slideTimeNormal, function() {
+      $target.data('index', nextImg);
+    });
   }
 });
 
 TM.declare('lh.controller.LifeController').inherit('lh.controller.BaseController').extend({
-  initialize:function() {
-    this.U.createInstance('lh.controller.SharedController');
+  initialize: function() {
+    this.U.createInstance('lh.controller.PageController');
     this.U.createInstance('lh.controller.ItemMenuController');
   }
 });

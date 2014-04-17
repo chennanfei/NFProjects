@@ -77,9 +77,9 @@ window.TM = (function() {
     var pageController;
 
     return {
-      copy:_pfCopy,
+      copy: _pfCopy,
 
-      createEntrance:function() {
+      createEntrance: function() {
         if (pageController) {
           return;
         }
@@ -97,12 +97,12 @@ window.TM = (function() {
         }
       },
 
-      createInstance:function(classPath) {
+      createInstance: function(classPath) {
         var klass = this.getClass(classPath);
         return klass.createInstance.apply(klass, _pfSlice.call(arguments, 1));
       },
 
-      hasClass:function(classPath) {
+      hasClass: function(classPath) {
         if (!classPath) {
           return false;
         }
@@ -111,7 +111,7 @@ window.TM = (function() {
         return space && space.hasClass(paths[1]);
       },
 
-      getClass:function(classPath) {
+      getClass: function(classPath) {
         var paths = _pfSplitClassPath(classPath);
         var space = _pClassRegister.getNamespace(paths[0]);
         if (!space) {
@@ -120,13 +120,13 @@ window.TM = (function() {
         return space.getClass(paths[1]);
       },
 
-      printClasses:function() {
+      printClasses: function() {
         for (var k in _pNamespaces) {
           _pNamespaces[k].printClasses();
         }
       },
 
-      printNamespaces:function() {
+      printNamespaces: function() {
         var names = [];
         for (var k in _pNamespaces) {
           names.push(k);
@@ -143,7 +143,7 @@ window.TM = (function() {
       var className = name, extendedObj, parentClassPath, realClass, sharedObj, srcFunc;
 
       _pfCopy(this, {
-        construct:function(func) {
+        construct: function(func) {
           if (!func || typeof func !== 'function') {
             throw new Error('Passed arg should be a function.');
           }
@@ -151,32 +151,32 @@ window.TM = (function() {
           return this;
         },
 
-        extend:function(obj) {
+        extend: function(obj) {
           extendedObj = obj;
           return this;
         },
 
-        getParams:function() {
+        getParams: function() {
           if (!srcFunc) {
             srcFunc = function() {
             };
           }
 
           return {
-            className:className,
-            parentPath:parentClassPath || 'thinkmvc.Base',
-            extendedObj:extendedObj,
-            sharedObj:sharedObj,
-            srcFunc:srcFunc
+            className: className,
+            parentPath: parentClassPath || 'thinkmvc.Base',
+            extendedObj: extendedObj,
+            sharedObj: sharedObj,
+            srcFunc: srcFunc
           };
         },
 
-        inherit:function(classPath) {
+        inherit: function(classPath) {
           parentClassPath = classPath;
           return this;
         },
 
-        share:function(obj) {
+        share: function(obj) {
           sharedObj = obj;
           return this;
         }
@@ -241,7 +241,7 @@ window.TM = (function() {
 
       _pfCopy(this, {
         // public properties. all instances share one copy of each property
-        extend:function(obj) {
+        extend: function(obj) {
           if (!obj) {
             return this;
           }
@@ -258,11 +258,11 @@ window.TM = (function() {
           return this;
         },
 
-        getClass:function() {
+        getClass: function() {
           return freshClass;
         },
 
-        inherit:function(classPath) {
+        inherit: function(classPath) {
           if (!classPath) {
             return this;
           }
@@ -317,9 +317,9 @@ window.TM = (function() {
         }
 
         return {
-          classes:parent.classes || (parent.classes = {}),
-          dir:parent,
-          name:(name ? 'com.' : 'com') + name
+          classes: parent.classes || (parent.classes = {}),
+          dir: parent,
+          name: (name ? 'com.' : 'com') + name
         };
       })(path); // space
 
@@ -337,7 +337,7 @@ window.TM = (function() {
       }
 
       _pfCopy(this, {
-        getClass:function(className) {
+        getClass: function(className) {
           var klass = space.classes[className];
           if (!klass) {
             throw new Error('The class ' + this.getName() + '.' + className + ' does not exist.');
@@ -349,15 +349,15 @@ window.TM = (function() {
           return klass;
         },
 
-        getName:function() {
+        getName: function() {
           return space.name;
         },
 
-        hasClass:function(className) {
+        hasClass: function(className) {
           return className && className in space.classes;
         },
 
-        printClasses:function() {
+        printClasses: function() {
           var classNames = [];
           for (var k in space.classes) {
             classNames.push(k);
@@ -365,7 +365,7 @@ window.TM = (function() {
           _pfOutput('[Namespace]: ' + space.name + '; [Classes]: ' + classNames.join(', '));
         },
 
-        register:function(className) {
+        register: function(className) {
           var classes = space.classes;
           if (classes[className]) {
             throw new Error('The class ' + className + ' alredy exists.');
@@ -393,7 +393,7 @@ window.TM = (function() {
        register a class delaration.
        param can be a string e.g. 'com.animal.Dog' or 'Dog' or 'animal.Dog'
        */
-      declare:function(classPath) {
+      declare: function(classPath) {
         if (typeof classPath !== 'string') {
           throw new Error('Passed args should be a string. E.g. the string can be com.animal.Dog or Dog or animal.Dog');
         }
@@ -403,7 +403,7 @@ window.TM = (function() {
         return space.register(paths[1]);
       },
 
-      getNamespace:getNamespace
+      getNamespace: getNamespace
     };
   }()); // _pClassRegister
 
@@ -411,7 +411,7 @@ window.TM = (function() {
   /* load javascript resources (a)schoronously */
   var _pResourceLoader = (function() {
     var dependencyStatusList = {}, scriptParent, scripts, sortedModules = [],
-      status = { COMPLETED:1, HAS_DEPENDENCIES:2, PENDING:3, READY:4 };
+      status = { COMPLETED: 1, HAS_DEPENDENCIES: 2, PENDING: 3, READY: 4 };
 
     function allResourcesLoaded() {
       for (var k in dependencyStatusList) {
@@ -540,6 +540,7 @@ window.TM = (function() {
       var body = document && document.body;
       if (!body) {
         setTimeout(initDependencyStatus, 1);
+        return;
       }
       var page = body.getAttribute('data-page');
       if (!page) {
@@ -641,7 +642,7 @@ window.TM = (function() {
     }
 
     return {
-      configure:function(config) {
+      configure: function(config) {
         if (!(config && config.pages && config.modules)) {
           throw new Error('Configuration is invalid.');
         }
@@ -651,7 +652,7 @@ window.TM = (function() {
         initDependencyStatus();
       },
 
-      start:function() {
+      start: function() {
         getScripts().forEach(function(script) {
           if (!scriptParent) {
             scriptParent = script.parentNode;
@@ -682,10 +683,10 @@ window.TM = (function() {
   }());
 
   return {
-    configure:function(config) {
+    configure: function(config) {
       return _pResourceLoader.configure(config);
     },
-    declare:function(classPath) {
+    declare: function(classPath) {
       return _pClassRegister.declare(classPath);
     }
   };
@@ -693,17 +694,17 @@ window.TM = (function() {
 
 // super class: Base
 TM.declare('thinkmvc.Base').extend({
-  debug:function(msg) {
+  debug: function(msg) {
     console.log(msg);
   },
 
-  destroy:function() {
+  destroy: function() {
     var proxiedCallbacks = this._proxiedCallbacks;
     if (!proxiedCallbacks) {
       return;
     }
 
-    var destroyFlag = { removeReferenceForGC:true };
+    var destroyFlag = { removeReferenceForGC: true };
     for (var name in proxiedCallbacks) {
       proxiedCallbacks[name].call(null, destroyFlag);
       proxiedCallbacks[name] = null;
@@ -711,11 +712,11 @@ TM.declare('thinkmvc.Base').extend({
     this._proxiedCallbacks = null;
   },
 
-  getClassName:function() {
+  getClassName: function() {
     return this.constructor.className;
   },
 
-  isInstanceOf:function(klass) {
+  isInstanceOf: function(klass) {
     if (typeof klass === 'string') {
       klass = this.U.getClass(klass);
     }
@@ -732,7 +733,7 @@ TM.declare('thinkmvc.Base').extend({
    @spec: call the method of class prototype
    @param: "classPath:methodName", e.g. thinkmvc.Model:initialize
    */
-  invoke:function(methodPath) {
+  invoke: function(methodPath) {
     var paths = methodPath && methodPath.split(':');
     if (!(paths && paths.length === 2)) {
       throw new Error('Method ' + methodPath + ' was not found.');
@@ -748,7 +749,7 @@ TM.declare('thinkmvc.Base').extend({
   },
 
   // set current object as the context of performing callback
-  proxy:function(callback, callbackName) {
+  proxy: function(callback, callbackName) {
     var name = callbackName || (function(func) {
       if (typeof func !== 'function') {
         throw new Error('Passed arg is not a function.');
@@ -778,7 +779,7 @@ TM.declare('thinkmvc.Base').extend({
   },
 
   // set/get an attribute to constructor's propotype
-  proto:function(name, value) {
+  proto: function(name, value) {
     if (!(name && typeof name === 'string')) {
       return;
     }
@@ -790,7 +791,7 @@ TM.declare('thinkmvc.Base').extend({
     return pr[name];
   },
 
-  toString:function() {
+  toString: function() {
     var props = [], funcs = [];
     for (var k in this) {
       if (this[k] instanceof Function) {
@@ -807,22 +808,22 @@ TM.declare('thinkmvc.Base').extend({
       + '; [Properties]: ' + props.join(', ');
   }
 }).share({
-    createInstance:function() {
-      var instance = Object.create(this.prototype);
-      this.apply(instance, arguments);
-      return instance;
-    }
-  }); // Base
+  createInstance: function() {
+    var instance = Object.create(this.prototype);
+    this.apply(instance, arguments);
+    return instance;
+  }
+}); // Base
 
 // class: Event
 TM.declare('thinkmvc.evt.Event').extend({
-  execute:function(target, data) {
+  execute: function(target, data) {
     var callbackList = this._callbackList;
     if (!(callbackList && callbackList.length)) {
       return;
     }
 
-    var args = { data:data, target:target };
+    var args = { data: data, target: target };
     for (var i = 0; i < callbackList.length; i++) {
       callbackList[i](args);
     }
@@ -832,21 +833,21 @@ TM.declare('thinkmvc.evt.Event').extend({
     }
   },
 
-  getName:function() {
+  getName: function() {
     return this._name;
   },
 
-  initialize:function(name) {
+  initialize: function(name) {
     this._name = name;
   },
 
-  push:function(callback_s) {
+  push: function(callback_s) {
     var callbackList = this._callbackList || (this._callbackList = []);
     Array.prototype.push.apply(callbackList, arguments);
     return this;
   },
 
-  remove:function(callback) {
+  remove: function(callback) {
     if (!callback) {
       this._callbackList = null;
       return this;
@@ -862,7 +863,7 @@ TM.declare('thinkmvc.evt.Event').extend({
 
 // class: EventManager
 TM.declare('thinkmvc.evt.EventManager').extend({
-  off:function(name, callback) {
+  off: function(name, callback) {
     var events = this._events;
     if (!events) {
       return this;
@@ -876,7 +877,7 @@ TM.declare('thinkmvc.evt.EventManager').extend({
     return this;
   },
 
-  on:function(name, callback) {
+  on: function(name, callback) {
     var events = this._events || (this._events = {});
     if (!events[name]) {
       events[name] = this.U.createInstance('thinkmvc.evt.Event', name);
@@ -885,7 +886,7 @@ TM.declare('thinkmvc.evt.EventManager').extend({
     return this;
   },
 
-  trigger:function(name, data) {
+  trigger: function(name, data) {
     var events = this._events;
     if (events && (name in events)) {
       events[name].execute(this, data);
@@ -896,14 +897,14 @@ TM.declare('thinkmvc.evt.EventManager').extend({
 
 // super model class
 TM.declare('thinkmvc.Model').inherit('thinkmvc.evt.EventManager').extend({
-  attributes:[],
-  vewPath:'',
+  attributes: [],
+  vewPath: '',
 
-  change:function() {
+  change: function() {
     return this.trigger('change');
   },
 
-  destroy:function() {
+  destroy: function() {
     if (this._view) {
       this._view.destroy();
       this._view = null;
@@ -911,7 +912,7 @@ TM.declare('thinkmvc.Model').inherit('thinkmvc.evt.EventManager').extend({
     this.trigger('destory').off();
   },
 
-  initialize:function() {
+  initialize: function() {
     var viewPath = this.viewPath;
     if (viewPath) {
       this._view = this.U.createInstance(viewPath, this);
@@ -920,7 +921,7 @@ TM.declare('thinkmvc.Model').inherit('thinkmvc.evt.EventManager').extend({
 }); // Model
 
 TM.declare('thinkmvc.Collection').inherit('thinkmvc.evt.EventManager').extend({
-  add:function() {
+  add: function() {
     var Model = this._Model || (this._Model = this.U.getClass(this.modelPath));
     var instance = Model.createInstance.apply(Model, arguments);
     this._models.push(instance);
@@ -928,7 +929,7 @@ TM.declare('thinkmvc.Collection').inherit('thinkmvc.evt.EventManager').extend({
     return this.trigger('add', instance);
   },
 
-  change:function(updateAll) {
+  change: function(updateAll) {
     if (updateAll !== false) {
       this.each(function(model) {
         model.change();
@@ -937,7 +938,7 @@ TM.declare('thinkmvc.Collection').inherit('thinkmvc.evt.EventManager').extend({
     return this.trigger('change');
   },
 
-  destroy:function(destroyAll) {
+  destroy: function(destroyAll) {
     if (destroyAll !== false) {
       this.each(function(model) {
         model.destroy();
@@ -948,7 +949,7 @@ TM.declare('thinkmvc.Collection').inherit('thinkmvc.evt.EventManager').extend({
     this.trigger('destroy').off();
   },
 
-  each:function(callback) {
+  each: function(callback) {
     if (!callback || this.isEmpty()) {
       return;
     }
@@ -959,13 +960,13 @@ TM.declare('thinkmvc.Collection').inherit('thinkmvc.evt.EventManager').extend({
     }
   },
 
-  get:function(index) {
+  get: function(index) {
     if (index >= 0 && index < this._models.length) {
       return this._models[index];
     }
   },
 
-  initialize:function() {
+  initialize: function() {
     if (!this.modelPath) {
       throw new Error('Model path is not set.');
     }
@@ -976,16 +977,16 @@ TM.declare('thinkmvc.Collection').inherit('thinkmvc.evt.EventManager').extend({
     }
   },
 
-  isEmpty:function() {
+  isEmpty: function() {
     return this.size() <= 0 ? true : false;
   },
 
-  last:function() {
+  last: function() {
     var index = this.size() - 1;
     return index >= 0 ? this._models[index] : null;
   },
 
-  remove:function(index) {
+  remove: function(index) {
     if (typeof index === 'undefined') {
       this._models = [];
       this.trigger('remove:all');
@@ -1000,19 +1001,19 @@ TM.declare('thinkmvc.Collection').inherit('thinkmvc.evt.EventManager').extend({
     return this.trigger('remove');
   },
 
-  size:function() {
+  size: function() {
     var models = this._models;
     return models ? models.length : 0;
   }
 });
 
 TM.declare('thinkmvc.ui.Common').extend({
-  $:function(selector) {
+  $: function(selector) {
     var $root = this._$root || (this._$root = $(this.rootNode || 'html'))
     return selector && $root.find(selector);
   },
 
-  destroy:function() {
+  destroy: function() {
     this.invoke(':destroy'); // it actually calls thinkmvc.Base:destroy
 
     var el = this._el;
@@ -1026,12 +1027,12 @@ TM.declare('thinkmvc.ui.Common').extend({
     this._el = null;
   },
 
-  initialize:function() {
+  initialize: function() {
     this.refreshElements();
     this.initEvents && this.initEvents();
   },
 
-  refreshElements:function() {
+  refreshElements: function() {
     var selectors = this.selectors, el = this._el || (this._el = {});
     // elements
     if (!selectors) {
@@ -1046,10 +1047,10 @@ TM.declare('thinkmvc.ui.Common').extend({
 
 // super controller class
 TM.declare('thinkmvc.Controller').inherit('thinkmvc.ui.Common').extend({
-  eventSplitter:/^(\S+)\s*(.*)$/,
-  undelegatableEvents:[], // some events are not delegatable via jQuery
+  eventSplitter: /^(\S+)\s*(.*)$/,
+  undelegatableEvents: [], // some events are not delegatable via jQuery
 
-  initEvents:function() {
+  initEvents: function() {
     var events = this.events;
     if (!events) {
       return;
@@ -1086,12 +1087,12 @@ TM.declare('thinkmvc.Controller').inherit('thinkmvc.ui.Common').extend({
 
 // super view class
 TM.declare('thinkmvc.View').inherit('thinkmvc.ui.Common').extend({
-  destroy:function() {
+  destroy: function() {
     this.invoke('thinkmvc.ui.Common:destroy');
     this._model = null;
   },
 
-  initEvents:function() {
+  initEvents: function() {
     var events = this.events;
     if (!(events && this._model)) {
       return;
@@ -1108,40 +1109,40 @@ TM.declare('thinkmvc.View').inherit('thinkmvc.ui.Common').extend({
     }
   },
 
-  initialize:function(model) {
+  initialize: function(model) {
     this._model = model;
     this.invoke('thinkmvc.ui.Common:initialize');
   }
 });
 
 TM.declare('thinkmvc.val.Error').extend({
-  initialize:function(id, msg) {
+  initialize: function(id, msg) {
     this._id = id;
     this._message = msg;
   },
 
-  getId:function() {
+  getId: function() {
     return this._id;
   },
 
-  getMessage:function() {
+  getMessage: function() {
     return this._message;
   }
 });
 
 TM.declare('thinkmvc.val.Validator').extend({
-  errorType:'thinkmvc.val.Error',
+  errorType: 'thinkmvc.val.Error',
 
-  createError:function(id, msg) {
+  createError: function(id, msg) {
     var err = this.U.createInstance(this.errorType, id, msg);
     this._errors.push(err);
   },
 
-  getErrors:function() {
+  getErrors: function() {
     return this._errors;
   },
 
-  getMessage:function() {
+  getMessage: function() {
     if (!this.hasErrors()) {
       return;
     }
@@ -1157,11 +1158,11 @@ TM.declare('thinkmvc.val.Validator').extend({
     return msg;
   },
 
-  hasErrors:function() {
+  hasErrors: function() {
     return this._errors && this._errors.length ? true : false;
   },
 
-  initialize:function(model) {
+  initialize: function(model) {
     if (!model) {
       return;
     }

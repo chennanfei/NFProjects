@@ -8,17 +8,17 @@
   <link href="assets/css/tm_base.css" rel="stylesheet">
   <link href="assets/css/lh_page.css" rel="stylesheet">
 </head>
-<body class="background-primary" data-page="works">
+<body class="background-primary" data-page="work">
   <header class="tm-container tm-row header-fixed">
     <div class="tm-row-col2">
       <img src="assets/images/site_logo.JPG" width="60" height="72"/>
     </div>
     <nav class="tm-row-col10 tm-row-col-last tm-row tm-top-spacing-extra-large">
       <div class="tm-row-col2">
-        <a class="background-stress" href="works.html">Work 工作</a>
+        <a class="nav-menu-item background-stress" href="work.html">Work 工作</a>
       </div>
       <div class="tm-row-col10 tm-row-col-last">
-        <!--<a href="life.html">Life 生活</a>-->
+        <a class="nav-menu-item" href="life.html">Life 生活</a>
       </div>
     </nav>
   </header>
@@ -26,16 +26,16 @@
   <div id="mainContent" class="tm-container tm-content tm-row main-content">
     <ul id="menu" class="tm-list menu-fixed">
       <li>
-        <a class="menu-item" data-item-id="guideDesign">Guides Design 环境标志设计</a>
+        <a class="nav-menu-item menu-item" data-item-id="guideDesign">Guides Design 环境标志设计</a>
         <ul class="tm-sub-list tm-spacing-base tm-top-spacing-base tm-hidden">
-          <li><a class="sub-menu-item" href="javascript:void(false);" data-content-id="product_1">北京西海南沿48号</a></li>
-          <li><a class="sub-menu-item" href="javascript:void(false);" data-content-id="product_2">上海SOHU</a></li>
-          <li><a class="sub-menu-item" href="javascript:void(false);" data-content-id="product_3">上海喜马拉雅美术馆</a></li>
-          <li><a class="sub-menu-item" href="javascript:void(false);" data-content-id="product_4">天津连云港</a></li>
+          <li><a class="nav-menu-item sub-menu-item" href="javascript:void(false);" data-content-id="product_1">北京西海南沿48号</a></li>
+          <li><a class="nav-menu-item sub-menu-item" href="javascript:void(false);" data-content-id="product_2">上海SOHU</a></li>
+          <li><a class="nav-menu-item sub-menu-item" href="javascript:void(false);" data-content-id="product_3">上海喜马拉雅美术馆</a></li>
+          <li><a class="nav-menu-item sub-menu-item" href="javascript:void(false);" data-content-id="product_4">天津连云港</a></li>
         </ul>
       </li>
-      <li><a class="menu-item" data-item-id="webDesign">Web Design Web设计</a></li>
-      <li><a class="menu-item" data-item-id="brandDesign">Bran Design Brand设计</a></li>
+      <li><a class="nav-menu-item menu-item" data-item-id="webDesign">Web Design Web设计</a></li>
+      <li><a class="nav-menu-item menu-item" data-item-id="brandDesign">Bran Design Brand设计</a></li>
     </ul>
 
     <div class="tm-col-offset2 tm-row-col10 tm-row-col-last">
@@ -45,7 +45,9 @@
           <div class="tm-row-col6 design-list-left">
             <div class="item" data-content-id="product_1">
               <div class="image">
-                <img src="assets/images/works/qianmensohu.JPG">
+                <div class="image-panel">
+                  <img src="assets/images/works/qianmensohu.JPG">
+                </div>
               </div>
               <div class="desc">
                 <p>北京前门SOHO / Qianmen Beijing</p>
@@ -56,7 +58,9 @@
           <div class="tm-row-col6 tm-row-col-last design-list-right">
             <div class="item" data-content-id="product_2">
               <div class="image">
-                <img src="assets/images/works/qianmen2.JPG">
+                <div class="image-panel">
+                  <img src="assets/images/works/qianmen2.JPG"><img class="tm-hidden" src="assets/images/works/qianmen3.JPG">
+                </div>
               </div>
               <div class="desc">
                 <p>北京前门SOHO / Qianmen Beijing</p>
@@ -65,7 +69,9 @@
             </div>
             <div class="item">
               <div class="image">
-                <img src="assets/images/works/qianmen3.JPG">
+                <div class="image-panel">
+                  <img src="assets/images/works/qianmen3.JPG"><img  class="tm-hidden" src="assets/images/works/qianmensohu.JPG">
+                </div>
               </div>
               <div class="desc">
                 <p>北京前门SOHO / Qianmen SOHU Beijing</p>
