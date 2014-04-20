@@ -10,7 +10,7 @@ TM.configure({
   modules: {
     lh_admin: 'lh_admin.js',
     lh_app: 'lh_site.js',
-    jquery: 'lib/jquery-1.11.0.js' //'http://code.jquery.com/jquery-1.11.0.min.js'
+    jquery: 'http://code.jquery.com/jquery-1.11.0.min.js' // 'lib/jquery-1.11.0.js'
   },
 
   pages: {

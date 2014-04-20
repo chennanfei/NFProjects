@@ -50,60 +50,80 @@ p {
   border-bottom: 1px solid #FFFFFF;
 }
 
-.lhd .brand-text span {
+.lhd .float-text-list span {
   font-weight: bold;
   font-size: 3em;
   position: absolute;
   z-index: 100;
 }
 
-.lhd .brand-text-1 {
+.lhd .float-text-list .brand-text1 {
   top: 50%;
   left: 20%;
 }
 
-.lhd .brand-text-2 {
+.lhd .float-text-list .brand-text2 {
   top: 20%;
   left: 40%;
 }
 
-.lhd .brand-text-3 {
+.lhd .float-text-list .brand-text3 {
   top: 30%;
   left: 48%;
 }
 
-.lhd .brand-text-4 {
+.lhd .float-text-list .brand-text4 {
   top: 70%;
   left: 48%;
 }
 
-.lhd .brand-text-5 {
+.lhd .float-text-list .brand-text5 {
   top: 60%;
   left: 55%;
 }
 
-.lhd .brand-text-6 {
+.lhd .float-text-list .brand-text6 {
   top: 30%;
   right: 38%;
 }
 
-.lhd .brand-text-7 {
+.lhd .float-text-list .brand-text7 {
   top: 32%;
   right: 30%;
 }
 
-.lhd .brand-text-8 {
+.lhd .float-text-list .brand-text8 {
   top: 16%;
   right: 10%;
 }
 
+.lhd .float-text-list .page-text1 {
+  left: 8em;
+}
+
+.lhd .float-text-list .page-text2 {
+  top: 10em;
+  right: 5em;
+}
+
+.lhd .float-text-list .page-text3 {
+  top: 20em;
+  left: 10em;
+}
+
+.lhd .float-text-list .page-text4 {
+  top: 25em;
+  right: -0.5em;
+}
+
 .lhd .main-content {
   margin: 10.5em auto;
+  position: relative;
 }
 
 .lhd .header-fixed, .lhd .footer-fixed, .lhd .menu-fixed {
   position: fixed;
-  z-index: 99;
+  z-index: 110;
 }
 
 .lhd .header-fixed, .lhd .footer-fixed {
@@ -181,6 +201,15 @@ p {
   position: absolute;
   bottom: 0;
   z-index: 101;
+}
+
+.lhd .page-loading {
+  font-weight: bold;
+  display: none;
+  padding: 0.5em;
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 .lhd .design-list h3 {

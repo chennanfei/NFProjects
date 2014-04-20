@@ -1,17 +1,50 @@
 TM.declare('lh.controller.BaseController').inherit('thinkmvc.Controller').extend({
+  animateTime: {
+    NORMAL: 300,
+    FAST: 200,
+    SLOW: 500,
+    VERY_SLOW: 1000
+  },
   preventedActions: {},
-  slideTimeSlow: 500,
-  slideTimeNormal: 300,
   selectedClass: 'background-stress',
 
-  preventDoubleAction: function(action) {
+  makeAjax: function(url, args) {
+    if (!url) {
+      throw new Error('No url was passed to ajax request.');
+    }
+
+    var self = this;
+    return $.ajax(url, {
+      async: true,
+      contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+      data: args.data,
+      dataType: args.dataType || 'html',
+      type: args.type || 'GET',
+
+      beforeSend: function() {
+        args.beforeSendHandler && args.beforeSendHandler.apply(self, arguments);
+      },
+      complete: function() {
+        args.completeHandler && args.completeHandler.apply(self, arguments);
+      },
+      error: function() {
+        args.errorHandler && args.errorHandler.apply(self, arguments);
+      },
+      success: function() {
+        args.successHandler && args.successHandler.apply(self, arguments);
+      }
+    });
+  },
+
+  /* Prevent the same action being executed twice */
+  preventDoubleAction: function(action, time) {
     var self = this;
     if (!self.preventedActions[action]) {
       self.preventedActions[action] = true;
 
       setTimeout(function() {
         self.preventedActions[action] = false;
-      }, self.slideTimeSlow);
+      }, time || self.animateTime.NORMAL);
 
       return false;
     }
@@ -26,22 +59,42 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
       return;
     }
 
-    var el = this._el, slideTime = this.slideTimeNormal,
+    var el = this._el, slideTime = this.animateTime.NORMAL,
       selected = this.selectedClass, selectedEl = '.' + selected,
-      $selectItem = el.$menuItems.filter(selectedEl).removeClass(selected);
+      $selectItem = el.$menuItems.filter(selectedEl);
     if ($selectItem.length) {
-      $selectItem.siblings('.tm-sub-list').slideUp(slideTime);
+      $selectItem.removeClass(selected).siblings('.tm-sub-list').slideUp(slideTime);
       el.$subMenuItems.filter(selectedEl).removeClass(selected);
     }
-    $menuItem.addClass(selected);
-    $menuItem.siblings('.tm-sub-list').slideDown(slideTime);
+    $menuItem.addClass(selected).siblings('.tm-sub-list').slideDown(slideTime);
   }
 
-  function scrollContentToTop($menuItem) {
+  /* retrieve section content by ajax */
+  function retrieveSection($section) {
+    var url = $section.data('url'), $loading = this._el.$pageLoading, self = this;
+    if (!url) {
+      return;
+    }
+
+    this.makeAjax(url, {
+      beforeSendHandler: function() {
+        $loading.fadeIn();
+      },
+      successHandler: function(data, status, xhr) {
+        // remove url, no need request twice
+        $section.html(data).removeAttr('data-url');
+        // scroll the block to top
+        scrollContentToTop.call(self, $section);
+        $loading.fadeOut();
+      }
+    });
+  }
+
+  function scrollContentToTop($section) {
     var mainTop = this._el.$mainContent.offset().top,
-      offset = $('#' + $menuItem.data('itemId')).offset();
+      offset = $section.offset(), self = this;
     if (offset) {
-      $('html,body').animate({scrollTop: offset.top - mainTop}, this.slideTimeNormal);
+      $('html,body').animate({scrollTop: offset.top - mainTop}, this.animateTime.NORMAL);
     }
   }
 
@@ -58,19 +111,20 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
       itemContents: '.design-list .content',
       mainContent: '#mainContent',
       menuItems: '#menu .menu-item',
+      pageLoading: '#pageLoading',
       subMenuItems: '#menu .sub-menu-item'
     },
 
     close: function(event) {
-      var el = this._el, $target = $(event.currentTarget), selected = this.selectedClass, selectedEl = '.' + selected;
-      $target.parents('.content').fadeOut(this.slideTimeNormal, function() {
-        el.$subMenuItems.filter(selectedEl).removeClass(selected);
-        $target.parents('.design-list').find('.preview-content').show();
+      var el = this._el, $target = $(event.currentTarget), selected = this.selectedClass;
+      $target.parents('.content').fadeOut(this.animateTime.NORMAL, function() {
+        el.$subMenuItems.filter('.' + selected).removeClass(selected);
+        $target.closest('.design-list').find('.preview-content').show();
       });
     },
 
     renderSubMenu: function(event) {
-      var $target = $(event.currentTarget), self = this;
+      var $target = $(event.currentTarget);
       if ($target.hasClass(this.selectedClass)) {
         return;
       }
@@ -78,13 +132,20 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
       // expand sub menu
       expandSubMenu.call(this, $target);
 
-      // scroll the block to top
-      scrollContentToTop.call(this, $target);
+      var $section = $('#' + $target.data('itemId')), url = $section.data('url');
+      if (url) {
+        // retrieve section content
+        retrieveSection.call(this, $section);
+      } else {
+        // scroll the block to top
+        scrollContentToTop.call(this, $section);
+      }
     },
 
+    /* When clicking left menu, show sub menu and item content at the right side */
     renderItemContent: function(event) {
       var $target = $(event.currentTarget), contentId = $target.data('contentId'),
-        selected = this.selectedClass, selectedEl = '.' + selected;
+        selected = this.selectedClass;
       if (!contentId || $target.hasClass(selected)) {
         return;
       }
@@ -94,22 +155,22 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
         return;
       }
 
-      this._el.$subMenuItems.filter(selectedEl).removeClass(selected);
+      this._el.$subMenuItems.filter('.' + selected).removeClass(selected);
       $target.addClass(selected);
 
       this._el.$itemContents.filter(':visible').hide();
-      $content.fadeIn(this.slideTimeNormal);
+      $content.fadeIn(this.animateTime.NORMAL);
     },
 
     /*
      * When window scrolls, update left menu according to first visible content
      * */
     updateMenu: function() {
-      var el = this._el, $list = el.$designList, $win = $(window), firstId,
+      var el = this._el, $list = el.$designList, firstId,
         mainTop = el.$mainContent.offset().top;
       $list.each(function(index, el) {
         var $el = $(el), contentOffset = $el.offset().top + $el.height() - 100;
-        if (contentOffset > $win.scrollTop() + mainTop) {
+        if (contentOffset > $(window).scrollTop() + mainTop) {
           firstId = $el.attr('id');
           return false;
         }
@@ -127,20 +188,55 @@ TM.declare('lh.controller.PageController').inherit('lh.controller.BaseController
     'mouseenter #footMarker': 'toggleFooter',
     'mouseleave .close-btn': 'toggleCloseBtn',
     'mouseleave #realFooter': 'toggleFooter',
-    'scroll window': 'toggleFooter'
+    'scroll window': 'animateOnScroll'
   },
 
   selectors: {
+    floatTextList: '#floatTextList',
     footer: '#footer',
+    mainContent: '#mainContent',
     realFooter: '#realFooter'
+  },
+
+  animateOnScroll: function(event) {
+    this.moveFloatTexts();
+
+    // toggle to show footer
+    this.toggleFooter(event);
+  },
+
+  moveFloatTexts: function() {
+    // Float texts
+    var scrollTop = $(window).scrollTop(), slowTime = this.animateTime.VERY_SLOW;
+    this._el.$floatTextList.find('span').each(function(index, el) {
+      var $el = $(el), startMove = $el.data('startMove');
+
+      // compute the distance which window scrolls
+      var winTop = $el.data('winTop'), distance = isNaN(winTop) ? 0 : scrollTop - winTop;
+      if (startMove === 0) {
+        // if the window scrolls for more than a distance, then recover to default position
+        $el.data('startMove', 1).animate({'top': $el.data('originTop')}, slowTime, function() {
+          $el.data('startMove', 2);
+        });
+      } else {
+        if (isNaN(startMove) || startMove === 2) {
+          // store the original status
+          var top = parseInt($el.css('top'), 10)
+          $el.data({originTop: top, startMove: 0, winTop: scrollTop});
+        }
+
+        // keep the position
+        $el.css('top', $el.data('originTop') + distance);
+      }
+    });
   },
 
   toggleCloseBtn: function(event) {
     var $target = $(event.currentTarget);
     if (event.type === 'mouseenter') {
-      $target.animate({'font-size': '2.8em'}, 200);
+      $target.animate({'font-size': '2.8em'}, this.animateTime.FAST);
     } else {
-      $target.animate({'font-size': '1.8em'}, 200);
+      $target.animate({'font-size': '1.8em'}, this.animateTime.FAST);
     }
   },
 
@@ -151,14 +247,14 @@ TM.declare('lh.controller.PageController').inherit('lh.controller.BaseController
       isAtBottom = $win.scrollTop() + $win.height() === $doc.height(),
       isMouseEvent = event.type === 'mouseenter',
       isScrollEvent = event.type === 'scroll',
-      slideTimeSlow = this.slideTimeSlow, slideTimeNormal = this.slideTimeNormal;
+      slowTime = this.animateTime.SLOW, normalTime = this.animateTime.NORMAL;
     if ((isMouseEvent || (isScrollEvent && isAtBottom)) && $marker.is(':visible')) {
-      $marker.slideUp(slideTimeNormal, function() {
-        $realFooter.slideDown(slideTimeSlow);
+      $marker.slideUp(normalTime, function() {
+        $realFooter.slideDown(slowTime);
       });
     } else if (!$marker.is(':visible')) {
-      $realFooter.slideUp(slideTimeSlow, function() {
-        $marker.slideDown(slideTimeNormal);
+      $realFooter.slideUp(slowTime, function() {
+        $marker.slideDown(normalTime);
       });
     }
   }
@@ -180,12 +276,13 @@ TM.declare('lh.controller.LoadingController').inherit('lh.controller.BaseControl
     el.$preloadedImages.remove();
   }
 
-  function switchShowImages() {
+  function switchImages() {
     var index = 0, el = this._el, $images = el.$imgList.find('img');
     if (!$images.length) {
       return;
     }
 
+    var animateTime = this.animateTime;
     setInterval(function() {
       var $img, count = 0;
       while (true) {
@@ -204,9 +301,9 @@ TM.declare('lh.controller.LoadingController').inherit('lh.controller.BaseControl
 
       if (!el.$realTitle.is(':visible')) {
         el.$loadingTitle.hide();
-        el.$realTitle.slideDown(300);
+        el.$realTitle.slideDown(animateTime.NORMAL);
       }
-    }, 500);
+    }, animateTime.SLOW);
   }
 
   // public properties
@@ -223,7 +320,7 @@ TM.declare('lh.controller.LoadingController').inherit('lh.controller.BaseControl
     initialize: function() {
       this.invoke('lh.controller.BaseController:initialize');
       initImageList.call(this);
-      switchShowImages.call(this);
+      switchImages.call(this);
     }
   };
 });
@@ -277,7 +374,7 @@ TM.declare('lh.controller.WorkController').inherit('lh.controller.BaseController
     }
 
     var left = -1 * nextImg * width;
-    $images.parent().animate({left: left}, this.slideTimeNormal, function() {
+    $images.parent().animate({left: left}, this.animateTime.NORMAL, function() {
       $target.data('index', nextImg);
     });
   }

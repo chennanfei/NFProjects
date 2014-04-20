@@ -68,6 +68,7 @@ img {
 .tm-row-col7, .tm-row-col8, .tm-row-col9, .tm-row-col10, .tm-row-col11 {
   display: block;
   float: left;
+  position: relative;
 }
 
 .tm-row-col1 {
