@@ -264,7 +264,7 @@ TM.declare('lh.controller.LoadingController').inherit('lh.controller.BaseControl
   // private functions
   function initImageList() {
     var $images, el = this._el;
-    this._el.$preloadedImages.each(function(index, img) {
+    el.$preloadedImages.each(function(index, img) {
       var $img = $("<img>").hide().attr('src', $(img).attr('src'))
         .load(function(event) {
           $(this).data('ready', 1);
