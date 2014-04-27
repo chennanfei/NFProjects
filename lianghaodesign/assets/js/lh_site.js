@@ -108,7 +108,6 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
 
     selectors: {
       designList: '.design-list',
-      itemContents: '.design-list .content',
       mainContent: '#mainContent',
       menuItems: '#menu .menu-item',
       pageLoading: '#pageLoading',
@@ -116,10 +115,10 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
     },
 
     close: function(event) {
-      var el = this._el, $target = $(event.currentTarget), selected = this.selectedClass;
-      $target.parents('.content').fadeOut(this.animateTime.NORMAL, function() {
+      var el = this._el, $targetParent = $(event.currentTarget).parent(), selected = this.selectedClass;
+      $targetParent.fadeOut(this.animateTime.NORMAL, function() {
         el.$subMenuItems.filter('.' + selected).removeClass(selected);
-        $target.closest('.design-list').find('.preview-content').show();
+        $targetParent.siblings('.preview-content').show();
       });
     },
 
@@ -158,7 +157,7 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
       this._el.$subMenuItems.filter('.' + selected).removeClass(selected);
       $target.addClass(selected);
 
-      this._el.$itemContents.filter(':visible').hide();
+      $content.siblings().hide();
       $content.fadeIn(this.animateTime.NORMAL);
     },
 
@@ -221,7 +220,7 @@ TM.declare('lh.controller.PageController').inherit('lh.controller.BaseController
       } else {
         if (isNaN(startMove) || startMove === 2) {
           // store the original status
-          var top = parseInt($el.css('top'), 10)
+          var top = parseInt($el.css('top'), 10);
           $el.data({originTop: top, startMove: 0, winTop: scrollTop});
         }
 
@@ -257,6 +256,51 @@ TM.declare('lh.controller.PageController').inherit('lh.controller.BaseController
         $marker.slideDown(normalTime);
       });
     }
+  }
+});
+
+TM.declare('lh.controller.PreviewImagesController').inherit('lh.controller.BaseController').extend({
+  events: {
+    'load .preview-content .image img:first': 'initImageList',
+    'mouseenter .preview-content .image': 'switchImages'
+  },
+
+  selectors: {
+    previews: '#mainContent .preview-content'
+  },
+
+  initImageList: function(event) {
+    var $firstImg = $(event.currentTarget),
+      $container = $firstImg.closest('.image'),
+      $images = $container.find('img'),
+      size = {width: $firstImg.width(), height: $firstImg.height()},
+      imgCount = $images.length;
+    if (!imgCount) {
+      return;
+    }
+
+    $container.css(size).addClass('image-float').data('ready', 1);
+    $images.css(size).show().parent().width(size.width * imgCount);
+  },
+
+  /* show next image when the mouse enters into image container */
+  switchImages: function(event) {
+    var $target = $(event.currentTarget), $images = $target.find('img');
+    if (!$target.data('ready')) {
+      this.initImageList({currentTarget: $images[0]});
+    }
+
+    // get next image and compute position of the image container
+    var imgCount = $images.length, width = $images.eq(0).width(),
+      nextImg = ($target.data('index') || 0) + 1;
+    if (nextImg >= imgCount) {
+      nextImg = 0;
+    }
+
+    var left = -1 * nextImg * width;
+    $images.parent().animate({left: left}, this.animateTime.NORMAL, function() {
+      $target.data('index', nextImg);
+    });
   }
 });
 
@@ -326,57 +370,10 @@ TM.declare('lh.controller.LoadingController').inherit('lh.controller.BaseControl
 });
 
 TM.declare('lh.controller.WorkController').inherit('lh.controller.BaseController').extend({
-  events: {
-    'load .preview-content .image img:first': 'initImageList',
-    'mouseenter .preview-content .image': 'switchImages'
-  },
-
-  selectors: {
-    previews: '#mainContent .preview-content'
-  },
-
   initialize: function() {
     this.U.createInstance('lh.controller.PageController');
     this.U.createInstance('lh.controller.ItemMenuController');
-    this.invoke('lh.controller.BaseController:initialize');
-  },
-
-  initImageList: function(event) {
-    var $firstImg = $(event.currentTarget),
-      $container = $firstImg.closest('.image'),
-      $images = $container.find('img'),
-      size = {width: $firstImg.width(), height: $firstImg.height()},
-      imgCount = $images.length;
-    if (!imgCount) {
-      return;
-    }
-
-    $container.css(size).addClass('image-float').data('ready', 1);
-    $images.css(size).show().parent().width(size.width * imgCount);
-  },
-
-  /* show next image when the mouse enters into image container */
-  switchImages: function(event) {
-    if (this.preventDoubleAction('switch-images')) {
-      return;
-    }
-
-    var $target = $(event.currentTarget), $images = $target.find('img');
-    if (!$target.data('ready')) {
-      this.initImageList({currentTarget: $images[0]});
-    }
-
-    // get next image and compute position of the image container
-    var imgCount = $images.length, width = $images.eq(0).width(),
-      nextImg = ($target.data('index') || 0) + 1;
-    if (nextImg >= imgCount) {
-      nextImg = 0;
-    }
-
-    var left = -1 * nextImg * width;
-    $images.parent().animate({left: left}, this.animateTime.NORMAL, function() {
-      $target.data('index', nextImg);
-    });
+    this.U.createInstance('lh.controller.PreviewImagesController');
   }
 });
 
@@ -384,5 +381,6 @@ TM.declare('lh.controller.LifeController').inherit('lh.controller.BaseController
   initialize: function() {
     this.U.createInstance('lh.controller.PageController');
     this.U.createInstance('lh.controller.ItemMenuController');
+    this.U.createInstance('lh.controller.PreviewImagesController');
   }
 });

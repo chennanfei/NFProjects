@@ -7,6 +7,10 @@ body {
   padding: 0;
 }
 
+a {
+  cursor: pointer;
+}
+
 header {
   padding: 0.5em 0;
 }
@@ -27,6 +31,7 @@ textarea {
 
 img {
   margin: 0;
+  max-width: 100%;
   padding: 0;
   vertical-align: middle;
 }
