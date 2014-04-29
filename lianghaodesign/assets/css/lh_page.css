@@ -266,6 +266,10 @@ p {
   line-height: 1.6;
 }
 
+.lhd .design-list .item .image-panel {
+  font-size: 0;
+}
+
 .lhd .design-list .item .image-panel img {
   display: none;
 }

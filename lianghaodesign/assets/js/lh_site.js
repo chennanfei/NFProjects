@@ -157,7 +157,7 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
       this._el.$subMenuItems.filter('.' + selected).removeClass(selected);
       $target.addClass(selected);
 
-      $content.siblings().hide();
+      $content.siblings('.content').hide();
       $content.fadeIn(this.animateTime.NORMAL);
     },
 
