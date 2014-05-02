@@ -13,7 +13,7 @@
     <div class="tm-row-col2">
       <img src="assets/images/site_logo.png" width="60" height="72"/>
     </div>
-    <nav class="tm-row-col10 tm-row-col-last tm-row tm-top-spacing-extra-large">
+    <nav class="tm-row-col10 tm-row-col-last tm-row">
       <div class="tm-row-col2">
         <a class="nav-menu-item " href="work.html">Work 工作</a>
       </div>
@@ -21,35 +21,35 @@
         <a class="nav-menu-item background-stress" href="life.html">Life 生活</a>
       </div>
     </nav>
-    <div id="pageLoading" class="page-loading background-stress">Loading......</div>
   </header>
+  <div id="pageLoading" class="page-loading background-stress">Loading......</div>
 
   <div id="mainContent" class="tm-container tm-content tm-row main-content">
     <ul id="menu" class="tm-list menu-fixed">
       <li>
-        <a class="nav-menu-item menu-item" data-item-id="lifeNews">良好新闻</a>
+        <a class="nav-menu-item menu-item" data-item-id="lifeNews">Lianghao News 良好新闻</a>
         <ul class="tm-sub-list tm-spacing-base tm-top-spacing-base tm-hidden">
           <li><a class="nav-menu-item sub-menu-item" data-content-id="news_1">安妮画展</a></li>
-          <li><a class="nav-menu-item sub-menu-item" data-content-id="news_2">禅修</a></li>
           <li><a class="nav-menu-item sub-menu-item" data-content-id="news_3">化装舞会</a></li>
+          <li><a class="nav-menu-item sub-menu-item" data-content-id="news_2">禅修</a></li>
           <li><a class="nav-menu-item sub-menu-item" data-content-id="news_4">以物易物市集</a></li>
           <li><a class="nav-menu-item sub-menu-item" data-content-id="news_5">易书屋</a></li>
         </ul>
       </li>
       <li>
-        <a class="nav-menu-item menu-item" data-item-id="lifeTeam">良好团队</a>
+        <a class="nav-menu-item menu-item" data-item-id="lifeTeam">Lianghao Team 良好团队</a>
         <ul class="tm-sub-list tm-spacing-base tm-top-spacing-base tm-hidden">
           <li><a class="nav-menu-item sub-menu-item" data-content-id="team_1">团队成员</a></li>
         </ul>
       </li>
       <li>
-        <a class="nav-menu-item menu-item" data-item-id="lifeDays">良好生活</a>
+        <a class="nav-menu-item menu-item" data-item-id="lifeDays">Lianghao Life 良好生活</a>
         <ul class="tm-sub-list tm-spacing-base tm-top-spacing-base tm-hidden">
           <li><a class="nav-menu-item sub-menu-item" data-content-id="days_1">悠乐汇---家</a></li>
         </ul>
       </li>
       <li>
-        <a class="nav-menu-item menu-item" data-item-id="lifeDiscovery">良好发现</a>
+        <a class="nav-menu-item menu-item" data-item-id="lifeDiscovery">Lianghao Discovery 良好发现</a>
         <ul class="tm-sub-list tm-spacing-base tm-top-spacing-base tm-hidden">
           <li><a class="nav-menu-item sub-menu-item" data-content-id="discovery_1">发现</a></li>
         </ul>
@@ -65,10 +65,9 @@
       </div>
 
       <div class="design-list tm-spacing-medium" id="lifeNews">
-        <h3>良好新闻</h3>
         <div class="tm-row content preview-content">
-          <div class="tm-row-col6 design-list-right">
-            <div class="item">
+          <div class="tm-row-col6">
+            <div class="item tm-float-right">
               <div class="image">
                 <div class="image-panel">
                   <img src="assets/images/life/an_ni_1.jpg"><img src="assets/images/life/an_ni_2.jpg">
@@ -78,17 +77,7 @@
                 <p>安妮画展</p>
               </div>
             </div>
-            <div class="item">
-              <div class="image">
-                <div class="image-panel">
-                  <img src="assets/images/life/hua_zhuang_party_1.jpg"><img src="assets/images/life/hua_zhuang_party_2.jpg">
-                </div>
-              </div>
-              <div class="desc">
-                <p>化妆舞会</p>
-              </div>
-            </div>
-            <div class="item">
+            <div class="item tm-float-left">
               <div class="image">
                 <div class="image-panel">
                   <img src="assets/images/life/yi_shu_wu_1.jpg"><img src="assets/images/life/yi_shu_wu_2.jpg">
@@ -100,8 +89,18 @@
             </div>
           </div>
 
-          <div class="tm-row-col6 tm-row-col-last design-list-left">
-            <div class="item">
+          <div class="tm-row-col6 tm-row-col-last">
+            <div class="item tm-float-left">
+              <div class="image">
+                <div class="image-panel">
+                  <img src="assets/images/life/hua_zhuang_party_1.jpg"><img src="assets/images/life/hua_zhuang_party_2.jpg">
+                </div>
+              </div>
+              <div class="desc">
+                <p>化妆舞会</p>
+              </div>
+            </div>
+            <div class="item tm-float-right">
               <div class="image">
                 <div class="image-panel">
                   <img src="assets/images/life/chan_xiu_1.jpg"><img src="assets/images/life/chan_xiu_2.jpg">
@@ -111,7 +110,7 @@
                 <p>禅修</p>
               </div>
             </div>
-            <div class="item">
+            <div class="item tm-float-left">
               <div class="image">
                 <div class="image-panel">
                   <img src="assets/images/life/yi_wu_yi_wu_1.jpg"><img src="assets/images/life/yi_wu_yi_wu_2.jpg">
@@ -126,47 +125,53 @@
 
         <div id="news_1" class="tm-row content content-detail">
           <div class="close-btn">X</div>
-          <img src="assets/images/life/an_ni_1.jpg">
-          <img src="assets/images/life/an_ni_2.jpg">
-          <img src="assets/images/life/an_ni_3.jpg">
-          <img src="assets/images/life/an_ni_4.jpg">
-          <img src="assets/images/life/an_ni_5.jpg">
+          <div class="images">
+            <img src="assets/images/life/an_ni_1.jpg">
+            <img src="assets/images/life/an_ni_2.jpg">
+            <img src="assets/images/life/an_ni_3.jpg">
+            <img src="assets/images/life/an_ni_4.jpg">
+            <img src="assets/images/life/an_ni_5.jpg">
+          </div>
         </div>
         <div id="news_2" class="tm-row content content-detail">
           <div class="close-btn">X</div>
-          <div class="item">
-            <div class="image">
-              <img src="assets/images/life/chan_xiu_1.jpg">
-              <img src="assets/images/life/chan_xiu_2.jpg">
-              <img src="assets/images/life/chan_xiu_3.jpg">
-            </div>
+          <div class="images">
+            <img src="assets/images/life/chan_xiu_1.jpg">
+            <img src="assets/images/life/chan_xiu_2.jpg">
+            <img src="assets/images/life/chan_xiu_3.jpg">
           </div>
         </div>
         <div id="news_3" class="tm-row content content-detail">
           <div class="close-btn">X</div>
-          <img src="assets/images/life/hua_zhuang_party_1.jpg">
-          <img src="assets/images/life/hua_zhuang_party_2.jpg">
-          <img src="assets/images/life/hua_zhuang_party_3.jpg">
-          <img src="assets/images/life/hua_zhuang_party_4.jpg">
-          <img src="assets/images/life/hua_zhuang_party_5.jpg">
-          <img src="assets/images/life/hua_zhuang_party_6.jpg">
-          <img src="assets/images/life/hua_zhuang_party_7.jpg">
-          <img src="assets/images/life/hua_zhuang_party_8.jpg">
+          <div class="images">
+            <img src="assets/images/life/hua_zhuang_party_1.jpg">
+            <img src="assets/images/life/hua_zhuang_party_2.jpg">
+            <img src="assets/images/life/hua_zhuang_party_3.jpg">
+            <img src="assets/images/life/hua_zhuang_party_4.jpg">
+            <img src="assets/images/life/hua_zhuang_party_5.jpg">
+            <img src="assets/images/life/hua_zhuang_party_6.jpg">
+            <img src="assets/images/life/hua_zhuang_party_7.jpg">
+            <img src="assets/images/life/hua_zhuang_party_8.jpg">
+          </div>
         </div>
         <div id="news_4" class="tm-row content content-detail">
           <div class="close-btn">X</div>
-          <img src="assets/images/life/yi_wu_yi_wu_1.jpg">
-          <img src="assets/images/life/yi_wu_yi_wu_2.jpg">
-          <img src="assets/images/life/yi_wu_yi_wu_3.jpg">
-          <img src="assets/images/life/yi_wu_yi_wu_4.jpg">
-          <img src="assets/images/life/yi_wu_yi_wu_5.jpg">
-          <img src="assets/images/life/yi_wu_yi_wu_6.jpg">
+          <div class="images">
+            <img src="assets/images/life/yi_wu_yi_wu_1.jpg">
+            <img src="assets/images/life/yi_wu_yi_wu_2.jpg">
+            <img src="assets/images/life/yi_wu_yi_wu_3.jpg">
+            <img src="assets/images/life/yi_wu_yi_wu_4.jpg">
+            <img src="assets/images/life/yi_wu_yi_wu_5.jpg">
+            <img src="assets/images/life/yi_wu_yi_wu_6.jpg">
+          </div>
         </div>
         <div id="news_5" class="tm-row content content-detail">
           <div class="close-btn">X</div>
-          <img src="assets/images/life/yi_shu_wu_1.jpg">
-          <img src="assets/images/life/yi_shu_wu_2.jpg">
-          <img src="assets/images/life/yi_shu_wu_3.jpg">
+          <div class="images">
+            <img src="assets/images/life/yi_shu_wu_1.jpg">
+            <img src="assets/images/life/yi_shu_wu_2.jpg">
+            <img src="assets/images/life/yi_shu_wu_3.jpg">
+          </div>
         </div>
       </div>
 
@@ -182,8 +187,7 @@
   </div>
 
   <footer class="tm-container footer-fixed" id="footer">
-    <div class="marker" id="footMarker"></div>
-    <div class="tm-row tm-hidden" id="realFooter">
+    <div class="tm-row footer-content background-stress" id="footerContent">
       <div class="tm-row-col2">
         <h4>Lianghao</h4>
         <ul>
@@ -208,5 +212,6 @@
       </div>
     </div>
   </footer>
+  </body>
 </body>
 </html>

@@ -146,6 +146,14 @@ img {
   float: none !important;
 }
 
+.tm-float-left {
+  float: left !important;
+}
+
+.tm-float-right {
+  float: right !important;
+}
+
 .tm-hidden {
   display: none;
 }

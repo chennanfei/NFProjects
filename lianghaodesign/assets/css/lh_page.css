@@ -1,5 +1,7 @@
 body {
   color: #FFFFFF;
+  font-family: ITC Officina Sans Std, arial;
+  letter-spacing: 0.03em;
 }
 
 header {
@@ -13,11 +15,7 @@ footer a, footer a:visited, footer a:hover {
 
 nav {
   font-weight: bold;
-}
-
-p {
-  margin-bottom: 0;
-  margin-top: 0;
+  margin-top: 4.75em;
 }
 
 .lhd *::-moz-selection {
@@ -39,10 +37,6 @@ p {
 
 .lhd .background-stress {
   background-color: #E81206;
-}
-
-.lhd .nav-menu-item {
-  padding: 0.2em;
 }
 
 .lhd .nav-menu-item:hover, .lhd .nav-menu-item.background-stress {
@@ -117,7 +111,7 @@ p {
 }
 
 .lhd .main-content {
-  margin: 10.5em auto;
+  margin: 10em auto;
   position: relative;
 }
 
@@ -135,7 +129,7 @@ p {
 .lhd .header-fixed {
   background-color: #E93D1B;
   padding-top: 2.5em;
-  padding-bottom: 0.5em;
+  padding-bottom: 1.5em;
   top: 0;
 }
 
@@ -157,15 +151,14 @@ p {
 }
 
 .lhd .footer-fixed {
-  background-color: #E81206;
-  bottom: 0;
-  padding-bottom: 0.5em;
-  padding-top: 0.5em;
+  bottom: -9em;
   margin-bottom: 0;
+  padding-top: 1em;
 }
 
-.lhd .footer-fixed .marker {
-  height: 1em;
+.lhd .footer-fixed .footer-content {
+  padding-top: 1em;
+  padding-bottom: 2.5em;
 }
 
 .lhd .loading {
@@ -198,6 +191,10 @@ p {
   padding: 0.2em 0.5em;
 }
 
+.lhd .loading .text a:hover {
+  text-decoration: underline;
+}
+
 .lhd .loading .image .text {
   position: absolute;
   bottom: 0;
@@ -205,12 +202,14 @@ p {
 }
 
 .lhd .page-loading {
+  font-size: 3em;
   font-weight: bold;
   display: none;
   padding: 0.5em;
-  position: absolute;
-  top: 0;
-  right: 0;
+  position: fixed;
+  top: 40%;
+  left: 40%;
+  z-index: 299;
 }
 
 .lhd .design-list h3 {
@@ -240,17 +239,11 @@ p {
 }
 
 .lhd .design-list .item {
-  overflow: hidden;
+  clear: both;
   margin-bottom: 1.5em;
+  overflow: hidden;
   position: relative;
-}
-
-.lhd .design-list-left .item:nth-child(odd), .lhd .design-list-right .item:nth-child(even) {
-  float: left;
-}
-
-.lhd .design-list-left .item:nth-child(even), .lhd .design-list-right .item:nth-child(odd) {
-  float: right;
+  line-height: 1.6;
 }
 
 .lhd .design-list .item:last-child {
@@ -263,7 +256,11 @@ p {
 }
 
 .lhd .design-list .item .desc {
-  line-height: 1.6;
+  margin-top: 0.5em;
+}
+
+.lhd .design-list .item .desc p {
+  margin: 0;
 }
 
 .lhd .design-list .item .image-panel {

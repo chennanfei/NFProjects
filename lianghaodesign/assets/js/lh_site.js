@@ -184,17 +184,16 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
 TM.declare('lh.controller.PageController').inherit('lh.controller.BaseController').extend({
   events: {
     'mouseenter .close-btn': 'toggleCloseBtn',
-    'mouseenter #footMarker': 'toggleFooter',
+    'mouseenter #footer': 'toggleFooter',
     'mouseleave .close-btn': 'toggleCloseBtn',
-    'mouseleave #realFooter': 'toggleFooter',
+    'mouseleave #footer': 'toggleFooter',
     'scroll window': 'animateOnScroll'
   },
 
   selectors: {
     floatTextList: '#floatTextList',
     footer: '#footer',
-    mainContent: '#mainContent',
-    realFooter: '#realFooter'
+    mainContent: '#mainContent'
   },
 
   animateOnScroll: function(event) {
@@ -240,21 +239,23 @@ TM.declare('lh.controller.PageController').inherit('lh.controller.BaseController
   },
 
   toggleFooter: function(event) {
-    var $footer = this._el.$footer, $win = $(window), $doc = $(document),
-      $marker = $footer.find('#footMarker'),
-      $realFooter = $footer.find('#realFooter'),
+    var $win = $(window), $doc = $(document), $footer = this._el.$footer,
       isAtBottom = $win.scrollTop() + $win.height() === $doc.height(),
       isMouseEvent = event.type === 'mouseenter',
       isScrollEvent = event.type === 'scroll',
-      slowTime = this.animateTime.SLOW, normalTime = this.animateTime.NORMAL;
-    if ((isMouseEvent || (isScrollEvent && isAtBottom)) && $marker.is(':visible')) {
-      $marker.slideUp(normalTime, function() {
-        $realFooter.slideDown(slowTime);
-      });
-    } else if (!$marker.is(':visible')) {
-      $realFooter.slideUp(slowTime, function() {
-        $marker.slideDown(normalTime);
-      });
+      slideTime = this.animateTime.SLOW;
+
+    // save the original bottom
+    var bottom = $footer.css('bottom');
+    if (typeof $footer.data('originalBottom') === 'undefined') {
+      $footer.data('originalBottom', bottom);
+    }
+
+    var ob = $footer.data('originalBottom');
+    if ((isMouseEvent || (isScrollEvent && isAtBottom)) && bottom !== 0) {
+      $footer.animate({'bottom': 0}, slideTime);
+    } else if (bottom !== ob) {
+      $footer.animate({'bottom': ob}, slideTime);
     }
   }
 });
@@ -307,41 +308,42 @@ TM.declare('lh.controller.PreviewImagesController').inherit('lh.controller.BaseC
 TM.declare('lh.controller.LoadingController').inherit('lh.controller.BaseController').extend(function() {
   // private functions
   function initImageList() {
-    var $images, el = this._el;
-    el.$preloadedImages.each(function(index, img) {
-      var $img = $("<img>").hide().attr('src', $(img).attr('src'))
+    var $imgLinks, el = this._el;
+    el.$preloadedImages.each(function(index, obj) {
+      var $obj = $(obj), $img = el.$imgTemp.clone();
+      $img.find('img').attr('src', $obj.attr('src'))
         .load(function(event) {
-          $(this).data('ready', 1);
+          $(this).parent().attr('href', $obj.data('url')).data('ready', 1);
         });
-      $images = $images ? $images.add($img) : $img;
+      $imgLinks = $imgLinks ? $imgLinks.add($img) : $img;
     });
 
-    el.$imgList.prepend($images);
+    el.$imgList.prepend($imgLinks);
     el.$preloadedImages.remove();
   }
 
   function switchImages() {
-    var index = 0, el = this._el, $images = el.$imgList.find('img');
-    if (!$images.length) {
+    var index = 0, el = this._el, $imgLinks = el.$imgTemp.siblings('a');
+    if (!$imgLinks.length) {
       return;
     }
 
     var animateTime = this.animateTime;
     setInterval(function() {
-      var $img, count = 0;
+      var $imgLink, count = 0;
       while (true) {
-        $img = $images.eq(index++ % $images.length);
-        if ($img.data('ready')) {
+        $imgLink = $imgLinks.eq(index++ % $imgLinks.length);
+        if ($imgLink.data('ready')) {
           break;
         }
 
-        if (++count === $images.length) {
+        if (++count === $imgLinks.length) {
           return;
         }
       }
 
-      $images.filter(':visible').hide();
-      $img.show();
+      $imgLinks.filter(':visible').hide();
+      $imgLink.show();
 
       if (!el.$realTitle.is(':visible')) {
         el.$loadingTitle.hide();
@@ -356,6 +358,7 @@ TM.declare('lh.controller.LoadingController').inherit('lh.controller.BaseControl
 
     selectors: {
       imgList: '.image',
+      imgTemp: '#image-template',
       loadingTitle: '#loadingTitle',
       preloadedImages: 'object',
       realTitle: '#realTitle'
