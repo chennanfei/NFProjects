@@ -45,9 +45,8 @@ nav {
 }
 
 .lhd .float-text-list span {
-  font-weight: bold;
   font-size: 3em;
-  position: absolute;
+  position: fixed;
   z-index: 100;
 }
 
@@ -91,23 +90,33 @@ nav {
   right: 10%;
 }
 
-.lhd .float-text-list .page-text1 {
-  left: 8em;
+.lhd .float-text-list2 {
+  font-size: 3em;
 }
 
-.lhd .float-text-list .page-text2 {
+.lhd .float-text-list2 span {
+  position: fixed;
+  z-index: 100;
+}
+
+.lhd .float-text-list2 .page-text1 {
+  top: 3.2em;
+  left: 15em;
+}
+
+.lhd .float-text-list2 .page-text2 {
   top: 10em;
   right: 5em;
 }
 
-.lhd .float-text-list .page-text3 {
+.lhd .float-text-list2 .page-text3 {
   top: 20em;
   left: 10em;
 }
 
-.lhd .float-text-list .page-text4 {
+.lhd .float-text-list2 .page-text4 {
   top: 25em;
-  right: -0.5em;
+  right: 0;
 }
 
 .lhd .main-content {
@@ -117,7 +126,7 @@ nav {
 
 .lhd .header-fixed, .lhd .footer-fixed, .lhd .menu-fixed {
   position: fixed;
-  z-index: 110;
+  z-index: 900;
 }
 
 .lhd .header-fixed, .lhd .footer-fixed {
@@ -231,7 +240,7 @@ nav {
   position: absolute;
   right: 0;
   top: 0;
-  z-index: 98;
+  z-index: 799;
 }
 
 .lhd .design-list .close-btn.close-btn-in {
@@ -279,7 +288,7 @@ nav {
   position: absolute;
   left: 0;
   top: 0;
-  z-index: 10;
+  z-index: 20;
 }
 
 .lhd .profile .item img {

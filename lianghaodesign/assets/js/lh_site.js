@@ -82,7 +82,7 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
       },
       successHandler: function(data, status, xhr) {
         // remove url, no need request twice
-        $section.html(data).removeAttr('data-url');
+        $section.html(data).data('url', null);
         // scroll the block to top
         scrollContentToTop.call(self, $section);
         $loading.fadeOut();
@@ -191,41 +191,69 @@ TM.declare('lh.controller.PageController').inherit('lh.controller.BaseController
   },
 
   selectors: {
-    floatTextList: '#floatTextList',
+    floatLayer: '#floatLayer',
     footer: '#footer',
     mainContent: '#mainContent'
   },
 
+  initialize: function() {
+    this.invoke('lh.controller.BaseController:initialize');
+
+    var $floatLayer = this._el.$floatLayer;
+    $floatLayer.data('lastOffset', $(window).scrollTop())
+      .children('span').each(function(index, layer) {
+        var $el = $(layer);
+        $el.data('origin', parseInt($el.css('top'), 10));
+      });
+  },
+
   animateOnScroll: function(event) {
-    this.moveFloatTexts();
+    this.moveFloatLayer2();
 
     // toggle to show footer
     this.toggleFooter(event);
   },
 
-  moveFloatTexts: function() {
-    // Float texts
-    var scrollTop = $(window).scrollTop(), slowTime = this.animateTime.VERY_SLOW;
-    this._el.$floatTextList.find('span').each(function(index, el) {
-      var $el = $(el), startMove = $el.data('startMove');
-
-      // compute the distance which window scrolls
-      var winTop = $el.data('winTop'), distance = isNaN(winTop) ? 0 : scrollTop - winTop;
-      if (startMove === 0) {
-        // if the window scrolls for more than a distance, then recover to default position
-        $el.data('startMove', 1).animate({'top': $el.data('originTop')}, slowTime, function() {
-          $el.data('startMove', 2);
-        });
-      } else {
-        if (isNaN(startMove) || startMove === 2) {
-          // store the original status
-          var top = parseInt($el.css('top'), 10);
-          $el.data({originTop: top, startMove: 0, winTop: scrollTop});
-        }
-
-        // keep the position
-        $el.css('top', $el.data('originTop') + distance);
+  moveFloatLayer: function() {
+    var $win = $(window), offset = $win.scrollTop() - this._el.$mainContent.offset().top;
+    this._el.$floatLayer.children('span').each(function(index, layer) {
+      var $layer = $(layer), lastOffset = $layer.data('lastOffset');
+      $layer.data('lastOffset', offset);
+      if (lastOffset === undefined) {
+        return;
       }
+
+      var isPageUp = offset > lastOffset ? 1 : 0;
+      if ($layer.data('origin') === undefined || $layer.data('isPageUp') !== isPageUp) {
+        $layer.data('origin', offset); // the offset when page scrolls in one direction at the beginning
+        $layer.data('startPos', parseInt($layer.css('top'), 10));
+        $layer.data('isPageUp', isPageUp);
+      }
+
+      var origin = $layer.data('origin'), move = offset - origin; // compute the offset comparing last direction
+      if (Math.abs(move) < 100) {
+        // stay at the fixed place in window for a while
+        $layer.css('top', move + $layer.data('startPos'));
+        return;
+      }
+
+      // catch up the page
+      //var ratio = (offset - lastOffset) / origin + 1;
+      //$layer.css('top', $layer.data('startPos') * ratio);
+    });
+  },
+
+  moveFloatLayer2: function() {
+    var $win = $(window), offset = $win.scrollTop(),
+      $floatLayer = this._el.$floatLayer,
+      lastOffset = $floatLayer.data('lastOffset');
+    $floatLayer.data('lastOffset', offset);
+
+    var diff = offset - lastOffset, speed = 0.6; // page goes up or goes down
+    $floatLayer.data('isPageUp', diff > 0);
+    $floatLayer.children('span').each(function(index, layer) {
+      var $layer = $(layer), currentTop = parseInt($layer.css('top'), 10);
+      $layer.css('top', currentTop - diff * speed);
     });
   },
 
