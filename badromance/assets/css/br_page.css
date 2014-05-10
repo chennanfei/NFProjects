@@ -1,0 +1,226 @@
+body {
+  font-family: 'helvetica', '黑体';
+}
+
+.br-size-base {
+  font-size: 1em;
+}
+
+.br-size-medium {
+  font-size: 1.4em;
+}
+
+.br-section {
+  position: fixed;
+  left: 0;
+  right: 0;
+}
+.br-section-inner {
+  left: 50%;
+  margin-left: -480px;
+  position: absolute;
+  width: 960px;
+}
+
+#loading {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  background-color: #231815;
+}
+
+.br-loading {
+  position: absolute;
+  margin-top: -90px;
+  margin-left: -245px;
+  left: 50%;
+  top: 50%;
+  z-index: 10;
+}
+
+.br-loading .br-glass {
+  border: 4px solid #FFFFFF;
+  height: 160px;
+  border-radius: 85px;
+  width: 160px;
+  overflow: hidden;
+}
+
+.br-loading .br-logo-container {
+  position: relative;
+  height: 180px;
+  width: 490px;
+  padding: 0 7em;
+  top: -10px;
+}
+
+.br-loading .br-big-logo {
+  height: 180px;
+  width: 490px;
+}
+
+.br-header-fixed, .br-footer-fixed {
+  display: none;
+  z-index: 900;
+}
+
+.br-header-fixed {
+  top: 0
+}
+
+.br-footer-fixed {
+  position: fixed;
+  background-color: #FF3333;
+  left: 0;
+  right: 0;
+  height: 10em;
+  bottom: 0;
+}
+
+/* icon */
+.br-icon {
+  background-repeat: no-repeat;
+  display: inline-block;
+  position: absolute;
+  left: 0;
+  vertical-align: top;
+}
+
+.br-icon-site {
+  background-image: url("../images/site-logo.png");
+  height: 60px;
+  width: 137px;
+}
+
+.br-icon-email {
+  background-image: url("../images/email.png");
+  height: 39px;
+  width: 39px;
+}
+
+.br-icon-shop {
+  background-image: url("../images/shop.png");
+  background-size: 345px 359px;
+}
+
+.br-icon-shop-atm {
+  background-position: -10px 0;
+  height: 120px;
+  width: 120px;
+}
+
+.br-icon-shop-design {
+  background-position: -220px 0;
+  height: 122px;
+  width: 125px;
+}
+
+.br-icon-shop-about {
+  background-position: -4px -228px;
+  height: 130px;
+  width: 130px;
+}
+
+.br-icon-shop-flower {
+  background-position: -220px -230px;
+  height: 130px;
+  width: 130px;
+}
+
+/* menu */
+.br-menu {
+  display: table;
+  float: right;
+  padding: 0;
+  margin: 2em 0 0 0;
+}
+
+.br-menu li {
+  display: table-cell;
+  padding: 0 1.5em;
+}
+
+.br-menu li a {
+  position: relative;
+}
+
+.br-menu li p {
+  margin: 0 0 0.5em 0;
+}
+
+.br-menu li p:last-child {
+  margin: 0;
+}
+
+#home {
+  background-color: #FFFFFF;
+}
+
+.br-home {
+  position: fixed;
+  height: 20em;
+  top: 40%;
+  left: 50%;
+  margin-left: -10em;
+  margin-top: -10em;
+  width: 20em;
+}
+
+.br-home .br-site-title {
+  position: relative;
+  height: 137px;
+  width: 205px;
+  left: 50%;
+  margin-left: -102.5px;
+}
+
+.br-home .br-site-title img {
+  height: 137px;
+  width: 205px;
+}
+
+.br-home .br-site-desc {
+  font-size: 1.4em;
+  position: relative;
+  left: 50%;
+  margin-left: -8.5em;
+  text-align: center;
+  width: 17em;
+}
+
+.br-home .br-home-menu {
+  position: relative;
+  color: #DB2852;
+  font-size: 0.8em;
+}
+
+.br-home .br-home-menu a {
+  padding: 0 0.5em;
+}
+
+#shop {
+  background-color: #FF3333;
+  color: #FFFFFF;
+  height: 100%;
+}
+
+#shop p {
+  letter-spacing: 0.2em;
+  margin: 0;
+}
+
+#shop .br-icon {
+  position: static;
+}
+
+#shop .br-section-inner {
+  margin-left: -200px;
+  top: 20%;
+  width: 400px;
+}
+
+#shop .br-shop-link {
+  display: inline-block;
+}
