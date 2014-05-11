@@ -1,6 +1,6 @@
 body {
   color: #FFFFFF;
-  font-family: ITC Officina Sans Std, arial;
+  font-family: 'ITC Officina Sans Std', 'arial', '黑体';
   letter-spacing: 0.03em;
 }
 
@@ -14,8 +14,9 @@ footer a, footer a:visited, footer a:hover {
 }
 
 nav {
+  font-size: 1.5em;
   font-weight: bold;
-  margin-top: 4.75em;
+  margin-top: 2.85em;
 }
 
 .lhd *::-moz-selection {
@@ -120,7 +121,7 @@ nav {
 }
 
 .lhd .main-content {
-  margin: 10em auto;
+  margin: 12em auto;
   position: relative;
 }
 
@@ -143,6 +144,7 @@ nav {
 }
 
 .lhd .menu-item {
+  font-weight: bold;
   cursor: pointer;
 }
 
@@ -253,6 +255,8 @@ nav {
   overflow: hidden;
   position: relative;
   line-height: 1.6;
+  max-width: 500px;
+  max-height: 677px;
 }
 
 .lhd .design-list .item:last-child {
@@ -270,6 +274,18 @@ nav {
 
 .lhd .design-list .item .desc p {
   margin: 0;
+}
+
+.lhd .design-list .item .desc p:first-child {
+  font-weight: bold;
+}
+
+.lhd .design-list .item .detail {
+  font-size: 10px;
+}
+
+.lhd .design-list .item .detail p {
+  padding: 0.35em 0;
 }
 
 .lhd .design-list .item .image-panel {
