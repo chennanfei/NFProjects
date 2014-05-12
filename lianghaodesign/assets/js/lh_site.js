@@ -1,4 +1,4 @@
-TM.declare('lh.controller.BaseController').inherit('thinkmvc.Controller').extend({
+TM.declare('lh.controller.BaseController').inherit('thinkmvc.Controller').extend( {
   animateTime: {
     NORMAL: 300,
     FAST: 200,
@@ -199,61 +199,24 @@ TM.declare('lh.controller.PageController').inherit('lh.controller.BaseController
   initialize: function() {
     this.invoke('lh.controller.BaseController:initialize');
 
-    var $floatLayer = this._el.$floatLayer;
-    $floatLayer.data('lastOffset', $(window).scrollTop())
-      .children('span').each(function(index, layer) {
-        var $el = $(layer);
-        $el.data('origin', parseInt($el.css('top'), 10));
-      });
+    this._el.$floatLayer.children('span').each(function(index, layer) {
+      var $el = $(layer);
+      $el.data('origin', parseInt($el.css('top'), 10));
+    });
   },
 
   animateOnScroll: function(event) {
-    this.moveFloatLayer2();
+    this.moveWords();
 
     // toggle to show footer
     this.toggleFooter(event);
   },
 
-  moveFloatLayer: function() {
-    var $win = $(window), offset = $win.scrollTop() - this._el.$mainContent.offset().top;
+  moveWords: function() {
+    var scrollTop = $(window).scrollTop(), offset = scrollTop * 0.8;
     this._el.$floatLayer.children('span').each(function(index, layer) {
-      var $layer = $(layer), lastOffset = $layer.data('lastOffset');
-      $layer.data('lastOffset', offset);
-      if (lastOffset === undefined) {
-        return;
-      }
-
-      var isPageUp = offset > lastOffset ? 1 : 0;
-      if ($layer.data('origin') === undefined || $layer.data('isPageUp') !== isPageUp) {
-        $layer.data('origin', offset); // the offset when page scrolls in one direction at the beginning
-        $layer.data('startPos', parseInt($layer.css('top'), 10));
-        $layer.data('isPageUp', isPageUp);
-      }
-
-      var origin = $layer.data('origin'), move = offset - origin; // compute the offset comparing last direction
-      if (Math.abs(move) < 100) {
-        // stay at the fixed place in window for a while
-        $layer.css('top', move + $layer.data('startPos'));
-        return;
-      }
-
-      // catch up the page
-      //var ratio = (offset - lastOffset) / origin + 1;
-      //$layer.css('top', $layer.data('startPos') * ratio);
-    });
-  },
-
-  moveFloatLayer2: function() {
-    var $win = $(window), offset = $win.scrollTop(),
-      $floatLayer = this._el.$floatLayer,
-      lastOffset = $floatLayer.data('lastOffset');
-    $floatLayer.data('lastOffset', offset);
-
-    var diff = offset - lastOffset, speed = 0.6; // page goes up or goes down
-    $floatLayer.data('isPageUp', diff > 0);
-    $floatLayer.children('span').each(function(index, layer) {
-      var $layer = $(layer), currentTop = parseInt($layer.css('top'), 10);
-      $layer.css('top', currentTop - diff * speed);
+      var $el = $(layer);
+      $el.css('top', $el.data('origin') - offset);
     });
   },
 

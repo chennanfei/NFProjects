@@ -255,8 +255,6 @@ nav {
   overflow: hidden;
   position: relative;
   line-height: 1.6;
-  max-width: 500px;
-  max-height: 677px;
 }
 
 .lhd .design-list .item:last-child {
@@ -264,6 +262,8 @@ nav {
 }
 
 .lhd .design-list .item .image {
+  max-width: 500px;
+  max-height: 677px;
   overflow: hidden;
   position: relative;
 }
