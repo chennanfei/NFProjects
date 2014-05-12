@@ -54,6 +54,7 @@ body {
   width: 490px;
   padding: 0 7em;
   top: -10px;
+  z-index: -1;
 }
 
 .br-loading .br-big-logo {
@@ -105,7 +106,7 @@ body {
   background-position: -334px -47px;
   height: 44px;
   width: 44px;
-  top: -0.5em;
+  top: -0.2em;
 }
 
 .br-icon-email-black {

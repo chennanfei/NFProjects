@@ -39,20 +39,146 @@ TM.declare('br.controller.BaseController').inherit('thinkmvc.Controller').extend
       TRANSFORM: 190
     },
 
+    getScrollStatus: function() {
+      return this._scrollStatus;
+    },
+
     initScrollStatus: function() {
       var self = this, movedOffset = getMovedOffset.call(this), $win = $(window);
       scrollTop = $win.scrollTop();
 
       this._scrollStatus = {
-        isPageUp: movedOffset > 0,
+        isPageUp: movedOffset >= 0,
         position: getPosition.call(self),
         scrollTop: scrollTop,
         winWidth: $win.width()
       };
+    }
+  }
+});
+
+TM.declare('br.controller.ParallaxScrollController').inherit('br.controller.BaseController').extend(function() {
+  // private static variables
+  var lastPos, scrollTop, scroll = { MULTIPLE: 25, RATIO: 0, TRANSFORM: 190 };
+
+  // private functions
+  function getMovedOffset() {
+    var lp = lastPos || 0;
+    lastPos = scrollTop;
+    return scrollTop - lp;
+  }
+
+  function getPosition() {
+    if (!scroll.RATIO) {
+      // compute the max distance the window can scrolls
+      var sceneHeight = $('#scene').height() - $(window).height();
+      if (isNaN(sceneHeight) || sceneHeight <= 0) {
+        throw new Error('The height of #scene is invalue.');
+      }
+
+      // In this case, window triggers scroll event every time when it scrolls 100,
+      // scrollRatio will transform scrollTop to a smaller value so that elements' move
+      // can be controlled more precisely.
+      scroll.RATIO = sceneHeight / scroll.TRANSFORM;
+    }
+    return scrollTop / scroll.RATIO;
+  }
+
+  function getPropValue(config, pos) {
+    var $el = config.$el, offset = (pos - config.minPos + 0.5) * scroll.MULTIPLE,
+      startPoint = config.startPoint, endPoint = config.endPoint,
+      propValue = startPoint + offset;
+
+    if (endPoint > startPoint) {
+      propValue = propValue > endPoint ? endPoint : propValue;
+      propValue = propValue < startPoint ? startPoint : propValue;
+    } else {
+      propValue = propValue > startPoint ? startPoint : propValue;
+      propValue = propValue < endPoint ? endPoint : propValue;
+    }
+    return propValue;
+  }
+
+  function initScrollStatus() {
+    var self = this, movedOffset = getMovedOffset.call(this), $win = $(window);
+    scrollTop = $win.scrollTop();
+
+    return {
+      isPageUp: movedOffset >= 0,
+      position: getPosition.call(self),
+      scrollTop: scrollTop,
+      winWidth: $win.width()
+    };
+  }
+
+  function isAtPosition(config, isPageUp) {
+    if (isPageUp) {
+      return config.$el.data('propValue') === config.endPoint;
+    } else {
+      return config.$el.data('propValue') === config.startPoint;
+    }
+  }
+
+  function move(config, scrollStatus) {
+    var pos = scrollStatus.position;
+    if (pos > config.maxPos) {
+      return;
+    }
+
+    var $el = config.$el, isPageUp = scrollStatus.isPageUp;
+    if (isAtPosition(config, scrollStatus.isPageUp)) {
+      return;
+    }
+
+    var propValue = getPropValue.call(this, config, pos);
+    if (propValue === config.startPoint) {
+      $el.hide();
+    } else {
+      $el.show();
+    }
+
+    if (isPageUp) { // page goes up
+      if (pos > config.minPos) {
+        $el.css(config.cssProp, propValue);
+      }
+    } else { // page goes down
+      $el.css(config.cssProp, propValue);
+    }
+    $el.data('propValue', propValue);
+  }
+
+  return {
+    /*
+     * Move element by position
+     * @prams:
+     * config = {
+         $el: this._el.$foot, // element to move
+         cssProp: 'bottom', // css property to be modified so element looks moving
+         maxPos: 30, // element moves in a scope between minPos and maxPos
+         minPos: 19,
+         minOffset: 12 // when offset to the original position is less than this value,
+         // force offset to 0 so the element can go back to its original position
+       };
+     * */
+    add: function(config) {
+      if (!this._configs) {
+        this._configs = [];
+      }
+
+      this._configs.push(config);
+      return this;
     },
 
-    getScrollStatus: function() {
-      return this._scrollStatus;
+    scroll: function() {
+      var configs = this._configs;
+      if (!(configs && configs.length)) {
+        return;
+      }
+
+      var scrollStatus = initScrollStatus.call(this);
+      for (var i = 0; i < configs.length; i++) {
+        move.call(this, configs[i], scrollStatus);
+      }
     }
   }
 });
@@ -119,18 +245,6 @@ TM.declare('br.controller.HomeController').inherit('br.controller.BaseController
     });
   }
 
-  /*
-   * Move element by position
-   * @prams:
-   * config = {
-       $el: this._el.$foot, // element to move
-       cssProp: 'bottom', // css property to be modified so element looks moving
-       maxPos: 30, // element moves in a scope between minPos and maxPos
-       minPos: 19,
-       minOffset: 12 // when offset to the original position is less than this value,
-                      // force offset to 0 so the element can go back to its original position
-       };
-   * */
   function move(config) {
     var scrollStatus = this.getScrollStatus(), pos = scrollStatus.position;
     if (pos > config.maxPos) {
@@ -153,7 +267,7 @@ TM.declare('br.controller.HomeController').inherit('br.controller.BaseController
     var config = {
       $el: this._el.$foot,
       cssProp: 'bottom',
-      maxPos: 30,
+      maxPos: 40,
       minPos: 19,
       minOffset: 12
     };
@@ -165,7 +279,7 @@ TM.declare('br.controller.HomeController').inherit('br.controller.BaseController
     var config = {
       $el: this._el.$siteDesc,
       cssProp: 'left',
-      maxPos: 46,
+      maxPos: 60,
       minPos: 10,
       minOffset: 10
     };
@@ -176,7 +290,7 @@ TM.declare('br.controller.HomeController').inherit('br.controller.BaseController
   function moveSiteMenu() {
     var pos = this.getScrollStatus().position;
     // site-menu is active in [0, 32]
-    if (pos > 32) {
+    if (pos > 40) {
       return;
     }
 
@@ -188,7 +302,7 @@ TM.declare('br.controller.HomeController').inherit('br.controller.BaseController
     var config = {
       $el: this._el.$siteTitle,
       cssProp: 'left',
-      maxPos: 60,
+      maxPos: 70,
       minPos: 19,
       minOffset: 12
     };
@@ -217,10 +331,8 @@ TM.declare('br.controller.HomeController').inherit('br.controller.BaseController
 
     handleScrolling: function() {
       this.initScrollStatus();
-
-      var status = this.getScrollStatus();
       //DEBUG
-      //console.log(status);
+      console.log(this.getScrollStatus());
 
       moveSiteMenu.call(this);
       moveSiteDesc.call(this);
@@ -230,138 +342,58 @@ TM.declare('br.controller.HomeController').inherit('br.controller.BaseController
   }
 });
 
-TM.declare('br.controller.ShopController').inherit('br.controller.BaseController').extend(function() {
-  function getPropValue(config, pos) {
-    var $el = config.$el, offset = (pos - config.minPos + 0.5) * this.scroll.MULTIPLE,
-      startPoint = $el.data('startPoint'), endPoint = $el.data('endPoint'),
-      propValue = startPoint + offset;
+TM.declare('br.controller.ShopController').inherit('br.controller.BaseController').extend({
+  events: {
+    'scroll window': 'handleScrolling'
+  },
 
-    if (endPoint > startPoint) {
-      propValue = propValue > endPoint ? endPoint : propValue;
-      propValue = propValue < startPoint ? startPoint : propValue;
-    } else {
-      propValue = propValue > startPoint ? startPoint : propValue;
-      propValue = propValue < endPoint ? endPoint : propValue;
-    }
-    return propValue;
-  }
+  rootNode: '#shop',
 
-  function isAtPosition($el, isPageUp) {
-    if (isPageUp) {
-      return $el.data('propValue') === $el.data('endPoint');
-    } else {
-      return $el.data('propValue') === $el.data('startPoint');
-    }
-  }
+  selectors: {
+    leftCol: '#shop-col-first',
+    rightCol: '#shop-col-second',
+    sectionInner: '.br-section-inner'
+  },
 
-  /*
-  * shop section moves from right side
-  * */
-  function moveShopSection() {
-    var config = {
-      $el: this._$root,
-      cssProp: 'right',
-      maxPos: 82,
-      minPos: 30,
-      minOffset: 10
-    };
+  initialize: function() {
+    this.invoke('br.controller.BaseController:initialize');
 
-    move.call(this, config);
-  }
+    var width = $(window).width(), halfW = -width / 2;
+    this._$root.css({left: 'auto', right: -width});
+    this._el.$leftCol.css('left', halfW);
+    this._el.$rightCol.css('right', halfW);
 
-  function move(config) {
-    var scrollStatus = this.getScrollStatus(), pos = scrollStatus.position;
-    if (pos > config.maxPos) {
-      return;
-    }
-
-    var $el = config.$el, isPageUp = scrollStatus.isPageUp;
-    if (isAtPosition($el, scrollStatus.isPageUp)) {
-      return;
-    }
-
-    var propValue = getPropValue.call(this, config, pos);
-    if (propValue === $el.data('startPoint')) {
-      $el.hide();
-    } else {
-      $el.show();
-    }
-
-    if (isPageUp) { // page goes up
-      if (pos > config.minPos) {
-        $el.css(config.cssProp, propValue);
-      }
-    } else { // page goes down
-      $el.css(config.cssProp, propValue);
-    }
-    $el.data('propValue', propValue);
-  }
-
-  function moveLeftColumn() {
-    var config = {
-      $el: this._el.$leftCol,
-      cssProp: 'left',
-      maxPos: 120,
-      minPos: 82,
-      minOffset: 15
-    };
-
-    move.call(this, config);
-  }
-
-  function moveRightColumn() {
-    var config = {
-      $el: this._el.$rightCol,
-      cssProp: 'right',
-      maxPos: 120,
-      minPos: 82,
-      minOffset: 15
-    };
-
-    move.call(this, config);
-  }
-
-  return {
-    events: {
-      'scroll window': 'handleScrolling'
-    },
-
-    rootNode: '#shop',
-
-    selectors: {
-      leftCol: '#shop-col-first',
-      rightCol: '#shop-col-second',
-      sectionInner: '.br-section-inner'
-    },
-
-    initialize: function() {
-      this.invoke('br.controller.BaseController:initialize');
-
-      var width = $(window).width();
-      this._$root.css({left: 'auto', right: -width}).data({
+    // create parallax scroll object
+    this._parallaxScroll = this.U.createInstance('br.controller.ParallaxScrollController')
+      .add({ // shop section moves out from right side
+        $el: this._$root,
+        cssProp: 'right',
+        maxPos: 90,
+        minPos: 20,
+        minOffset: 10,
         startPoint: -width,
         endPoint: 0
-      });
-
-      var startPoint = -width / 2;
-      this._el.$leftCol.css('left', startPoint).data({
-        startPoint: startPoint,
+      }).add({ // left column moves out from left side
+        $el: this._el.$leftCol,
+        cssProp: 'left',
+        maxPos: 120,
+        minPos: 70,
+        minOffset: 15,
+        startPoint: halfW,
+        endPoint: 0
+      }).add({ // right column moves out from right side
+        $el: this._el.$rightCol,
+        cssProp: 'right',
+        maxPos: 120,
+        minPos: 70,
+        minOffset: 15,
+        startPoint: halfW,
         endPoint: 0
       });
+  },
 
-      this._el.$rightCol.css('right', startPoint).data({
-        startPoint: startPoint,
-        endPoint: 0
-      });
-    },
-
-    handleScrolling: function() {
-      this.initScrollStatus();
-
-      moveShopSection.call(this);
-      moveLeftColumn.call(this);
-      moveRightColumn.call(this);
-    }
+  handleScrolling: function() {
+    this._parallaxScroll.scroll();
   }
 });
 
