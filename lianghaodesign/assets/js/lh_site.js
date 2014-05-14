@@ -53,9 +53,13 @@ TM.declare('lh.controller.BaseController').inherit('thinkmvc.Controller').extend
 });
 
 TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseController').extend((function() {
-  function expandSubMenu($menuItem) {
+
+  /*
+  * switch the selected status of menu items.
+  * */
+  function expandSubMenu($menuItem, subExpanded) {
     // When clicking menu items, the window will scroll. prevent this function being executed twice in short time.
-    if (this.preventDoubleAction('window-scroll') || $menuItem.hasClass(this.selectedClass)) {
+    if (this.preventDoubleAction('expand-menu') || ($menuItem.hasClass(this.selectedClass) && !subExpanded)) {
       return;
     }
 
@@ -66,7 +70,12 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
       $selectItem.removeClass(selected).siblings('.tm-sub-list').slideUp(slideTime);
       el.$subMenuItems.filter(selectedEl).removeClass(selected);
     }
-    $menuItem.addClass(selected).siblings('.tm-sub-list').slideDown(slideTime);
+
+    if (subExpanded) {
+      $menuItem.addClass(selected).siblings('.tm-sub-list').slideDown(slideTime);
+    } else {
+      $menuItem.addClass(selected);
+    }
   }
 
   /* retrieve section content by ajax */
@@ -122,16 +131,16 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
       });
     },
 
+    /*
+    * Click the item of left menu, expand sub menu and locate the right content
+    * */
     renderSubMenu: function(event) {
-      var $target = $(event.currentTarget);
-      if ($target.hasClass(this.selectedClass)) {
-        return;
-      }
+      var $target = $(event.currentTarget),
+        $section = $('#' + $target.data('itemId')), url = $section.data('url');
 
       // expand sub menu
-      expandSubMenu.call(this, $target);
+      expandSubMenu.call(this, $target, true);
 
-      var $section = $('#' + $target.data('itemId')), url = $section.data('url');
       if (url) {
         // retrieve section content
         retrieveSection.call(this, $section);
@@ -187,7 +196,7 @@ TM.declare('lh.controller.PageController').inherit('lh.controller.BaseController
     'mouseenter #footer': 'toggleFooter',
     'mouseleave .close-btn': 'toggleCloseBtn',
     'mouseleave #footer': 'toggleFooter',
-    'scroll window': 'animateOnScroll'
+    'scroll window': 'moveWords'
   },
 
   selectors: {
@@ -203,13 +212,6 @@ TM.declare('lh.controller.PageController').inherit('lh.controller.BaseController
       var $el = $(layer);
       $el.data('origin', parseInt($el.css('top'), 10));
     });
-  },
-
-  animateOnScroll: function(event) {
-    this.moveWords();
-
-    // toggle to show footer
-    this.toggleFooter(event);
   },
 
   moveWords: function() {
@@ -230,24 +232,31 @@ TM.declare('lh.controller.PageController').inherit('lh.controller.BaseController
   },
 
   toggleFooter: function(event) {
-    var $win = $(window), $doc = $(document), $footer = this._el.$footer,
-      isAtBottom = $win.scrollTop() + $win.height() === $doc.height(),
-      isMouseEvent = event.type === 'mouseenter',
-      isScrollEvent = event.type === 'scroll',
+    var $footer = this._el.$footer, status = $footer.data('status'),
       slideTime = this.animateTime.SLOW;
 
-    // save the original bottom
-    var bottom = $footer.css('bottom');
-    if (typeof $footer.data('originalBottom') === 'undefined') {
-      $footer.data('originalBottom', bottom);
+    // status: 1 - hidden / showed, 2 - showing/hiding
+    if (status === 2) {
+      return;
     }
 
-    var ob = $footer.data('originalBottom');
-    if ((isMouseEvent || (isScrollEvent && isAtBottom)) && bottom !== 0) {
-      $footer.animate({'bottom': 0}, slideTime);
-    } else if (bottom !== ob) {
-      $footer.animate({'bottom': ob}, slideTime);
+    // save the original bottom
+    var curBottom = parseInt($footer.css('bottom'), 10);
+    if ($footer.data('originalBottom') === undefined) {
+      $footer.data('originalBottom', curBottom);
     }
+
+    // when mouse enters in, shows up; moves out, then hides. But if the foot is
+    // at the expected position, do nothing
+    var bottom = event.type === 'mouseenter' ? 0 : $footer.data('originalBottom');
+    if (bottom === curBottom) {
+      return;
+    }
+
+    $footer.data('status', 2).animate({bottom: bottom}, this.animateTime.NORMAL,
+      function() {
+        $footer.data('status', 1);
+      });
   }
 });
 

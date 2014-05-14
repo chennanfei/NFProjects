@@ -139,7 +139,7 @@ nav {
 .lhd .header-fixed {
   background-color: #E93D1B;
   padding-top: 2.5em;
-  padding-bottom: 1.5em;
+  padding-bottom: 3.4em;
   top: 0;
 }
 
@@ -154,6 +154,14 @@ nav {
 
 .lhd footer ul li {
   line-height: 1.6;
+}
+
+.lhd footer::-moz-selection {
+  background-color: #E93D1B;
+}
+
+.lhd footer*::selection {
+  background-color: #E93D1B;
 }
 
 .lhd footer label {
