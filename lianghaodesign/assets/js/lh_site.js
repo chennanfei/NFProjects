@@ -53,6 +53,7 @@ TM.declare('lh.controller.BaseController').inherit('thinkmvc.Controller').extend
 });
 
 TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseController').extend((function() {
+  var hasPendingAjax = false;
 
   /*
   * switch the selected status of menu items.
@@ -79,21 +80,28 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
   }
 
   /* retrieve section content by ajax */
-  function retrieveSection($section) {
+  function retrieveSection($section, autoScroll) {
     var url = $section.data('url'), $loading = this._el.$pageLoading, self = this;
-    if (!url) {
+    if (!url || hasPendingAjax) {
       return;
     }
 
     this.makeAjax(url, {
       beforeSendHandler: function() {
+        hasPendingAjax = true;
         $loading.fadeIn();
+      },
+      completeHandler: function() {
+        hasPendingAjax = false
       },
       successHandler: function(data, status, xhr) {
         // remove url, no need request twice
         $section.html(data).data('url', null);
-        // scroll the block to top
-        scrollContentToTop.call(self, $section);
+
+        if (autoScroll) {
+          // scroll the block to top
+          scrollContentToTop.call(self, $section);
+        }
         $loading.fadeOut();
       }
     });
@@ -112,7 +120,7 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
       'click .close-btn': 'close',
       'click .menu-item': 'renderSubMenu',
       'click .sub-menu-item': 'renderItemContent',
-      'scroll window': 'updateMenu'
+      'scroll window': 'handleScrolling'
     },
 
     selectors: {
@@ -131,6 +139,27 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
       });
     },
 
+    handleScrolling: function() {
+      var $win = $(window), $section,
+        distance = $(document).height() - ($win.scrollTop() + $win.height());
+      if (distance < 20) {
+        // look for the first empty section.
+        this._el.$designList.each(function(index, el) {
+          var $el = $(el);
+          if ($el.data('url')) {
+            $section = $el;
+            return false;
+          }
+        });
+      }
+
+      if ($section) {
+        retrieveSection.call(this, $section);
+      } else {
+        this.updateMenu();
+      }
+    },
+
     /*
     * Click the item of left menu, expand sub menu and locate the right content
     * */
@@ -143,7 +172,7 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
 
       if (url) {
         // retrieve section content
-        retrieveSection.call(this, $section);
+        retrieveSection.call(this, $section, true);
       } else {
         // scroll the block to top
         scrollContentToTop.call(this, $section);
