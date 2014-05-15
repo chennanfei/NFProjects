@@ -93,30 +93,31 @@ nav {
 
 .lhd .float-text-list2 {
   font-size: 3em;
+  line-height: 1;
 }
 
 .lhd .float-text-list2 span {
-  position: fixed;
+  position: absolute;
   z-index: 100;
 }
 
 .lhd .float-text-list2 .page-text1 {
-  top: 3.2em;
-  left: 15em;
+  top: 0;
+  left: 10em;
 }
 
 .lhd .float-text-list2 .page-text2 {
-  top: 10em;
+  top: 7em;
   right: 5em;
 }
 
 .lhd .float-text-list2 .page-text3 {
-  top: 20em;
-  left: 10em;
+  top: 15em;
+  left: 1em;
 }
 
 .lhd .float-text-list2 .page-text4 {
-  top: 25em;
+  top: 20em;
   right: 0;
 }
 
@@ -207,7 +208,9 @@ nav {
 }
 
 .lhd .loading .text a {
-  padding: 0.2em 0.5em;
+  display: inline-block;
+  text-align: center;
+  width: 2.5em;
 }
 
 .lhd .loading .text a:hover {
@@ -218,6 +221,7 @@ nav {
   position: absolute;
   bottom: 0;
   z-index: 101;
+  padding: 0.1em 0.5em;
 }
 
 .lhd .page-loading {
@@ -270,6 +274,7 @@ nav {
 }
 
 .lhd .design-list .item .image {
+  cursor: pointer;
   max-width: 500px;
   max-height: 677px;
   overflow: hidden;
@@ -313,8 +318,4 @@ nav {
   left: 0;
   top: 0;
   z-index: 20;
-}
-
-.lhd .profile .item img {
-  width: 160px;
 }

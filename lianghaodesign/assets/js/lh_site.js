@@ -218,7 +218,7 @@ TM.declare('lh.controller.PageController').inherit('lh.controller.BaseController
     var scrollTop = $(window).scrollTop(), offset = scrollTop * 0.8;
     this._el.$floatLayer.children('span').each(function(index, layer) {
       var $el = $(layer);
-      $el.css('top', $el.data('origin') - offset);
+      $el.css('top', $el.data('origin') + offset);
     });
   },
 
@@ -233,12 +233,7 @@ TM.declare('lh.controller.PageController').inherit('lh.controller.BaseController
 
   toggleFooter: function(event) {
     var $footer = this._el.$footer, status = $footer.data('status'),
-      slideTime = this.animateTime.SLOW;
-
-    // status: 1 - hidden / showed, 2 - showing/hiding
-    if (status === 2) {
-      return;
-    }
+      slideTime = this.animateTime.NORMAL;
 
     // save the original bottom
     var curBottom = parseInt($footer.css('bottom'), 10);
@@ -246,27 +241,39 @@ TM.declare('lh.controller.PageController').inherit('lh.controller.BaseController
       $footer.data('originalBottom', curBottom);
     }
 
+    // status: 1 - hidden / showed, 2 - showing/hiding
     // when mouse enters in, shows up; moves out, then hides. But if the foot is
     // at the expected position, do nothing
-    var bottom = event.type === 'mouseenter' ? 0 : $footer.data('originalBottom');
-    if (bottom === curBottom) {
+    var isLeaving = event.type === 'mouseleave',
+      bottom = isLeaving ? $footer.data('originalBottom') : 0;
+    if (status === 2 || bottom === curBottom) {
       return;
     }
 
-    $footer.data('status', 2).animate({bottom: bottom}, this.animateTime.NORMAL,
-      function() {
-        $footer.data('status', 1);
-      });
+    $footer.data('status', 2);
+    var toggle = function() {
+      $footer.animate({bottom: bottom}, slideTime,
+        function() { $footer.data('status', 1); });
+    };
+
+    // when mouse leaves, footer disappears after 3 seconds
+    if (isLeaving) {
+      setTimeout(toggle, 3000);
+    } else {
+      toggle();
+    }
   }
 });
 
 TM.declare('lh.controller.PreviewImagesController').inherit('lh.controller.BaseController').extend({
   events: {
+    'click .design-list .image': 'findRightItemInSubMenu',
     'load .preview-content .image img:first': 'initImageList',
     'mouseenter .preview-content .image': 'switchImages'
   },
 
   selectors: {
+    menu: '#menu',
     previews: '#mainContent .preview-content'
   },
 
@@ -282,6 +289,14 @@ TM.declare('lh.controller.PreviewImagesController').inherit('lh.controller.BaseC
 
     $container.css(size).addClass('image-float').data('ready', 1);
     $images.css(size).show().parent().width(size.width * imgCount);
+  },
+
+  /* find the item in sub menu according to content id and click the menu item */
+  findRightItemInSubMenu: function(event) {
+    var contentId = $(event.currentTarget).data('contentId');
+    if (contentId) {
+       this._el.$menu.find('[data-content-id=' + contentId + ']').click();
+    }
   },
 
   /* show next image when the mouse enters into image container */
@@ -354,6 +369,11 @@ TM.declare('lh.controller.LoadingController').inherit('lh.controller.BaseControl
 
   // public properties
   return {
+    events: {
+      'mouseenter a.page-link': 'toggleLinkText',
+      'mouseleave a.page-link': 'toggleLinkText'
+    },
+
     rootNode: '#loadingImages',
 
     selectors: {
@@ -368,6 +388,11 @@ TM.declare('lh.controller.LoadingController').inherit('lh.controller.BaseControl
       this.invoke('lh.controller.BaseController:initialize');
       initImageList.call(this);
       switchImages.call(this);
+    },
+
+    toggleLinkText: function(event) {
+      var $target = $(event.currentTarget);
+      $target.children('span').toggle();
     }
   };
 });

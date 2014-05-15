@@ -376,6 +376,10 @@ ul.tm-sub-list {
   margin-left: 1em;
 }
 
+ul.tm-sub-list li {
+  margin-bottom: 0.5em;
+}
+
 /* other */
 .tm-copyright {
   padding-right: 0.25em;
