@@ -1,35 +1,34 @@
-TM.declare('thinkmvc.parallax.SequenceList').extend(function() {
-  var sequenceList = {};
+TM.declare('thinkmvc.parallax.SequenceList').extend({
+  initialize: function() {
+    this._sequenceList = {};
 
-  return {
-    initialize: function() {
-      // create controller and listen window events
-      this.U.createInstance('thinkmvc.controller.ParallaxScrollController', this);
-    },
+    // create controller and listen window events
+    this.U.createInstance('thinkmvc.controller.ParallaxScrollController', this);
+  },
 
-    get: function(options) {
-      var argType = typeof options;
-      if (argType === 'object') {
-        var seq = options.sequence || 'seq_0';
-        if (!sequenceList.hasOwnProperty(seq)) {
-          sequenceList[seq] = this.U.createInstance('thinkmvc.parallax.Sequence', options);
-        }
-        return sequenceList[seq];
+  get: function(options) {
+    var argType = typeof options, sequenceList = this._sequenceList;
+    if (argType === 'object') {
+      var seq = options.sequence || 'seq_0';
+      if (!sequenceList.hasOwnProperty(seq)) {
+        sequenceList[seq] = this.U.createInstance('thinkmvc.parallax.Sequence', options);
       }
+      return sequenceList[seq];
+    }
 
-      if (argType === 'string') {
-        return sequenceList[seq];
-      }
-    },
+    if (argType === 'string') {
+      return sequenceList[seq];
+    }
+  },
 
-    each: function(callback) {
-      for (var k in sequenceList) {
-        if (sequenceList.hasOwnProperty(k)) {
-          callback.call(this, sequenceList[k]);
-        }
+  each: function(callback) {
+    var sequenceList = this._sequenceList;
+    for (var k in sequenceList) {
+      if (sequenceList.hasOwnProperty(k)) {
+        callback.call(this, sequenceList[k]);
       }
     }
-  };
+  }
 });
 
 TM.declare('thinkmvc.parallax.Sequence').extend({
@@ -267,42 +266,46 @@ TM.declare('thinkmvc.parallax.Movement').extend(function() {
   }
 });
 
-TM.declare('thinkmvc.controller.ParallaxScrollController').inherit('thinkmvc.Controller').extend({
-  events: {
-    //'resize window': 'resize',
-    'scroll window': 'scroll'
-  },
+TM.declare('thinkmvc.controller.ParallaxScrollController').inherit('thinkmvc.Controller').extend(function() {
+  function moveSequence(sequence) {
+    var scrollStatus = sequence.initScrollStatus(),
+      movements = sequence.getAvailableMovements();
 
-  initialize: function(sequences) {
-    this.invoke('thinkmvc.Controller:initialize');
-    this._sequences = sequences;
-  },
+    //DEBUG
+    //console.log(scrollStatus);
 
-  scroll: function() {
-    this._sequences.each(function(sequence) {
-      var scrollStatus = sequence.initScrollStatus(),
-        movements = sequence.getAvailableMovements();
-
-      //DEBUG
-      //console.log(scrollStatus);
-
-      for (var i = 0; movements && i < movements.length; i++) {
-        var movement = movements[i], $el = movement.getAvailableElement();
-        if (!$el) {
-          return;
-        }
-
-        var propValue = movement.initPosition(scrollStatus).computePropValue();
-        if (propValue !== movement.getStartPoint() && !$el.is(':visible')) {
-          // before the element moves, show it in case it is invisible
-          $el.show();
-        }
-
-        if (movement.canUpdate()) {
-          $el.css(movement.getCssProp(), propValue);
-        }
-        $el.data('propValue', propValue);
+    for (var i = 0; movements && i < movements.length; i++) {
+      var movement = movements[i], $el = movement.getAvailableElement();
+      if (!$el) {
+        return;
       }
-    });
+
+      var propValue = movement.initPosition(scrollStatus).computePropValue();
+      if (propValue !== movement.getStartPoint() && !$el.is(':visible')) {
+        // before the element moves, show it in case it is invisible
+        $el.show();
+      }
+
+      if (movement.canUpdate()) {
+        $el.css(movement.getCssProp(), propValue);
+      }
+      $el.data('propValue', propValue);
+    }
   }
+
+  return {
+    events: {
+      //'resize window': 'resize',
+      'scroll window': 'scroll'
+    },
+
+    initialize: function(sequences) {
+      this.invoke('thinkmvc.Controller:initialize');
+      this._sequences = sequences;
+    },
+
+    scroll: function() {
+      this._sequences.each(moveSequence);
+    }
+  };
 });
