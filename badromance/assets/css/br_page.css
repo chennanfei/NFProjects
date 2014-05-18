@@ -166,7 +166,7 @@ body {
   background-color: #FFFFFF;
 }
 
-.br-home {
+#home .br-home {
   position: fixed;
   height: 20em;
   top: 40%;
@@ -176,7 +176,7 @@ body {
   width: 20em;
 }
 
-.br-home .br-site-title {
+#home .br-home .br-site-title {
   position: relative;
   height: 137px;
   width: 205px;
@@ -184,12 +184,12 @@ body {
   margin-left: -102.5px;
 }
 
-.br-home .br-site-title img {
+#home .br-home .br-site-title img {
   height: 137px;
   width: 205px;
 }
 
-.br-home .br-site-desc {
+#home .br-home .br-site-desc {
   font-size: 1.4em;
   position: relative;
   left: 50%;
@@ -198,13 +198,13 @@ body {
   width: 17em;
 }
 
-.br-home .br-home-menu {
+#home .br-home .br-home-menu {
   position: relative;
   color: #DB2852;
   font-size: 0.8em;
 }
 
-.br-home .br-home-menu a {
+#home .br-home .br-home-menu a {
   padding: 0 0.5em;
 }
 
@@ -212,6 +212,7 @@ body {
   background-color: #FF3333;
   color: #FFFFFF;
   height: 100%;
+  overflow: hidden;
 }
 
 #shop p {
@@ -231,4 +232,44 @@ body {
 
 #shop .br-shop-link {
   display: inline-block;
+}
+
+#design .br-design-head {
+  color: #FF3333;
+  font-size: 1.4em;
+  margin-top: 10em;
+  margin-bottom: 5em;
+}
+
+#design .br-head-text-cn {
+  letter-spacing: 0.7em;
+  padding-left: 0.7em;
+}
+
+#design .br-head-text-en {
+  letter-spacing: 0.1em;
+  padding-left: 0.1em;
+}
+
+#design .br-design-content {
+  background-color: #C9CACA;
+  min-height: 10em;
+  padding: 2%;
+  position: relative;
+}
+
+#design .br-design-content-inner {
+  min-height: 400px;
+  overflow: hidden;
+}
+
+#design .br-design-scroll-images img {
+  width: 100%;
+}
+
+#contact-footer {
+  bottom: 0;
+  color: #FFFFFF;
+  background-color: #FF3333;
+  height: 200px;
 }

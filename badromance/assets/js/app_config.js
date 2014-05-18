@@ -3,12 +3,13 @@ TM.configure({
   debugEnabled: false,
 
   dependencies: {
-    site: ['jquery']
+    site: ['jquery', 'parallax']
   },
 
   modules: {
-    site: 'br_site.js',
-    jquery: 'lib/jquery-1.11.0.js' // 'http://code.jquery.com/jquery-1.11.0.min.js'
+    parallax: 'lib/parallax-scroll-v2.js',
+    jquery: 'lib/jquery-1.11.0.js', // 'http://code.jquery.com/jquery-1.11.0.min.js'
+    site: 'br_site_v2.js'
   },
 
   pages: {

@@ -1036,6 +1036,7 @@ TM.declare('thinkmvc.ui.Common').extend({
     var selectors = this.selectors, el = this._el || (this._el = {});
     // elements
     if (!selectors) {
+      this.$(); // initialize root node
       return;
     }
 
