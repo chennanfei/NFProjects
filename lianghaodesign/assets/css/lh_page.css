@@ -40,6 +40,10 @@ nav {
   background-color: #E81206;
 }
 
+.lhd .invisible {
+  visibility: hidden;
+}
+
 .lhd .nav-menu-item:hover, .lhd .nav-menu-item.background-stress {
   background-color: #E81206;
   border-bottom: 1px solid #FFFFFF;
@@ -171,14 +175,22 @@ nav {
 }
 
 .lhd .footer-fixed {
-  bottom: -9em;
+  bottom: -6em;
   margin-bottom: 0;
   padding-top: 1em;
 }
 
+.lhd .footer-fixed p {
+  margin: 0.5em 0;
+}
+
 .lhd .footer-fixed .footer-content {
-  padding-top: 1em;
-  padding-bottom: 2.5em;
+  padding: 1.2em 0 1em;
+}
+
+.lhd .footer-fixed .footer-prompt {
+  padding: 0.3em;
+  box-sizing: border-box;
 }
 
 .lhd .loading {
