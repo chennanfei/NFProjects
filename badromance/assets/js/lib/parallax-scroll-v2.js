@@ -32,7 +32,6 @@ TM.declare('thinkmvc.parallax.SequenceList').extend({
 });
 
 TM.declare('thinkmvc.parallax.Sequence').extend({
-  modelPath: 'thinkmvc.parallax.Movement',
   scroll: { RATIO: 0, TRANSFORM: 190 },
 
   initialize: function(options) {
@@ -72,8 +71,16 @@ TM.declare('thinkmvc.parallax.Sequence').extend({
     return movementList;
   },
 
+  getMinPosition: function() {
+    return this._minPos;
+  },
+
   getMovement: function(index) {
     return this._configs[index];
+  },
+
+  getMovements: function() {
+    return this._configs;
   },
 
   getMovementCount: function() {
@@ -102,7 +109,6 @@ TM.declare('thinkmvc.parallax.Sequence').extend({
 
     return this._scrollStatus = {
       isPageUp: scrollTop - lastPos > 0,
-      minPosition: this._minPos,
       position: scrollTop / this.scroll.RATIO,
       scrollTop: scrollTop,
       winWidth: $win.width()
@@ -114,15 +120,30 @@ TM.declare('thinkmvc.parallax.Movement').extend(function() {
   var scroll = { MULTIPLE: 25 };
 
   function getOffset() {
-    return (this._position - this.getMinPosition()) * scroll.MULTIPLE;
+    var speed = this._config.speed || 1;
+    return (this._position - this.getMinPosition()) * scroll.MULTIPLE * speed;
   }
 
   function isAtPosition(elIndex, isPageUp) {
-    var propValue = this.getElement(elIndex).data('propValue');
+    var propValue = this._propValues[elIndex];
 
     return isPageUp
       ? propValue === this.getEndPoint()
       : propValue === this.getStartPoint();
+  }
+
+  function updateEndPosition(isAtEnding) {
+    // when window goes down and element reaches the ending point,
+    // record the scroll position
+    var curElIndex = this._cachedElIndex;
+    if (isAtEnding && this._isPageUp && !this._endPositions[curElIndex]) {
+        this._endPositions[curElIndex] = this._position;
+    }
+
+    // when window scrolls to the starting point, clear recorded positions
+    if (this._position === 0) {
+      this._endPositions = {};
+    }
   }
 
   return {
@@ -140,7 +161,11 @@ TM.declare('thinkmvc.parallax.Movement').extend(function() {
       * startPoint, endPoint, $el, sequence, order
       * */
       this._config = config;
+
       this._sequence = sequence;
+      this._isInitialized = false; // elements' prop value is not set yet
+      this._propValues = {};
+      this._endPositions = {};
     },
 
     canUpdate: function() {
@@ -156,6 +181,7 @@ TM.declare('thinkmvc.parallax.Movement').extend(function() {
         startPoint = this.getStartPoint(),
         endPoint = this.getEndPoint();
 
+      // prop value should be always between [startPoint, endPoint]
       if (endPoint > startPoint) {
         propValue = startPoint + offset;
         if (propValue > endPoint) {
@@ -171,6 +197,9 @@ TM.declare('thinkmvc.parallax.Movement').extend(function() {
           propValue = endPoint;
         }
       }
+
+      updateEndPosition.call(this, propValue === endPoint);
+
       return propValue;
     },
 
@@ -180,9 +209,6 @@ TM.declare('thinkmvc.parallax.Movement').extend(function() {
 
     getAvailableElementIndex: function() {
       if (!this.hasOwnProperty('_cachedElIndex')) {
-        if (this.hasOwnProperty('_isPageUp')) {
-          throw new Error('_cachedElIndex and _isPageUp are not defined.');
-        }
         this._cachedElIndex = this.getMovableElementIndex(this._isPageUp);
       }
       return this._cachedElIndex;
@@ -198,22 +224,47 @@ TM.declare('thinkmvc.parallax.Movement').extend(function() {
         : this._config.$el;
     },
 
+    /* the movement's ending prop value */
     getEndPoint: function() {
       return this._config.endPoint;
     },
 
+    /*
+    * get the ending position of movement
+    * */
+    getEndPosition: function() {
+      return this._endPositions[this.getElement().length - 1];
+    },
+
     getMinPosition: function() {
-      // compute moved elements count
-      var count = 0, size = this._sequence.getMovementCount();
-      for (var i = 0; i < size; i++) {
-        var index = this._isPageUp ? i : size - i - 1,
-          movement = this._sequence.getMovement(index);
-        if (movement.getOrder() < this.getOrder()) {
-          count += movement.getElement().length;
+      var curIndex = this._cachedElIndex;
+      if (curIndex > 0 && this._endPositions[curIndex - 1]) {
+        return this._endPositions[curIndex - 1];
+      }
+
+      var i, movements = this._sequence.getMovements(),
+        curOrder = this.getOrder(), preMove, preEndPosition = null;
+      if (movements.length < 1) {
+        return 0;
+      }
+
+      // look for (order - 1) movements
+      for (i = 0; i < movements.length; i++) {
+        var order = movements[i].getOrder();
+        if (order >= curOrder) {
+          continue;
+        }
+
+        if (!preMove || order >= preMove.getOrder()) {
+          preMove = movements[i];
+          var preEnd = preMove.getEndPosition();
+          if (!preEndPosition || preEndPosition < preEnd) {
+            preEndPosition = preEnd;
+          }
         }
       }
-      count += this.getAvailableElementIndex() + 1;
-      return this._baseMinPos * count;
+
+      return preEndPosition === null ? this._sequence.getMinPosition() : preEndPosition;
     },
 
     /*
@@ -257,55 +308,59 @@ TM.declare('thinkmvc.parallax.Movement').extend(function() {
         this._isInitialized = true;
       }
 
-      this._baseMinPos = scrollStatus.minPosition;
       this._isPageUp = scrollStatus.isPageUp;
       this._position = scrollStatus.position;
 
       return this;
+    },
+
+    /*
+    * record the computed prop value after element is updated.
+    * */
+    recordPropValue: function(propValue) {
+      if (this._cachedElIndex >= 0) {
+        this._propValues[this._cachedElIndex] = propValue;
+      }
     }
   }
 });
 
-TM.declare('thinkmvc.controller.ParallaxScrollController').inherit('thinkmvc.Controller').extend(function() {
-  function moveSequence(sequence) {
-    var scrollStatus = sequence.initScrollStatus(),
-      movements = sequence.getAvailableMovements();
+TM.declare('thinkmvc.controller.ParallaxScrollController').inherit('thinkmvc.Controller').extend({
+  events: {
+    //'resize window': 'resize',
+    'scroll window': 'scroll'
+  },
 
+  initialize: function(sequences) {
+    this.invoke('thinkmvc.Controller:initialize');
+    this._sequences = sequences;
+  },
+
+  scroll: function() {
     //DEBUG
-    //console.log(scrollStatus);
+    //console.log($(window).scrollTop());
 
-    for (var i = 0; movements && i < movements.length; i++) {
-      var movement = movements[i], $el = movement.getAvailableElement();
-      if (!$el) {
-        return;
-      }
+    this._sequences.each(function(sequence) {
+      var scrollStatus = sequence.initScrollStatus(),
+        movements = sequence.getAvailableMovements();
 
-      var propValue = movement.initPosition(scrollStatus).computePropValue();
-      if (propValue !== movement.getStartPoint() && !$el.is(':visible')) {
-        // before the element moves, show it in case it is invisible
-        $el.show();
-      }
+      for (var i = 0; movements && i < movements.length; i++) {
+        var movement = movements[i], $el = movement.getAvailableElement();
+        if (!$el) {
+          return;
+        }
 
-      if (movement.canUpdate()) {
-        $el.css(movement.getCssProp(), propValue);
+        var propValue = movement.initPosition(scrollStatus).computePropValue();
+        if (propValue !== movement.getStartPoint() && !$el.is(':visible')) {
+          // before the element moves, show it in case it is invisible
+          $el.show();
+        }
+
+        if (movement.canUpdate()) {
+          $el.css(movement.getCssProp(), propValue);
+        }
+        movement.recordPropValue(propValue);
       }
-      $el.data('propValue', propValue);
-    }
+    });
   }
-
-  return {
-    events: {
-      //'resize window': 'resize',
-      'scroll window': 'scroll'
-    },
-
-    initialize: function(sequences) {
-      this.invoke('thinkmvc.Controller:initialize');
-      this._sequences = sequences;
-    },
-
-    scroll: function() {
-      this._sequences.each(moveSequence);
-    }
-  };
 });

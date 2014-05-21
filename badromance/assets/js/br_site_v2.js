@@ -22,8 +22,8 @@ TM.declare('br.controller.BaseController').inherit('thinkmvc.Controller').extend
 TM.declare('br.controller.MainController').inherit('br.controller.BaseController').extend({
   controllers: [
     'br.controller.HomeController',
-    'br.controller.ShopController'
-    //'br.controller.DesignController'
+    'br.controller.ShopController',
+    'br.controller.DesignController'
     //'br.controller.FootController'
   ],
 
@@ -44,7 +44,7 @@ TM.declare('br.controller.MainController').inherit('br.controller.BaseController
       el.$glass.css('margin-left', left);
       el.$imgContainer.css('left', -1 * left);
 
-      if (left >= 0) {// DEBUG - 426
+      if (left >= 426) {// DEBUG - 426
         clearInterval(timer);
         self.postShow();
       }
@@ -88,42 +88,46 @@ TM.declare('br.controller.HomeController').inherit('br.controller.BaseController
     });
 
     var sequenceList = this.getSequenceList();
-    sequenceList.get({
-        minPosition: 0,
-        sequence: 'seq_0'
-      })
-      .add({
-        $el: el.$siteMenu,
-        cssProp: 'left',
-        startPoint: 0,
-        endPoint: -1 * (width + el.$siteMenu.width())
-      });
 
+    // create movement sequence 0
     sequenceList.get({
-        minPosition: 10,
-        sequence: 'seq_1'
-      })
-      .add({
-        $el: el.$siteDesc,
-        cssProp: 'left',
-        startPoint: parseInt(el.$siteDesc.css('left'), 10),
-        endPoint: -1 * (width + el.$siteDesc.width())
-      });
+      minPosition: 0,
+      sequence: 'seq_0'
+    })
+    .add({
+      $el: el.$siteMenu,
+      cssProp: 'left',
+      startPoint: 0,
+      endPoint: -1 * (width + 100)
+    });
 
+    // create movement sequence 1
     sequenceList.get({
-        minPosition: 19,
-        sequence: 'seq_2'
-      }).add({
-        $el: el.$siteTitle,
-        cssProp: 'left',
-        startPoint: parseInt(el.$siteTitle.css('left'), 10),
-        endPoint: -1 * (width + el.$siteTitle.width())
-      }).add({
-        $el: el.$foot,
-        cssProp: 'bottom',
-        startPoint: 0,
-        endPoint: -1 * el.$foot.height()
-      });
+      minPosition: 10,
+      sequence: 'seq_1'
+    })
+    .add({
+      $el: el.$siteDesc,
+      cssProp: 'left',
+      startPoint: parseInt(el.$siteDesc.css('left'), 10),
+      endPoint: -1 * (width + 15)
+    });
+
+    // create movement sequence 2
+    sequenceList.get({
+      minPosition: 19,
+      sequence: 'seq_2'
+    }).add({
+      $el: el.$siteTitle,
+      cssProp: 'left',
+      startPoint: parseInt(el.$siteTitle.css('left'), 10),
+      endPoint: -1 * (width + 30)
+    }).add({
+      $el: el.$foot,
+      cssProp: 'bottom',
+      startPoint: 0,
+      endPoint: -1 * el.$foot.height()
+    });
   }
 });
 
@@ -140,9 +144,7 @@ TM.declare('br.controller.ShopController').inherit('br.controller.BaseController
     this.invoke('br.controller.BaseController:initialize');
 
     var $win = $(window), width = $win.width(), halfW = -width / 2, height = $win.height();
-
-    var sequenceList = this.getSequenceList();
-    sequenceList.get({
+    this.getSequenceList().get({
       sequence: 'seq_2'
     }).add({
       $el: this._$root,
@@ -160,6 +162,62 @@ TM.declare('br.controller.ShopController').inherit('br.controller.BaseController
       cssProp: 'right',
       order: 1,
       startPoint: halfW,
+      endPoint: 0
+    }).add({
+      $el: this._$root,
+      cssProp: 'top',
+      order: 2,
+      startPoint: 0,
+      endPoint: -1 * (height + 50)
+    });
+  }
+});
+
+TM.declare('br.controller.DesignController').inherit('br.controller.BaseController').extend({
+  rootNode: '#design',
+
+  selectors: {
+    content: '.br-design-content',
+    imageContainer: '.br-design-scroll-images',
+    leftImages: '.br-design-left-img',
+    rightImages: '.br-design-right-img'
+  },
+
+  initialize: function() {
+    this.invoke('br.controller.BaseController:initialize');
+
+    var el = this._el;
+    this.getSequenceList().get({
+      sequence: 'seq_2'
+    }).add({
+      $el: this._$root,
+      cssProp: 'opacity',
+      order: 2,
+      startPoint: 0,
+      endPoint: 1
+    }).add({
+      $el: el.$content,
+      cssProp: 'top',
+      order: 3,
+      startPoint: 100,
+      endPoint: -400
+    }).add({
+      $el: el.$imageContainer,
+      cssProp: 'margin-top',
+      order: 3,
+      startPoint: 300,
+      endPoint: -1100
+    }).add({
+      $el: el.$leftImages,
+      cssProp: 'left',
+      order: 4,
+      startPoint: -1 * el.$leftImages.outerWidth(),
+      endPoint: 0
+    }).add({
+      $el: el.$rightImages,
+      cssProp: 'right',
+      order: 4,
+      startPoint: -1 * el.$leftImages.outerWidth(),
       endPoint: 0
     });
   }
