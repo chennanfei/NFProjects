@@ -53,30 +53,68 @@ TM.declare('lh.controller.BaseController').inherit('thinkmvc.Controller').extend
 });
 
 TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseController').extend((function() {
-  var hasPendingAjax = false;
+  var hasPendingAjax = false,
+    $openItemContents = []; // record the latest item which is opened
+
+  function canCloseItem($item) {
+    var i, filteredAreas = [ // if the click event is from some areas, don't close the item
+      '.design-list .item',
+      '.design-list .content-detail',
+      '.sub-menu-item'
+    ];
+
+    // travel all nodes in the event chain
+    while ($item && $item.length) {
+      for (i = 0; i < filteredAreas.length; i++) {
+        if ($item.is(filteredAreas[i])) {
+          return false;
+        }
+      }
+
+      $item = $item.parent();
+    }
+
+    return true;
+  }
 
   /*
   * switch the selected status of menu items.
   * */
   function expandSubMenu($menuItem, subExpanded) {
     // When clicking menu items, the window will scroll. prevent this function being executed twice in short time.
-    if (this.preventDoubleAction('expand-menu') || ($menuItem.hasClass(this.selectedClass) && !subExpanded)) {
+    if (this.preventDoubleAction('expand-menu')) {
+      return;
+    }
+
+    var isMenuItemSelected = $menuItem.hasClass(this.selectedClass);
+    if (isMenuItemSelected && !subExpanded) {
       return;
     }
 
     var el = this._el, slideTime = this.animateTime.NORMAL,
       selected = this.selectedClass, selectedEl = '.' + selected,
       $selectItem = el.$menuItems.filter(selectedEl);
-    if ($selectItem.length) {
+    if ($selectItem.length && !$selectItem.is($menuItem)) {
       $selectItem.removeClass(selected).siblings('.tm-sub-list').slideUp(slideTime);
-      el.$subMenuItems.filter(selectedEl).removeClass(selected);
     }
 
     if (subExpanded) {
-      $menuItem.addClass(selected).siblings('.tm-sub-list').slideDown(slideTime);
+      var $subMenu = $menuItem.addClass(selected).siblings('.tm-sub-list');
+      if (!$subMenu.is(':visible')) {
+        $subMenu.slideDown(slideTime);
+      }
     } else {
       $menuItem.addClass(selected);
     }
+  }
+
+  // look for the latest open item
+  function getLatestOpenItem() {
+    var $openItem;
+    while (!($openItem && $openItem.is(':visible'))) {
+      $openItem = $openItemContents.pop();
+    }
+    return $openItem;
   }
 
   /* retrieve section content by ajax */
@@ -117,8 +155,9 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
 
   return {
     events: {
+      //'click document': 'closeOpenItem',
       'click .close-btn': 'close',
-      'click .menu-item': 'renderSubMenu',
+      'click .menu-item': 'toggleSubMenu',
       'click .sub-menu-item': 'renderItemContent',
       'scroll window': 'handleScrolling'
     },
@@ -135,8 +174,21 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
       var el = this._el, $targetParent = $(event.currentTarget).parent(), selected = this.selectedClass;
       $targetParent.fadeOut(this.animateTime.NORMAL, function() {
         el.$subMenuItems.filter('.' + selected).removeClass(selected);
-        $targetParent.siblings('.preview-content').show();
       });
+    },
+
+    /*
+    * close the latest open item
+    * */
+    closeOpenItem: function(event) {
+      if (!canCloseItem($(event.target))) {
+        return;
+      }
+
+      var $openItem = getLatestOpenItem();
+      if ($openItem) {
+        $openItem.find('.close-btn').click();
+      }
     },
 
     handleScrolling: function() {
@@ -163,9 +215,16 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
     /*
     * Click the item of left menu, expand sub menu and locate the right content
     * */
-    renderSubMenu: function(event) {
+    toggleSubMenu: function(event) {
       var $target = $(event.currentTarget),
+        $subItem = $target.siblings('.tm-sub-list'),
         $section = $('#' + $target.data('itemId')), url = $section.data('url');
+
+      // if the sub menu is open, then close it
+      if ($subItem.is(':visible')) {
+        $target.siblings('.tm-sub-list').slideUp(this.animateTime.NORMAL);
+        return;
+      }
 
       // expand sub menu
       expandSubMenu.call(this, $target, true);
@@ -182,7 +241,7 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
     /* When clicking left menu, show sub menu and item content at the right side */
     renderItemContent: function(event) {
       var $target = $(event.currentTarget), contentId = $target.data('contentId'),
-        selected = this.selectedClass;
+        selected = this.selectedClass, self = this;
       if (!contentId || $target.hasClass(selected)) {
         return;
       }
@@ -192,11 +251,25 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
         return;
       }
 
+      // look for selected sub menu item and reset its status
       this._el.$subMenuItems.filter('.' + selected).removeClass(selected);
       $target.addClass(selected);
 
-      $content.siblings('.content').hide();
+      // close item siblings
+      $content.siblings('.content-detail').hide();
+
+      // show item content
       $content.fadeIn(this.animateTime.NORMAL);
+
+      // after item shows, expand related sub menu and scroll page
+      var $subItem = $target.closest('.tm-sub-list');
+      if (!$subItem.is(':visible')) {
+        expandSubMenu.call(this, $subItem.siblings('.menu-item'), true);
+
+      }
+      scrollContentToTop.call(this, $content.closest('.design-list'));
+
+      //$openItemContents.push($content);
     },
 
     /*
@@ -285,9 +358,9 @@ TM.declare('lh.controller.PageController').inherit('lh.controller.BaseController
         function() { $footer.data('status', 1); });
     };
 
-    // when mouse leaves, footer disappears after 3 seconds
+    // when mouse leaves, footer disappears after 1 second
     if (isLeaving) {
-      setTimeout(toggle, 3000);
+      setTimeout(toggle, 1000);
     } else {
       toggle();
     }
