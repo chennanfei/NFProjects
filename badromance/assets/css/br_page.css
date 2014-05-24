@@ -143,7 +143,7 @@ body {
   display: table;
   float: right;
   padding: 0;
-  margin: 2em 2.3em 0 0;
+  margin: 2.8em 2.3em 0 0;
 }
 
 .br-menu li {
@@ -153,6 +153,12 @@ body {
 
 .br-menu li a {
   position: relative;
+}
+
+.br-menu .br-text-cn {
+  letter-spacing: 0.5em;
+  font-size: 1.2em;
+  padding-left: 0.5em;
 }
 
 .br-menu li p {
@@ -177,39 +183,26 @@ body {
   top: 40%;
   left: 50%;
   margin-left: -10em;
-  margin-top: -10em;
+  margin-top: -5em;
   width: 20em;
 }
 
 #home .br-home .br-site-title {
   position: relative;
-  height: 137px;
+  height: 160px;
   width: 205px;
   left: 50%;
   margin-left: -102.5px;
 }
 
-#home .br-home .br-site-title img {
-  height: 137px;
-  width: 205px;
-}
-
-#home .br-home .br-site-desc {
-  font-size: 1.4em;
-  position: relative;
-  left: 50%;
-  margin-left: -8.5em;
-  text-align: center;
-  width: 17em;
-}
-
 #home .br-home .br-home-menu {
   position: relative;
   color: #DB2852;
-  font-size: 0.8em;
+  letter-spacing: 0.1em;
+  left: 1.5em;
 }
 
-#home .br-home .br-home-menu a {
+#home .br-home .br-home-menu span {
   padding: 0 0.5em;
 }
 
@@ -221,8 +214,22 @@ body {
 }
 
 #shop p {
-  letter-spacing: 0.2em;
-  margin: 0;
+  margin: 0.5em;
+}
+#shop .br-shop-text-cn-1, #shop .br-shop-text-cn-2 {
+  font-size: 1.2em;
+}
+#shop .br-shop-text-cn-1 {
+  letter-spacing: 0.3em;
+  padding-left: 0.3em;
+}
+#shop .br-shop-text-cn-2 {
+  letter-spacing: 1.8em;
+  padding-left: 1.8em;
+}
+#shop .br-shop-text-en {
+  letter-spacing: 0.1em;
+  padding-left: 0.1em;
 }
 
 #shop .br-icon {
@@ -230,17 +237,16 @@ body {
 }
 
 #shop .br-section-inner {
-  margin-left: -200px;
+  margin-left: -250px;
   top: 20%;
-  width: 400px;
+  width: 500px;
 }
 
 #shop .br-shop-link {
-  display: inline-block;
+  display: block;
 }
 
 #design .br-design-head {
-  color: #FF3333;
   font-size: 1.4em;
   margin-top: 10em;
   margin-bottom: 5em;
@@ -257,10 +263,10 @@ body {
 }
 
 #design .br-design-content {
-  background-color: #C9CACA;
+  background-color: #FFFFFF;
   min-height: 10em;
-  padding: 2%;
   position: relative;
+  top: 7em;
 }
 
 #design .br-design-content-inner {

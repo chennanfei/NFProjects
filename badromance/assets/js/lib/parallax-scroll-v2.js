@@ -153,8 +153,16 @@ TM.declare('thinkmvc.parallax.Movement').extend(function() {
         throw new Error('Element is invalid');
       }
 
+      if (!config.hasOwnProperty('cssProp')) {
+        throw new Error('No cssProp was found');
+      }
+
       if (!config.hasOwnProperty('order')) {
         config.order = 0;
+      }
+
+      if (!config.hasOwnProperty('startPoint')) {
+        config.startPoint = parseFloat($el.css(config.cssProp));
       }
 
       /*

@@ -78,7 +78,8 @@ TM.declare('br.controller.HomeController').inherit('br.controller.BaseController
   initialize: function() {
     this.invoke('br.controller.BaseController:initialize');
 
-    var el = this._el, time = this.effectTime.SLOW, width = $(window).width() / 2;
+    var el = this._el, time = this.effectTime.SLOW, width = $(window).width() / 2,
+      sequenceList = this.getSequenceList();
 
     // show in order: home section, footer, header.
     el.$home.fadeIn(time, function() {
@@ -87,35 +88,19 @@ TM.declare('br.controller.HomeController').inherit('br.controller.BaseController
       });
     });
 
-    var sequenceList = this.getSequenceList();
-
     // create movement sequence 0
     sequenceList.get({
       minPosition: 0,
       sequence: 'seq_0'
-    })
-    .add({
+    }).add({
       $el: el.$siteMenu,
       cssProp: 'left',
-      startPoint: 0,
       endPoint: -1 * (width + 100)
-    });
-
-    // create movement sequence 1
-    sequenceList.get({
-      minPosition: 10,
-      sequence: 'seq_1'
-    })
-    .add({
-      $el: el.$siteDesc,
-      cssProp: 'left',
-      startPoint: parseInt(el.$siteDesc.css('left'), 10),
-      endPoint: -1 * (width + 15)
     });
 
     // create movement sequence 2
     sequenceList.get({
-      minPosition: 19,
+      minPosition: 10,
       sequence: 'seq_2'
     }).add({
       $el: el.$siteTitle,
@@ -178,9 +163,7 @@ TM.declare('br.controller.DesignController').inherit('br.controller.BaseControll
 
   selectors: {
     content: '.br-design-content',
-    imageContainer: '.br-design-scroll-images',
-    leftImages: '.br-design-left-img',
-    rightImages: '.br-design-right-img'
+    imageContainer: '.br-design-scroll-images'
   },
 
   initialize: function() {
@@ -199,26 +182,12 @@ TM.declare('br.controller.DesignController').inherit('br.controller.BaseControll
       $el: el.$content,
       cssProp: 'top',
       order: 3,
-      startPoint: 100,
       endPoint: -400
     }).add({
       $el: el.$imageContainer,
       cssProp: 'margin-top',
-      order: 3,
-      startPoint: 300,
-      endPoint: -1100
-    }).add({
-      $el: el.$leftImages,
-      cssProp: 'left',
       order: 4,
-      startPoint: -1 * el.$leftImages.outerWidth(),
-      endPoint: 0
-    }).add({
-      $el: el.$rightImages,
-      cssProp: 'right',
-      order: 4,
-      startPoint: -1 * el.$leftImages.outerWidth(),
-      endPoint: 0
+      endPoint: -300
     });
   }
 });
