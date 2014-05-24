@@ -57,11 +57,12 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
     $openItemContents = []; // record the latest item which is opened
 
   function canCloseItem($item) {
-    var i, filteredAreas = [ // if the click event is from some areas, don't close the item
-      '.design-list .item',
-      '.design-list .content-detail',
-      '.sub-menu-item'
-    ];
+    var i,
+      filteredAreas = [ // if the click event is from some areas, don't close the item
+        '.design-list .item',
+        '.design-list .content-detail',
+        '.sub-menu-item'
+      ];
 
     // travel all nodes in the event chain
     while ($item && $item.length) {
@@ -111,9 +112,9 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
   // look for the latest open item
   function getLatestOpenItem() {
     var $openItem;
-    while (!($openItem && $openItem.is(':visible'))) {
+    do {
       $openItem = $openItemContents.pop();
-    }
+    } while ($openItem && !$openItem.is(':visible'));
     return $openItem;
   }
 
@@ -155,7 +156,7 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
 
   return {
     events: {
-      //'click document': 'closeOpenItem',
+      'click document': 'closeOpenItem',
       'click .close-btn': 'close',
       'click .menu-item': 'toggleSubMenu',
       'click .sub-menu-item': 'renderItemContent',
@@ -171,9 +172,14 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
     },
 
     close: function(event) {
-      var el = this._el, $targetParent = $(event.currentTarget).parent(), selected = this.selectedClass;
-      $targetParent.fadeOut(this.animateTime.NORMAL, function() {
+      event.stopPropagation();
+
+      var el = this._el, $target = $(event.currentTarget), selected = this.selectedClass;
+      $target.parent().fadeOut(this.animateTime.NORMAL, function() {
         el.$subMenuItems.filter('.' + selected).removeClass(selected);
+
+        // recover the button to beginning status
+        $target.removeClass('close-btn-status-2');
       });
     },
 
@@ -216,6 +222,8 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
     * Click the item of left menu, expand sub menu and locate the right content
     * */
     toggleSubMenu: function(event) {
+      event.stopPropagation();
+
       var $target = $(event.currentTarget),
         $subItem = $target.siblings('.tm-sub-list'),
         $section = $('#' + $target.data('itemId')), url = $section.data('url');
@@ -236,10 +244,14 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
         // scroll the block to top
         scrollContentToTop.call(this, $section);
       }
+
+      return false;
     },
 
     /* When clicking left menu, show sub menu and item content at the right side */
     renderItemContent: function(event) {
+      event.stopPropagation();
+
       var $target = $(event.currentTarget), contentId = $target.data('contentId'),
         selected = this.selectedClass, self = this;
       if (!contentId || $target.hasClass(selected)) {
@@ -269,7 +281,8 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
       }
       scrollContentToTop.call(this, $content.closest('.design-list'));
 
-      //$openItemContents.push($content);
+      // push the item to open item list
+      $openItemContents.push($content);
     },
 
     /*
@@ -288,6 +301,8 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
 
       var $menuItem = el.$menuItems.filter('[data-item-id=' + firstId + ']');
       expandSubMenu.call(this, $menuItem);
+
+      return false;
     }
   };
 })());
@@ -325,11 +340,19 @@ TM.declare('lh.controller.PageController').inherit('lh.controller.BaseController
   },
 
   toggleCloseBtn: function(event) {
-    var $target = $(event.currentTarget);
+    var status = 0, $target = $(event.currentTarget), prefix = 'close-btn-status-';
     if (event.type === 'mouseenter') {
-      $target.animate({'font-size': '2.8em'}, this.animateTime.FAST);
+      var timer = setInterval(function() {
+          if (status === 2) { // exist if the button is at last status
+            clearInterval(timer);
+            return;
+          }
+
+          $target.removeClass(prefix + status).addClass(prefix + (++status));
+        }, this.animateTime.FAST);
     } else {
-      $target.animate({'font-size': '1.8em'}, this.animateTime.FAST);
+      // reset to the beginning status
+      $target.removeClass('close-btn-status-2');
     }
   },
 

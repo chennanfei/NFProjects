@@ -277,16 +277,23 @@ nav {
 }
 
 .lhd .design-list .close-btn {
+  background-image: url('../images/close-btn-1.png');
+  background-size: 45px 45px;
   cursor: pointer;
-  font-size: 1.8em;
   position: absolute;
   right: 0;
   top: 0;
   z-index: 799;
+  width: 45px;
+  height: 45px;
 }
 
-.lhd .design-list .close-btn.close-btn-in {
-  font-size: 3em;
+.lhd .design-list .close-btn-status-1 {
+  background-image: url('../images/close-btn-2.png');
+}
+
+.lhd .design-list .close-btn-status-2 {
+  background-image: url('../images/close-btn-3.png');
 }
 
 .lhd .design-list .item {
