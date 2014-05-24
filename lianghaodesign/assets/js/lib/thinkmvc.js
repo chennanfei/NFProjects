@@ -24,8 +24,8 @@
   }
 }());
 
-window.TM = (function() {
-  var DEBUG_MODE = false, _pDocument = typeof document !== 'undefined' ? document : null, _pCom = {},
+window.TM = (function(document, window) {
+  var DEBUG_MODE = false, _pCom = {},
     _pNamespaces = {}, _pfSlice = Array.prototype.slice, _pConfig,
     _excludedAttributes = ['_extend', '_self', 'constructor', 'U'];
 
@@ -423,18 +423,20 @@ window.TM = (function() {
     }
 
     function bindDOMReady() {
-      var callback = function() {
+      var callback = function(event) {
         _pGlobalUtil.createEntrance()
       };
       if (isDOMReady()) {
-        if (DEBUG_MODE) {
-          _pfOutput('DOM is ready.');
-        }
-        return callback();
+        callback();
+        return;
       }
 
       if (document.attachEvent) {
-        document.attachEvent('onreadystatechange', callback);
+        document.attachEvent('onreadystatechange', function() {
+          if (isDOMReady()) {
+            callback();
+          }
+        });
         window.attachEvent('onload', callback);
       } else if (document.addEventListener) {
         document.addEventListener('DOMContentLoaded', callback, false);
@@ -554,7 +556,8 @@ window.TM = (function() {
     }
 
     function isDOMReady() {
-      return document && document.body && document.readyState === 'complete';
+      var docState = document && document.body && document.readyState;
+      return docState === 'complete' || docState === 'interactive';
     }
 
     function loadResources() {
@@ -690,7 +693,7 @@ window.TM = (function() {
       return _pClassRegister.declare(classPath);
     }
   };
-}()); // core thinkMVC
+}(document, window)); // core thinkMVC
 
 // super class: Base
 TM.declare('thinkmvc.Base').extend({
