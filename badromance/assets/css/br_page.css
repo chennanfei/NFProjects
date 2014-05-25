@@ -118,13 +118,13 @@ a {
   background-position: -445px -43px;
 }
 
-.br-icon-shop-atm {
+.br-icon-shop-sale {
   background-position: -439px -185px;
   height: 140px;
   width: 140px;
 }
 
-.br-icon-shop-sale {
+.br-icon-shop-design {
   background-position: -691px -185px;
   height: 144px;
   width: 144px;
@@ -235,14 +235,12 @@ a {
 #home {
   background-color: #FFFFFF;
 }
-
-#home .br-section-inner {
+#home .br-home {
   height: 20em;
   left: 50%;
   margin-left: -10em;
   width: 20em;
 }
-
 #home .br-home .br-site-title {
   position: relative;
   height: 160px;
@@ -250,16 +248,20 @@ a {
   left: 50%;
   margin-left: -102.5px;
 }
-
 #home .br-home .br-home-menu {
   position: relative;
   color: #DB2852;
   letter-spacing: 0.1em;
   left: 1.5em;
 }
-
 #home .br-home .br-home-menu span {
   padding: 0 0.5em;
+}
+#home .br-home-video.br-section-inner {
+  position: absolute;
+  left: 0;
+  top: 0;
+
 }
 
 #home-head .br-section-inner {
@@ -360,8 +362,8 @@ a {
   z-index: 110;
 }
 .br-item img {
-  width: 300px;
-  height: 300px;
+  width: 400px;
+  height: 400px;
 }
 .br-item .br-item-close {
   cursor: pointer;

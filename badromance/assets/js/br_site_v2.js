@@ -55,6 +55,7 @@ TM.declare('br.controller.BaseController').inherit('thinkmvc.Controller').extend
 
 TM.declare('br.controller.MainController').inherit('br.controller.BaseController').extend({
   controllers: [
+    'br.controller.VideoController',
     'br.controller.HomeController',
     'br.controller.ShopController',
     'br.controller.SaleController'
@@ -78,7 +79,7 @@ TM.declare('br.controller.MainController').inherit('br.controller.BaseController
       el.$glass.css('margin-left', left);
       el.$imgContainer.css('left', -1 * left);
 
-      if (left >= 0) {// DEBUG - 426
+      if (left >= 426) {// DEBUG - 426
         clearInterval(timer);
         self.postShow();
       }
@@ -96,6 +97,37 @@ TM.declare('br.controller.MainController').inherit('br.controller.BaseController
         self.U.createInstance(self.controllers[i]);
       }
     }, self.effectTime.FAST);
+  }
+});
+
+TM.declare('br.controller.VideoController').inherit('br.controller.BaseController').extend({
+  selectors: {
+    videoBlock: '#home .br-home-video'
+  },
+
+  initialize: function() {
+    this.invoke('br.controller.BaseController:initialize');
+
+    var video = document.getElementById('video-fly-flowers');
+    // detect the browser's capacity
+    if (!(video.canPlayType && video.canPlayType('video/mp4; codecs="avc1.42E01E"'))) {
+      return;
+    }
+
+    video.play();
+
+    var $win = $(window), $videoBlock = this._el.$videoBlock;
+    $win.on('scroll', function() {
+      if ($win.scrollTop()) {
+        if (!video.paused) {
+          $videoBlock.fadeOut();
+          video.pause();
+        }
+      } else if (video.paused) {
+        $videoBlock.fadeIn();
+        video.play();
+      }
+    });
   }
 });
 
