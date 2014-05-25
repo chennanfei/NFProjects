@@ -226,3 +226,45 @@ TM.declare('br.controller.FootController').inherit('br.controller.BaseController
       });
   }
 });
+
+function tempCode() {
+  /*
+   * problem: when clicking the menu item, corresponding section should be shown.
+   * solution:
+   * 1. check the order of section in whole page
+   * 2. set all movements at the beginning position for previous sections
+   * 3. set all movements at the ending position for next sections
+   * 4. show the section but hide other ones.
+   * */
+  function showSection(event) {
+    var $target = $(event.currentTarget), section = $target.data('section');
+    if (!section) {
+      return;
+    }
+
+    var $section = $('#' + section);
+    if (!$section.length) {
+      return;
+    }
+
+    var isFound = false, sequenceList = this.getSequenceList(), $sections;
+    this.allSections.forEach(function(sec) {
+      var movements = sequenceList.getMovementsBySection(sec), i;
+      for (i = 0; movements && i < movements.length; i++) {
+        var move = movements[i], point = isFound ? move.getEndPoint() : move.getStartPoint();
+        move.getElement().css(move.getCssProp(), point).show();
+      }
+
+      if (sec === section) {
+        isFound = true;
+      } else if ($sections) {
+        $sections.add($('#' + sec));
+      } else {
+        $sections = $('#' + sec);
+      }
+    });
+
+    $sections.hide();
+    $section.show();
+  }
+}

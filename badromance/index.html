@@ -18,12 +18,40 @@
         </div>
         <nav class="tm-row-col10 tm-col-offset2 tm-row-col-last">
           <ul class="br-menu">
-            <li><a><p class="br-text-cn">首页</p><p class="tm-text-center">Home</p></a></li>
-            <li><a><p class="br-text-cn">商店</p><p class="tm-text-center">Shop</p></a></li>
-            <li><a><p class="br-text-cn">作品</p><p class="tm-text-center">Porffolio</p></a></li>
-            <li><a><i class="br-icon br-icon-email"></i></a></li>
+            <li>
+              <a class="br-show-section-action" href="javascript:void(false)" data-section="home">
+                <p class="br-text-cn">首页</p>
+                <p class="tm-text-center">Home</p>
+              </a>
+            </li>
+            <li>
+              <a class="br-show-section-action" href="javascript:void(false)" data-section="shop">
+                <p class="br-text-cn">商店</p>
+                <p class="tm-text-center">Shop</p>
+              </a>
+            </li>
+            <!--
+            <li>
+              <a class="br-show-section-action" href="javascript:void(false)" data-section="porffolio">
+                <p class="br-text-cn">作品</p>
+                <p class="tm-text-center">Porffolio</p>
+              </a>
+            </li>
+            -->
+            <li>
+              <a class="br-popover-action" href="javascript:void(false);" data-name="contact-info-popover">
+                <i class="br-icon br-icon-email"></i>
+              </a>
+            </li>
           </ul>
         </nav>
+      </div>
+
+      <div class="br-popover" id="contact-info-popover">
+        <span class="br-triangle br-triangle-up"></span>
+        <span class="br-popover-close">X</span>
+        <label>Email:</label>
+        <a href="mailto:124507124@qq.com">124507124@qq.com</a>
       </div>
     </header>
 
@@ -49,6 +77,10 @@
             <span>TEAM</span>/<span>DESIGN</span>/<span>FLOWER SHOP</span>
           </div>
         </div>
+
+        <!-- foot -->
+        <footer id="home-foot" class="br-section br-footer-fixed">
+        </footer>
       </section>
 
       <!-- shop -->
@@ -56,7 +88,7 @@
         <div class="br-section-inner tm-text-center">
           <div class="tm-row">
             <div id="shop-col-first" class="tm-row-col6 tm-hidden">
-              <a class="tm-spacing-large br-shop-link">
+              <a class="tm-spacing-large br-shop-link br-show-section-action" data-section="sale">
                 <i class="br-icon br-icon-shop-atm tm-spacing-medium"></i>
                 <p class="br-shop-text-cn-1">自动贩卖机</p>
                 <p class="br-shop-text-en">Vending Machine</p>
@@ -69,9 +101,9 @@
             </div>
             <div id="shop-col-second" class="tm-row-col6 tm-row-col-last tm-hidden">
               <span class="tm-spacing-large br-shop-link">
-                <i class="br-icon br-icon-shop-design tm-spacing-medium"></i>
+                <i class="br-icon br-icon-shop-sale tm-spacing-medium"></i>
                 <p class="br-shop-text-cn-2">设计</p>
-                <p class="br-shop-text-en">Design</p>
+                <p class="br-shop-text-en">sale</p>
               </span>
               <span class="br-shop-link">
                 <i class="br-icon br-icon-shop-flower tm-spacing-medium"></i>
@@ -83,50 +115,69 @@
         </div>
       </section>
 
-      <!-- for sale, act same as design section -->
-      <section id="design" class="br-section tm-hidden">
-        <div class="br-section-inner">
-          <div class="tm-text-center br-design-head">
+      <!-- for sale, act same as sale section -->
+      <section id="sale" class="br-section tm-hidden">
+        <div id="sale-preview" class="br-section-inner">
+          <div class="tm-text-center br-sale-head">
             <div class="tm-size-large tm-spacing-micro br-head-text-cn">贩卖</div>
             <div class="tm-size-medium tm-spacing-base br-head-text-en">For Sale</div>
-            <div><img src="assets/images/design-logo.png"></div>
+            <div><img src="assets/images/sale-logo.png"></div>
           </div>
 
-          <div class="br-design-content">
-            <div class="br-design-content-inner">
-              <div class="br-design-scroll-images">
-                <div class="tm-row tm-spacing-medium">
-                  <div class="tm-row-col4 br-design-left-img">
-                    <img src="assets/images/flower-1.jpg">
-                  </div>
-                  <div class="tm-row-col4 br-design-left-img">
-                    <img src="assets/images/flower-1.jpg">
-                  </div>
-                  <div class="tm-row-col4 tm-row-col-last br-design-right-img">
-                    <img src="assets/images/flower-1.jpg">
-                  </div>
-                </div>
-
-                <div class="tm-row tm-spacing-medium">
-                  <div class="tm-row-col4 br-design-left-img">
-                    <img src="assets/images/flower-1.jpg">
-                  </div>
-                  <div class="tm-row-col4 br-design-left-img">
-                    <img src="assets/images/flower-1.jpg">
-                  </div>
-                  <div class="tm-row-col4 tm-row-col-last br-design-right-img">
-                    <img src="assets/images/flower-1.jpg">
-                  </div>
-                </div>
-
+          <div class="br-sale-content">
+            <div class="br-sale-content-inner">
+              <div class="br-sale-scroll-images">
                 <div class="tm-row">
-                  <img src="assets/images/flower-foot.jpg">
-                </div>
-              </div>
+                  <div class="tm-row-col4">
+                    <div class="br-item-image-block" data-item-id="sale-item-1">
+                      <div class="br-item-image">
+                        <img src="assets/images/flower-1.jpg">
+                      </div>
+                      <div class="br-image-cover"></div>
+                    </div>
+                    <p class="tm-text-center">#001</p>
+                  </div>
+                  <div class="tm-row-col4">
+                    <div class="br-item-image-block" data-item-id="sale-item-2">
+                      <div class="br-item-image">
+                        <img src="assets/images/flower-1.jpg">
+                      </div>
+                      <div class="br-image-cover"></div>
+                    </div>
+                    <p class="tm-text-center">#003</p>
+                  </div>
+                  <div class="tm-row-col4 tm-row-col-last">
+                    <div class="br-item-image-block" data-item-id="sale-item-2">
+                      <div class="br-item-image">
+                        <img src="assets/images/flower-1.jpg">
+                      </div>
+                      <div class="br-image-cover"></div>
+                    </div>
+                    <p class="tm-text-center">#004</p>
+                  </div>
+                </div> <!-- tm-row -->
+              </div> <!-- br-sale-scroll-images -->
+            </div> <!-- br-sale-content-inner -->
+          </div> <!-- br-sale-content -->
+        </div> <!-- br-section-inner -->
+
+        <div id="sale-item-details" class="br-section-inner br-items">
+          <div id="sale-item-1" class="br-item tm-hidden">
+            <div class="br-item-close">返回</div>
+            <div class="tm-text-center tm-spacing-base">
+              <img src="assets/images/flower-1.jpg">
             </div>
+            <p class="tm-text-center">assddddd</p>
           </div>
-        </div>
-      </section>
+          <div id="sale-item-2" class="br-item tm-hidden">
+            <div class="br-item-close">返回</div>
+            <div class="tm-text-center tm-spacing-base">
+              <img src="assets/images/flower-1.jpg">
+            </div>
+            <p class="tm-text-center">assddddd</p>
+          </div>
+        </div> <!-- sale-item-details -->
+      </section><!-- sale -->
 
       <section id="contact-footer" class="tm-hidden br-section">
         <div class="br-section-inner">
@@ -144,11 +195,8 @@
           </div>
         </div>
       </section>
-    </div>
+    </div><!-- scene -->
 
-    <!-- foot -->
-    <footer id="home-foot" class="br-section br-footer-fixed">
-    </footer>
-  </div>
+  </div> <!-- tm-container -->
 </body>
 </html>

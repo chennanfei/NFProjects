@@ -21,6 +21,26 @@ TM.declare('thinkmvc.parallax.SequenceList').extend({
     }
   },
 
+  /*
+  getMovementsBySection: function(section) {
+    var movements = [];
+    if (!section) {
+      return movements;
+    }
+
+    this.each(function(sequence) {
+      var moves = sequence.getMovements(), i;
+      for (i = 0; moves && i < moves.length; i++) {
+        if (section === moves[i].getSectionName()) {
+          movements.push(moves[i]);
+        }
+      }
+    });
+
+    return movements;
+  },
+  */
+
   each: function(callback) {
     var sequenceList = this._sequenceList;
     for (var k in sequenceList) {
@@ -37,6 +57,7 @@ TM.declare('thinkmvc.parallax.Sequence').extend({
   initialize: function(options) {
     this._configs = [];
     this._minPos = options.minPosition;
+    this._section = options.section;
   },
 
   add: function(config) {
@@ -165,15 +186,13 @@ TM.declare('thinkmvc.parallax.Movement').extend(function() {
         config.startPoint = parseFloat($el.css(config.cssProp));
       }
 
-      /*
-      * startPoint, endPoint, $el, sequence, order
-      * */
+      // startPoint, endPoint, $el, sequence, order, cssProp
       this._config = config;
 
       this._sequence = sequence;
       this._isInitialized = false; // elements' prop value is not set yet
-      this._propValues = {};
-      this._endPositions = {};
+      this._propValues = {}; // current elements' prop values
+      this._endPositions = {}; // elements' final prop values
     },
 
     canUpdate: function() {
@@ -329,6 +348,20 @@ TM.declare('thinkmvc.parallax.Movement').extend(function() {
       if (this._cachedElIndex >= 0) {
         this._propValues[this._cachedElIndex] = propValue;
       }
+    },
+
+    // reset all elements to start point
+    resetToStartPoint: function() {
+      this.getElement().css(this.getCssProp(), this.getStartPoint());
+    },
+
+    // reset all elements to start point
+    resetToEndPoint: function() {
+      this.getElement().css(this.getCssProp(), this.getEndPoint());
+    },
+
+    getSectionName: function() {
+      return this._config.section;
     }
   }
 });

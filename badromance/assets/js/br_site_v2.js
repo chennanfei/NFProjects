@@ -1,12 +1,46 @@
 TM.declare('br.controller.BaseController').inherit('thinkmvc.Controller').extend(function() {
-  var sequenceList;
+  var sequenceList, isInitializedOnce = false, $doc = $(document);
+
+  function closePopover(event) {
+    $(event.target).closest('.br-popover').fadeOut();
+  }
+
+  function showPopover(event) {
+    var $target = $(event.currentTarget), popoverName = $target.data('name');
+    if (!popoverName) {
+      return;
+    }
+
+    var $popover = $('#' + popoverName), offset = $target.offset();
+    if (!($popover && $popover.length)) {
+      return;
+    }
+
+    $popover.css({
+      left: offset.left - $popover.width() / 2 + $target.width() / 2 - 10,
+      top: offset.top - $(window).scrollTop() + $target.height() + 10 // 10 is the size of triangle
+    }).show();
+  }
 
   return {
+    allSections: ['home', 'shop', 'sale'], // all sections on the page
+
     effectTime: {
       TINY: 10,
       FAST: 200,
       NORMAL: 300,
       SLOW: 500
+    },
+
+    initialize: function() {
+      this.invoke('thinkmvc.Controller:initialize');
+
+      if (!isInitializedOnce) {
+        // bind shared events
+        $doc.on('click', '.br-popover-action', showPopover);
+        $doc.on('click', '.br-popover-close', closePopover);
+        isInitializedOnce = true;
+      }
     },
 
     getSequenceList: function() {
@@ -23,7 +57,7 @@ TM.declare('br.controller.MainController').inherit('br.controller.BaseController
   controllers: [
     'br.controller.HomeController',
     'br.controller.ShopController',
-    'br.controller.DesignController'
+    'br.controller.SaleController'
     //'br.controller.FootController'
   ],
 
@@ -44,7 +78,7 @@ TM.declare('br.controller.MainController').inherit('br.controller.BaseController
       el.$glass.css('margin-left', left);
       el.$imgContainer.css('left', -1 * left);
 
-      if (left >= 426) {// DEBUG - 426
+      if (left >= 0) {// DEBUG - 426
         clearInterval(timer);
         self.postShow();
       }
@@ -66,11 +100,14 @@ TM.declare('br.controller.MainController').inherit('br.controller.BaseController
 });
 
 TM.declare('br.controller.HomeController').inherit('br.controller.BaseController').extend({
+  events: {
+    'click .br-show-section-action': 'showSection' // clicking top menu items shows related section
+  },
+
   selectors: {
     head: '#home-head',
     home: '#home',
     foot: '#home-foot',
-    siteDesc: '#site-desc',
     siteMenu: '#site-menu',
     siteTitle: '#site-title'
   },
@@ -95,7 +132,8 @@ TM.declare('br.controller.HomeController').inherit('br.controller.BaseController
     }).add({
       $el: el.$siteMenu,
       cssProp: 'left',
-      endPoint: -1 * (width + 100)
+      endPoint: -1 * (width + el.$siteMenu.width() / 2),
+      section: 'home'
     });
 
     // create movement sequence 2
@@ -106,13 +144,34 @@ TM.declare('br.controller.HomeController').inherit('br.controller.BaseController
       $el: el.$siteTitle,
       cssProp: 'left',
       startPoint: parseInt(el.$siteTitle.css('left'), 10),
-      endPoint: -1 * (width + 30)
+      endPoint: -1 * (width + 30),
+      section: 'home'
     }).add({
       $el: el.$foot,
       cssProp: 'bottom',
       startPoint: 0,
-      endPoint: -1 * el.$foot.height()
+      endPoint: -1 * el.$foot.height(),
+      section: 'home'
     });
+  },
+
+  showSection: function(event) {
+    var $target = $(event.currentTarget), section = $target.data('section');
+    if (!section) {
+      return;
+    }
+
+    var sectionPositions = {
+      home: 0,
+      shop: 8830,
+      sale: 11754
+    };
+
+    if (!sectionPositions.hasOwnProperty(section)) {
+      return;
+    }
+
+    $('html,body').animate({scrollTop: sectionPositions[section]}, 1500);
   }
 });
 
@@ -135,59 +194,127 @@ TM.declare('br.controller.ShopController').inherit('br.controller.BaseController
       $el: this._$root,
       cssProp: 'left',
       startPoint: width,
-      endPoint: 0
+      endPoint: 0,
+      section: 'shop'
     }).add({
       $el: this._el.$leftCol,
       cssProp: 'left',
       order: 1,
       startPoint: halfW,
-      endPoint: 0
+      endPoint: 0,
+      section: 'shop'
     }).add({
       $el: this._el.$rightCol,
       cssProp: 'right',
       order: 1,
       startPoint: halfW,
-      endPoint: 0
+      endPoint: 0,
+      section: 'shop'
     }).add({
       $el: this._$root,
       cssProp: 'top',
       order: 2,
       startPoint: 0,
-      endPoint: -1 * (height + 50)
+      endPoint: -1 * (height + 50),
+      section: 'shop'
     });
   }
 });
 
-TM.declare('br.controller.DesignController').inherit('br.controller.BaseController').extend({
-  rootNode: '#design',
+TM.declare('br.controller.SaleController').inherit('br.controller.BaseController').extend(function() {
+  function computeContentOffset() {
+    var el = this._el, offset = 271; // sale head's height
+    offset += parseFloat(el.$content.css('top'));
+    return offset;
+  }
 
-  selectors: {
-    content: '.br-design-content',
-    imageContainer: '.br-design-scroll-images'
-  },
+  return {
+    events: {
+      'click .br-item-close': 'closeItem',
+      'click .br-item-image-block': 'showItem',
+      'mouseenter .br-item-image': 'showImageCover',
+      'mouseleave .br-image-cover': 'hideImageCover',
+      'scroll window': 'closeVisibleItem'
+    },
 
-  initialize: function() {
-    this.invoke('br.controller.BaseController:initialize');
+    rootNode: '#sale',
 
-    var el = this._el;
-    this.getSequenceList().get({
-      sequence: 'seq_2'
-    }).add({
-      $el: this._$root,
-      cssProp: 'opacity',
-      order: 2,
-      startPoint: 0,
-      endPoint: 1
-    }).add({
-      $el: el.$content,
-      cssProp: 'top',
-      order: 3,
-      endPoint: -400
-    }).add({
-      $el: el.$imageContainer,
-      cssProp: 'margin-top',
-      order: 4,
-      endPoint: -300
-    });
+    selectors: {
+      content: '.br-sale-content',
+      head: '.br-sale-head',
+      imageContainer: '.br-sale-scroll-images',
+      itemDetails: '#sale-item-details',
+      preview: '#sale-preview'
+    },
+
+    initialize: function() {
+      this.invoke('br.controller.BaseController:initialize');
+
+      var el = this._el;
+      this.getSequenceList().get({
+        sequence: 'seq_2'
+      }).add({
+        $el: this._$root,
+        cssProp: 'opacity',
+        order: 2,
+        startPoint: 0,
+        endPoint: 1,
+        section: 'sale'
+      }).add({
+        $el: el.$content,
+        cssProp: 'top',
+        order: 3,
+        endPoint: -1 * computeContentOffset.call(this),
+        section: 'sale'
+      }).add({
+        $el: el.$imageContainer,
+        cssProp: 'margin-top',
+        order: 4,
+        endPoint: -300,
+        section: 'sale'
+      });
+    },
+
+    closeItem: function(event) {
+      var el = this._el;
+      el.$itemDetails.fadeOut(function() {
+        el.$preview.show();
+        $(event.currentTarget).closest('.br-item').hide();
+      });
+    },
+
+    closeVisibleItem: function() {
+      var el = this._el, visibleItem = el.$itemDetails.find('.br-item:visible');
+      if (visibleItem.length){
+        el.$itemDetails.fadeOut(function() {
+          el.$preview.show();
+          visibleItem.hide();
+        });
+      }
+    },
+
+    hideImageCover: function(event) {
+      $(event.currentTarget).fadeOut();
+    },
+
+    showItem: function(event) {
+      var $target = $(event.currentTarget), itemId = $target.data('itemId');
+      if (!itemId) {
+        return;
+      }
+
+      var el = this._el, $item = el.$itemDetails.find('#' + itemId);
+      if (!($item && $item.length)) {
+        return;
+      }
+
+      el.$preview.hide();
+      el.$itemDetails.show();
+      $item.show();
+    },
+
+    showImageCover: function(event) {
+      $(event.currentTarget).siblings('.br-image-cover').fadeIn();
+    }
   }
 });
