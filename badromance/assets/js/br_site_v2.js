@@ -57,6 +57,7 @@ TM.declare('br.controller.MainController').inherit('br.controller.BaseController
   controllers: [
     'br.controller.VideoController',
     'br.controller.HomeController',
+    'br.controller.HeaderController',
     'br.controller.ShopController',
     'br.controller.SaleController'
     //'br.controller.FootController'
@@ -79,7 +80,7 @@ TM.declare('br.controller.MainController').inherit('br.controller.BaseController
       el.$glass.css('margin-left', left);
       el.$imgContainer.css('left', -1 * left);
 
-      if (left >= 426) {// DEBUG - 426
+      if (left >= 0) {// DEBUG - 426
         clearInterval(timer);
         self.postShow();
       }
@@ -110,15 +111,16 @@ TM.declare('br.controller.VideoController').inherit('br.controller.BaseControlle
 
     var video = document.getElementById('video-fly-flowers');
     // detect the browser's capacity
-    if (!(video.canPlayType && video.canPlayType('video/mp4; codecs="avc1.42E01E"'))) {
+    if (!(video && video.canPlayType && video.canPlayType('video/mp4; codecs="avc1.42E01E"'))) {
       return;
     }
 
     video.play();
 
     var $win = $(window), $videoBlock = this._el.$videoBlock;
+    // when window scrolls, pause the video and hide it
     $win.on('scroll', function() {
-      if ($win.scrollTop()) {
+      if ($win.scrollTop() > 10) {
         if (!video.paused) {
           $videoBlock.fadeOut();
           video.pause();
@@ -175,18 +177,21 @@ TM.declare('br.controller.HomeController').inherit('br.controller.BaseController
     }).add({
       $el: el.$siteTitle,
       cssProp: 'left',
+      order: 1,
       startPoint: parseInt(el.$siteTitle.css('left'), 10),
       endPoint: -1 * (width + 30),
       section: 'home'
     }).add({
       $el: el.$foot,
       cssProp: 'bottom',
+      order: 1,
       startPoint: 0,
       endPoint: -1 * el.$foot.height(),
       section: 'home'
     });
   },
 
+  /* click menu item and scroll window to given position */
   showSection: function(event) {
     var $target = $(event.currentTarget), section = $target.data('section');
     if (!section) {
@@ -204,6 +209,40 @@ TM.declare('br.controller.HomeController').inherit('br.controller.BaseController
     }
 
     $('html,body').animate({scrollTop: sectionPositions[section]}, 1500);
+  }
+});
+
+TM.declare('br.controller.HeaderController').inherit('br.controller.BaseController').extend({
+  initialize: function() {
+    this.invoke('br.controller.BaseController:initialize');
+
+    // switch different headers
+    var $primaryHeader = $('#home-head'), $secondaryHeader = $('#home-head-secondary');
+    this.getSequenceList().get({
+      sequence: 'seq_2'
+    }).add({
+      $el: $primaryHeader,
+      cssProp: 'opacity',
+      order: 2,
+      endPoint: 0
+    }).add({
+      $el: $secondaryHeader,
+      cssProp: 'opacity',
+      order: 2,
+      endPoint: 1
+    }).add({
+      $el: $primaryHeader,
+      cssProp: 'opacity',
+      order: 5,
+      startPoint: 0,
+      endPoint: 1
+    }).add({
+      $el: $secondaryHeader,
+      cssProp: 'opacity',
+      order: 5,
+      startPoint: 1,
+      endPoint: 0
+    });
   }
 });
 
@@ -225,27 +264,28 @@ TM.declare('br.controller.ShopController').inherit('br.controller.BaseController
     }).add({
       $el: this._$root,
       cssProp: 'left',
+      order: 1,
       startPoint: width,
       endPoint: 0,
       section: 'shop'
     }).add({
       $el: this._el.$leftCol,
       cssProp: 'left',
-      order: 1,
+      order: 3,
       startPoint: halfW,
       endPoint: 0,
       section: 'shop'
     }).add({
       $el: this._el.$rightCol,
       cssProp: 'right',
-      order: 1,
+      order: 3,
       startPoint: halfW,
       endPoint: 0,
       section: 'shop'
     }).add({
       $el: this._$root,
       cssProp: 'top',
-      order: 2,
+      order: 4,
       startPoint: 0,
       endPoint: -1 * (height + 50),
       section: 'shop'
@@ -258,6 +298,39 @@ TM.declare('br.controller.SaleController').inherit('br.controller.BaseController
     var el = this._el, offset = 271; // sale head's height
     offset += parseFloat(el.$content.css('top'));
     return offset;
+  }
+
+  function renderImages() {
+    var index = 1, maxIndex = 18, num = 3,
+      $container = this._el.$imageContainer, $parentContainer = $container.parent();
+      $template = $('#sale-image-template');
+
+    $container.detach();
+
+    var $row;
+    while (index <= maxIndex) {
+      var a = index % num, $img = $template.clone().show();
+
+      $img.find('.br-item-image-block').data('item-id', 'sale-item-' + index)
+        .find('img').attr('src', 'assets/images/item-' + index + '.jpg');
+
+      // TODO br-image-cover
+      $img.find('.br-sale-item-title').text('#001');
+
+      if (a === 1) {
+        $row = $('<div class="tm-row"></div>');
+      }
+
+      $row.append($img);
+
+      if (a === 0) {
+        $img.addClass('tm-row-col-last');
+        $container.append($row);
+      }
+      index++;
+    }
+
+    $parentContainer.append($container);
   }
 
   return {
@@ -288,20 +361,20 @@ TM.declare('br.controller.SaleController').inherit('br.controller.BaseController
       }).add({
         $el: this._$root,
         cssProp: 'opacity',
-        order: 2,
+        order: 4,
         startPoint: 0,
         endPoint: 1,
         section: 'sale'
       }).add({
         $el: el.$content,
         cssProp: 'top',
-        order: 3,
+        order: 5,
         endPoint: -1 * computeContentOffset.call(this),
         section: 'sale'
       }).add({
         $el: el.$imageContainer,
         cssProp: 'margin-top',
-        order: 4,
+        order: 6,
         endPoint: -300,
         section: 'sale'
       });

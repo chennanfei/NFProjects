@@ -55,6 +55,36 @@
       </div>
     </header>
 
+    <!-- secondary header -->
+    <header id="home-head-secondary" class="tm-top-spacing-large br-section br-header-fixed">
+      <div class="tm-row br-section-inner">
+        <div class="tm-row-col2">
+          <i class="br-icon br-icon-site-secondary"></i>
+        </div>
+        <nav class="tm-row-col10 tm-col-offset2 tm-row-col-last">
+          <ul class="br-menu">
+            <li>
+              <a class="br-show-section-action" href="javascript:void(false)" data-section="home">
+                <p class="br-text-cn">首页</p>
+                <p class="tm-text-center">Home</p>
+              </a>
+            </li>
+            <li>
+              <a class="br-show-section-action" href="javascript:void(false)" data-section="shop">
+                <p class="br-text-cn">商店</p>
+                <p class="tm-text-center">Shop</p>
+              </a>
+            </li>
+            <li>
+              <a class="br-popover-action" href="javascript:void(false);" data-name="contact-info-popover">
+                <i class="br-icon br-icon-email-secondary"></i>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
     <!-- loading -->
     <div id="loading">
       <div class="br-loading">
@@ -77,11 +107,13 @@
             <span>TEAM</span>/<span>DESIGN</span>/<span>FLOWER SHOP</span>
           </div>
         </div>
+        <!--
         <div class="br-home-video">
           <video id="video-fly-flowers" autoplay="false" loop="true">
             <source src="assets/images/fly-flowers.mp4" type='video/mp4'>
           </video>
         </div>
+        -->
       </section>
 
       <!-- shop -->
@@ -104,7 +136,7 @@
               <span class="tm-spacing-large br-shop-link">
                 <i class="br-icon br-icon-shop-design tm-spacing-medium"></i>
                 <p class="br-shop-text-cn-2">设计</p>
-                <p class="br-shop-text-en">sale</p>
+                <p class="br-shop-text-en">Design</p>
               </span>
               <span class="br-shop-link">
                 <i class="br-icon br-icon-shop-flower tm-spacing-medium"></i>
@@ -120,43 +152,22 @@
       <section id="sale" class="br-section tm-hidden">
         <div id="sale-preview" class="br-section-inner">
           <div class="tm-text-center br-sale-head">
-            <div class="tm-size-large tm-spacing-micro br-head-text-cn">贩卖</div>
-            <div class="tm-size-medium tm-spacing-base br-head-text-en">For Sale</div>
-            <div><img src="assets/images/sale-logo.png"></div>
+            <i class="br-icon br-icon-sale-title"></i>
           </div>
 
           <div class="br-sale-content">
             <div class="br-sale-content-inner">
               <div class="br-sale-scroll-images">
-                <div class="tm-row">
-                  <div class="tm-row-col4">
-                    <div class="br-item-image-block" data-item-id="sale-item-1">
-                      <div class="br-item-image">
-                        <img src="assets/images/flower-1.jpg">
-                      </div>
-                      <div class="br-image-cover"></div>
+                <!-- images here -->
+                <div id="sale-image-template" class="tm-row-col4 tm-hidden">
+                  <div class="br-item-image-block">
+                    <div class="br-item-image">
+                      <img src="">
                     </div>
-                    <p class="tm-text-center">#001</p>
+                    <div class="br-image-cover"></div>
                   </div>
-                  <div class="tm-row-col4">
-                    <div class="br-item-image-block" data-item-id="sale-item-2">
-                      <div class="br-item-image">
-                        <img src="assets/images/flower-1.jpg">
-                      </div>
-                      <div class="br-image-cover"></div>
-                    </div>
-                    <p class="tm-text-center">#003</p>
-                  </div>
-                  <div class="tm-row-col4 tm-row-col-last">
-                    <div class="br-item-image-block" data-item-id="sale-item-2">
-                      <div class="br-item-image">
-                        <img src="assets/images/flower-1.jpg">
-                      </div>
-                      <div class="br-image-cover"></div>
-                    </div>
-                    <p class="tm-text-center">#004</p>
-                  </div>
-                </div> <!-- tm-row -->
+                  <p class="br-sale-item-title"></p>
+                </div>
               </div> <!-- br-sale-scroll-images -->
             </div> <!-- br-sale-content-inner -->
           </div> <!-- br-sale-content -->
@@ -164,13 +175,6 @@
 
         <div id="sale-item-details" class="br-section-inner br-items">
           <div id="sale-item-1" class="br-item tm-hidden">
-            <div class="br-item-close">返回</div>
-            <div class="tm-text-center tm-spacing-base">
-              <img src="assets/images/flower-1.jpg">
-            </div>
-            <p class="tm-text-center">assddddd</p>
-          </div>
-          <div id="sale-item-2" class="br-item tm-hidden">
             <div class="br-item-close">返回</div>
             <div class="tm-text-center tm-spacing-base">
               <img src="assets/images/flower-1.jpg">
