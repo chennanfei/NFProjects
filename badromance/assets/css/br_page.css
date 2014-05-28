@@ -25,7 +25,7 @@ a {
   margin-left: -480px;
   position: absolute;
   width: 960px;
-  top: 15em;
+  top: 11em;
 }
 
 #loading {
@@ -338,7 +338,6 @@ a {
 }
 #sale .br-sale-head {
   font-size: 1.4em;
-  margin-bottom: 5em;
   height: 246px;
   width: 144px;
   position: relative;
@@ -357,7 +356,7 @@ a {
   background-color: #FFFFFF;
   min-height: 10em;
   position: relative;
-  top: 7em;
+  top: 5em;
 }
 #sale .br-sale-content-inner {
   min-height: 400px;
@@ -386,7 +385,6 @@ a {
 
 /* items */
 .br-items.br-section-inner {
-  top: 11em;
   z-index: 110;
 }
 .br-item {

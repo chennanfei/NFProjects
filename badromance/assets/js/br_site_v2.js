@@ -306,18 +306,18 @@ TM.declare('br.controller.SaleController').inherit('br.controller.BaseController
     { name: 'mirage', title: '#008' },
     { name: 'desire', title: '#009' },
     { name: 'ego', title: '#010' },
-    { name: 'pervaya', title: '#11' },
-    { name: 'lover', title: '#12' },
-    { name: 'tease', title: '#13' },
-    { name: 'touching', title: '#14' },
-    { name: 'indulge', title: '#15' },
-    { name: 'dispel', title: '#16' },
-    { name: 'ferity', title: '#17' },
-    { name: 'soft', title: '#18' }
+    { name: 'pervaya', title: '#011' },
+    { name: 'lover', title: '#012' },
+    { name: 'tease', title: '#013' },
+    { name: 'touching', title: '#014' },
+    { name: 'indulge', title: '#015' },
+    { name: 'dispel', title: '#016' },
+    { name: 'ferity', title: '#017' },
+    { name: 'soft', title: '#018' }
   ];
   
   function computeContentOffset() {
-    var el = this._el, offset = 271; // sale head's height
+    var el = this._el, offset = 221 + 141; // sale head's height and sale desc image
     offset += parseFloat(el.$content.css('top'));
     return offset;
   }
@@ -391,7 +391,7 @@ TM.declare('br.controller.SaleController').inherit('br.controller.BaseController
         $el: el.$imageContainer,
         cssProp: 'margin-top',
         order: 6,
-        endPoint: -1200,
+        endPoint: -1000,
         section: 'sale'
       });
       
