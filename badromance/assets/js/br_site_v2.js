@@ -80,7 +80,7 @@ TM.declare('br.controller.MainController').inherit('br.controller.BaseController
       el.$glass.css('margin-left', left);
       el.$imgContainer.css('left', -1 * left);
 
-      if (left >= 0) {// DEBUG - 426
+      if (left >= 426) {// DEBUG - 426
         clearInterval(timer);
         self.postShow();
       }
@@ -294,43 +294,58 @@ TM.declare('br.controller.ShopController').inherit('br.controller.BaseController
 });
 
 TM.declare('br.controller.SaleController').inherit('br.controller.BaseController').extend(function() {
+  var $currentVisibleItem = null;
+  var saleItems = [
+    { name: 'forest', title: '#001' },
+    { name: 'sweet', title: '#002' },
+    { name: 'curious', title: '#003' },
+    { name: 'mysterious', title: '#004' },
+    { name: 'hormone', title: '#005' },
+    { name: 'impulse', title: '#006' },
+    { name: 'intense', title: '#007' },
+    { name: 'mirage', title: '#008' },
+    { name: 'desire', title: '#009' },
+    { name: 'ego', title: '#010' },
+    { name: 'pervaya', title: '#11' },
+    { name: 'lover', title: '#12' },
+    { name: 'tease', title: '#13' },
+    { name: 'touching', title: '#14' },
+    { name: 'indulge', title: '#15' },
+    { name: 'dispel', title: '#16' },
+    { name: 'ferity', title: '#17' },
+    { name: 'soft', title: '#18' }
+  ];
+  
   function computeContentOffset() {
     var el = this._el, offset = 271; // sale head's height
     offset += parseFloat(el.$content.css('top'));
     return offset;
   }
+  
+  function displayImages() {
+    var i, num = 3, size = saleItems.length, el = this._el, $row, $parent = el.$imageContainer.parent();
+    el.$imageContainer.detach();
 
-  function renderImages() {
-    var index = 1, maxIndex = 18, num = 3,
-      $container = this._el.$imageContainer, $parentContainer = $container.parent();
-      $template = $('#sale-image-template');
-
-    $container.detach();
-
-    var $row;
-    while (index <= maxIndex) {
-      var a = index % num, $img = $template.clone().show();
-
-      $img.find('.br-item-image-block').data('item-id', 'sale-item-' + index)
-        .find('img').attr('src', 'assets/images/item-' + index + '.jpg');
-
-      // TODO br-image-cover
-      $img.find('.br-sale-item-title').text('#001');
-
-      if (a === 1) {
+    for (i = 0; i < size; i++) {
+      var pos = i % num, name = saleItems[i].name;
+      if (pos === 0) {
         $row = $('<div class="tm-row"></div>');
       }
-
-      $row.append($img);
-
-      if (a === 0) {
-        $img.addClass('tm-row-col-last');
-        $container.append($row);
+      
+      var $node = el.$imageTemp.clone().show();
+      $node.find('.br-item-image-block').data('name', name);
+      $node.find('img').attr('src', 'assets/images/item-' + name + '.jpg');
+      $node.find('.br-icon-item').addClass('br-icon-item-' + name);
+      $node.find('.br-sale-item-title').text(saleItems[i].title);
+      
+      $row.append($node);
+      if (pos === num - 1) {
+        $node.addClass('tm-row-col-last');
+        el.$imageContainer.append($row);
       }
-      index++;
     }
-
-    $parentContainer.append($container);
+    
+    $parent.append(el.$imageContainer);
   }
 
   return {
@@ -339,7 +354,7 @@ TM.declare('br.controller.SaleController').inherit('br.controller.BaseController
       'click .br-item-image-block': 'showItem',
       'mouseenter .br-item-image': 'showImageCover',
       'mouseleave .br-image-cover': 'hideImageCover',
-      'scroll window': 'closeVisibleItem'
+      'scroll window': 'closeItem'
     },
 
     rootNode: '#sale',
@@ -348,7 +363,8 @@ TM.declare('br.controller.SaleController').inherit('br.controller.BaseController
       content: '.br-sale-content',
       head: '.br-sale-head',
       imageContainer: '.br-sale-scroll-images',
-      itemDetails: '#sale-item-details',
+      imageTemp: '#preview-item-template',
+      itemDetail: '#sale-item-detail',
       preview: '#sale-preview'
     },
 
@@ -375,26 +391,21 @@ TM.declare('br.controller.SaleController').inherit('br.controller.BaseController
         $el: el.$imageContainer,
         cssProp: 'margin-top',
         order: 6,
-        endPoint: -300,
+        endPoint: -1200,
         section: 'sale'
       });
+      
+      displayImages.call(this);
     },
 
-    closeItem: function(event) {
+    closeItem: function() {
       var el = this._el;
-      el.$itemDetails.fadeOut(function() {
-        el.$preview.show();
-        $(event.currentTarget).closest('.br-item').hide();
-      });
-    },
-
-    closeVisibleItem: function() {
-      var el = this._el, visibleItem = el.$itemDetails.find('.br-item:visible');
-      if (visibleItem.length){
-        el.$itemDetails.fadeOut(function() {
+      if ($currentVisibleItem) {
+        $currentVisibleItem.fadeOut(function() {
           el.$preview.show();
-          visibleItem.hide();
         });
+
+        $currentVisibleItem = null;
       }
     },
 
@@ -403,19 +414,24 @@ TM.declare('br.controller.SaleController').inherit('br.controller.BaseController
     },
 
     showItem: function(event) {
-      var $target = $(event.currentTarget), itemId = $target.data('itemId');
-      if (!itemId) {
+      var $target = $(event.currentTarget), name = $target.data('name');
+      if (!name) {
         return;
       }
 
-      var el = this._el, $item = el.$itemDetails.find('#' + itemId);
-      if (!($item && $item.length)) {
-        return;
+      var el = this._el, $node = el.$itemDetail.siblings('#sale-item-' + name);
+      if (!$node.length) {
+        $node = el.$itemDetail.clone();
+        $node.attr('id', '#sale-item-' + name);
+        $node.find('.br-item-detail-image').html($target.find('img').clone());
+        $node.find('.br-icon-item-detail').addClass('br-icon-item-detail-' + name);
+        el.$itemDetail.parent().append($node);
       }
+      
+      $currentVisibleItem = $node;
 
       el.$preview.hide();
-      el.$itemDetails.show();
-      $item.show();
+      $currentVisibleItem.show();
     },
 
     showImageCover: function(event) {

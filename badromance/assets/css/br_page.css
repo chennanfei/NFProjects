@@ -97,66 +97,61 @@ a {
   vertical-align: top;
 }
 
+/* icon */
 .br-icon-site, .br-icon-site-secondary {
   height: 67px;
   width: 150px;
 }
-
 .br-icon-site {
   background-position: -66px -65px;
 }
-
 .br-icon-site-secondary {
   background-position: -316px -150px;
 }
-
 .br-icon-site-title {
   background-position: -66px -160px;
   width: 234px;
   height: 150px;
 }
-
 .br-icon-email, .br-icon-email-secondary {
   height: 42px;
   width: 42px;
 }
-
 .br-icon-email {
   background-position: -611px -73px;
 }
-
 .br-icon-email-secondary {
   background-position: -535px -73px
 }
-
 .br-icon-shop-sale {
   background-position: -707px -67px;
   height: 146px;
   width: 146px;
 }
-
 .br-icon-shop-design {
   background-position: -949px -67px;
   height: 146px;
   width: 146px;
 }
-
 .br-icon-shop-about {
   background-position: -702px -235px;
   height: 155px;
   width: 146px;
 }
-
 .br-icon-shop-flower {
   background-position: -945px -233px;
   height: 155px;
   width: 150px;
 }
-
 .br-icon-sale-title {
   background-position: -497px -162px;
   height: 247px;
   width: 144px;
+}
+.br-icon-close-btn {
+  background-position: -328px -257px;
+  height: 28px;
+  width: 28px;
 }
 
 /* menu */
@@ -370,9 +365,10 @@ a {
 }
 #sale .br-sale-scroll-images img {
   width: 100%;
+  height: 200px;
 }
 #sale .br-sale-scroll-images > .tm-row {
-  margin-bottom: 5em;
+  margin-bottom: 2em;
 }
 #sale .br-item-image-block {
   cursor: pointer;
@@ -389,24 +385,236 @@ a {
 }
 
 /* items */
-.br-items .br-section-inner {
+.br-items.br-section-inner {
+  top: 11em;
   z-index: 110;
 }
+.br-item {
+  border: 4px solid #FF332F;
+  margin: 0 auto;
+  width: 540px;
+  padding: 1em;
+  position: relative;
+}
 .br-item img {
-  width: 400px;
-  height: 400px;
+  width: 510px;
+  height: 340px;
 }
 .br-item .br-item-close {
   cursor: pointer;
   position: absolute;
   padding: 0.5em;
-  font-size: 1.2em;
-  top: 0;
-  right: 0;
+  top: -22px;
+  right: -22px;
+  left: auto;
 }
-.br-item .br-item-close:hover {
-  color: #FF3333;
+/* item icon */
+.br-icon-item {
+  height: 36px;
+  top: 50%;
+  left: 50%;
+  margin-top: -18px;
+  margin-left: -25px;
 }
+
+.br-icon-item-forest {
+  background-position: -87px -344px;
+  width: 50px;
+}
+.br-icon-item-mysterious {
+  background-position: -69px -403px;
+  width: 82px;
+  margin-left: -41px;
+}
+.br-icon-item-intense {
+  background-position: -82px -477px;
+  width: 54px;
+  margin-left: -27px;
+}
+.br-icon-item-ego {
+  background-position: -83px -538px;
+  width: 44px;
+  margin-left: -22px;
+}
+.br-icon-item-sweet {
+  background-position: -201px -344px;
+  width: 40px;
+  margin-left: -20px;
+}
+.br-icon-item-hormone {
+  background-position: -190px -424px;
+  width: 58px;
+  margin-left: -29px;
+}
+.br-icon-item-desire {
+  background-position: -196px -494px;
+  width: 50px;
+}
+.br-icon-item-mirage {
+  background-position: -311px -358px;
+  width: 50px;
+}
+.br-icon-item-pervaya {
+  background-position: -275px -444px;
+  width: 115px;
+  margin-left: -57.5px;
+}
+.br-icon-item-lover {
+  background-position: -270px -518px;
+  width: 121px;
+  margin-left: -60.5px;
+}
+.br-icon-item-curious {
+  background-position: -485px -442px;
+  width: 72px;
+  margin-left: -36px;
+}
+.br-icon-item-impulse {
+  background-position: -478px -515px;
+  width: 55px;
+  margin-left: -27.5px;
+}
+.br-icon-item-tease {
+  background-position: -678px -422px;
+  width: 50px;
+}
+.br-icon-item-dispel {
+  background-position: -685px -526px;
+  width: 50px;
+}
+.br-icon-item-touching {
+  background-position: -815px -414px;
+  width: 68px;
+  margin-left: -34px;
+}
+.br-icon-item-ferity {
+  background-position: -822px -516px;
+  width: 50px;
+}
+.br-icon-item-indulge {
+  background-position: -940px -413px;
+  width: 54px;
+  margin-left: -27px;
+}
+.br-icon-item-soft {
+  background-position: -941px -516px;
+  width: 48px;
+  margin-left: -24px;
+}
+/* item detail icon */
+.br-icon-item-detail {
+  background-image: url("../images/item-desc-spriting.png");
+  background-repeat: no-repeat;
+  background-size: 2700px 689px;
+  display: block;
+  position: relative;
+  left: 50%;
+  width: 510px;
+  margin-left: -255px;
+}
+.br-icon-item-detail-forest {
+  background-position: -36px -37px;
+  height: 144px;
+  width: 423px;
+  margin-left: -212.5px
+}
+.br-icon-item-detail-sweet {
+  background-position: -36px -203px;
+  height: 144px;
+  width: 450px;
+  margin-left: -225px;
+}
+.br-icon-item-detail-mysterious {
+  background-position: -16px -363px;
+  height: 144px;
+  width: 523px;
+  margin-left: -252.5px;
+}
+.br-icon-item-detail-curious {
+  background-position: -30px -518px;
+  height: 150px;
+  width: 450px;
+  margin-left: -275px;
+}
+.br-icon-item-detail-hormone {
+  background-position: -535px -38px;
+  height: 126px;
+  width: 388px;
+  margin-left: -194px;
+}
+.br-icon-item-detail-impulse {
+  background-position: -515px -188px;
+  height: 126px;
+}
+.br-icon-item-detail-intense {
+  background-position: -575px -338px;
+  height: 126px;
+  width: 460px;
+  margin-left: -230px;
+}
+.br-icon-item-detail-mirage {
+  background-position: -578px -508px;
+  height: 150px;
+}
+.br-icon-item-detail-lover {
+  background-position: -1118px -482px;
+  height: 153px;
+}
+.br-icon-item-detail-pervaya {
+  background-position: -1096px -338px;
+  height: 128px;
+  width: 428px;
+  margin-left: -214px;
+}
+.br-icon-item-detail-ego {
+  background-position: -1040px -178px;
+  height: 128px;
+  width: 538px;
+  margin-left: -269px;
+}
+.br-icon-item-detail-desire {
+  background-position: -968px -45px;
+  height: 123px;
+  width: 456px;
+  margin-left: -228px;
+}
+.br-icon-item-detail-tease {
+  background-position: -1452px -42px;
+  height: 155px;
+  width: 515px;
+  margin-left: -257.5px;
+}
+.br-icon-item-detail-touching {
+  background-position: -1575px -265px;
+  height: 128px;
+  width: 460px;
+  margin-left: -230px;
+}
+.br-icon-item-detail-indulge {
+  background-position: -1645px -415px;
+  height: 150px;
+  width: 490px;
+  margin-left: -245px;
+}
+.br-icon-item-detail-soft {
+  background-position: -2200px -392px;
+  height: 136px;
+  width: 455px;
+  margin-left: -222.5px;
+}
+.br-icon-item-detail-ferity {
+  background-position: -2050px -212px;
+  height: 157px;
+  width: 508px;
+  margin-left: -254px;
+}
+.br-icon-item-detail-dispel {
+  background-position: -1992px -44px;
+  height: 155px;
+  width: 498px;
+  margin-left: -249px;
+}
+
 #contact-footer {
   bottom: 0;
   color: #FFFFFF;

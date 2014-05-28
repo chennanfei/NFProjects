@@ -2,9 +2,81 @@
 <html>
 <head lang="en">
   <meta charset="UTF-8">
-  <title></title>
+  <title>Video</title>
+  <script type="text/javascript" src="assets/js/lib/jquery-1.11.0.js"></script>
+  <style>
+    body {
+      background-color: red;
+      padding: 0;
+      margin: 0;
+    }
+    .video-container {
+      margin: 0 auto;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* icon */
+    .br-icon {
+      background-image: url("assets/images/item-desc-spriting.png");
+      background-repeat: no-repeat;
+      background-size: 2773px 692px;
+      display: inline-block;
+      left: 0;
+      vertical-align: top;
+
+      position: static;
+      border: 1px solid #DDDDDD;
+      float:left;
+      margin-right: 10px;
+    }
+
+    .br-icon-item {
+      background-position: 0 0;
+      height: 136px;
+      width: 200px;
+    }
+  </style>
 </head>
 <body>
-  <div class=""></div>
+  <div class="position: relative;">
+    <i class="br-icon br-icon-item"></i>
+  </div>
+  <div style="clear: both"></div>
+  <div style="height: 10px; color: #FFFFFF; width: 100%;">
+    <button id="confirm" style="border: 1px solid red;">Confirm</button>
+    <span id="position"></span>
+    <span id="position-info"></span>
+  </div>
+
+<script>
+  $(document).ready(function() {
+    var $pos = $('#position-info'), positions = new Array(2), $btn = $('#confirm'), cur = 0, count = 1;
+
+    $('body').on('mousemove', function(e) {
+      var xx = e.originalEvent.x || e.originalEvent.layerX || 0;
+      var yy = e.originalEvent.y || e.originalEvent.layerY || 0;
+      var info = 'x: ' + xx + ', y: ' + yy;
+      //$pos.html(info);
+    });
+
+    $('.br-icon-item').on('click', function(e) {
+      var index = cur++ % 2;
+      positions[index] = {
+        x: e.originalEvent.x || e.originalEvent.layerX || 0,
+        y: e.originalEvent.y || e.originalEvent.layerY || 0
+      };
+      $('#position').html('x: ' + positions[index].x + ', y: ' + positions[index].y);
+    });
+
+    $btn.on('click', function() {
+      var info = '<br>count: ' + (count++) + '<br>';
+      info += 'x1: ' + positions[0].x + ', y1: ' + positions[0].y + '<br>';
+      info += 'x2: ' + positions[1].x + ', y2: ' + positions[1].y + '<br>';
+      info += 'xd: ' + (positions[1].x - positions[0].x) + ', yd: ' + (positions[1].y - positions[0].y) + '<br>';
+      $pos.append(info);
+    });
+  });
+</script>
 </body>
 </html>
