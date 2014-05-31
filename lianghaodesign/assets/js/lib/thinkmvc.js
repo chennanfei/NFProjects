@@ -426,25 +426,22 @@ window.TM = (function(document, window) {
       var callback = function(event) {
         _pGlobalUtil.createEntrance()
       };
+
       if (isDOMReady()) {
         callback();
         return;
       }
 
-      if (document.attachEvent) {
+      if (document.addEventListener) {
+        document.addEventListener('DOMContentLoaded', callback, false);
+        window.addEventListener('load', callback, false);
+      } else if (document.attachEvent) {
         document.attachEvent('onreadystatechange', function() {
           if (isDOMReady()) {
             callback();
           }
         });
         window.attachEvent('onload', callback);
-      } else if (document.addEventListener) {
-        document.addEventListener('DOMContentLoaded', callback, false);
-        window.addEventListener('load', callback, false);
-      }
-
-      if (DEBUG_MODE) {
-        _pfOutput('Events are bound for ready DOM');
       }
     }
 
