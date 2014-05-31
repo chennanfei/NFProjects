@@ -174,16 +174,19 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
     close: function(event) {
       event.stopPropagation();
 
-      var el = this._el, $target = $(event.currentTarget), selected = this.selectedClass;
-      $target.parent().fadeOut(this.animateTime.NORMAL, function() {
-        var contentId = el.$subMenuItems.filter('.' + selected).removeClass(selected).data('contentId');
+      var el = this._el, $target = $(event.currentTarget), $parent = $target.closest('.content-detail'),
+        selected = this.selectedClass, contentId = $parent.attr('id');
+
+      $parent.fadeOut(this.animateTime.NORMAL, function() {
+        var selector = '[data-content-id="' + contentId + '"]';
+        el.$subMenuItems.filter(selector).removeClass(selected);
 
         // recover the button to beginning status
         $target.removeClass('close-btn-status-2');
 
         // show the corresponding previewed item
-        $target.closest('.design-list').find('.preview-content .image[data-content-id=' + contentId + ']')
-          .parent().show();
+        $target.closest('.design-list')
+          .find('.preview-content .image' + selector).parent().show();
       });
     },
 
@@ -268,7 +271,7 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
       }
 
       // look for selected sub menu item and reset its status
-      this._el.$subMenuItems.filter('.' + selected).removeClass(selected);
+      $target.siblings('.' + selected).removeClass(selected);
       $target.addClass(selected);
 
       // hide item siblings
@@ -279,7 +282,9 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
 
       var $designList = $content.closest('.design-list');
       // hide the corresponding preview item
-      $designList.find('.preview-content .image[data-content-id=' + contentId + ']').parent().hide();
+      var $previewItems = $designList.find('.preview-content .item');
+      $previewItems.not(':visible').show();
+      $previewItems.has('.image[data-content-id=' + contentId + ']').hide();
 
       // after item shows, expand related sub menu and scroll page
       var $subItem = $target.closest('.tm-sub-list');
@@ -410,26 +415,26 @@ TM.declare('lh.controller.PreviewImagesController').inherit('lh.controller.BaseC
     previews: '#mainContent .preview-content'
   },
 
-  initImageList: function(event) {
-    var $firstImg = $(event.currentTarget),
-      $container = $firstImg.closest('.image'),
-      $images = $container.find('img'),
-      size = {width: $firstImg.width(), height: $firstImg.height()},
-      imgCount = $images.length;
-    if (!imgCount) {
-      return;
-    }
-
-    $container.css(size).addClass('image-float').data('ready', 1);
-    $images.css(size).show().parent().width(size.width * imgCount);
-  },
-
   /* find the item in sub menu according to content id and click the menu item */
   findRightItemInSubMenu: function(event) {
     var contentId = $(event.currentTarget).data('contentId');
     if (contentId) {
        this._el.$menu.find('[data-content-id=' + contentId + ']').click();
     }
+  },
+
+  initImageList: function(event) {
+    var $firstImg = $(event.currentTarget),
+      $container = $firstImg.closest('.image'),
+      $images = $container.find('img'),
+      size = {width: $firstImg.width(), height: $firstImg.height()},
+      imgCount = $images.length;
+    if (!imgCount || !size.width) {
+      return;
+    }
+
+    $container.css(size).addClass('image-float').data('ready', 1);
+    $images.css(size).show().parent().width(size.width * imgCount);
   },
 
   /* show next image when the mouse enters into image container */
