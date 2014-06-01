@@ -271,7 +271,7 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
       }
 
       // look for selected sub menu item and reset its status
-      $target.siblings('.' + selected).removeClass(selected);
+      $target.closest('.tm-sub-list').find('.' + selected).removeClass(selected);
       $target.addClass(selected);
 
       // hide item siblings
