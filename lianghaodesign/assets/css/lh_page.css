@@ -316,7 +316,6 @@ nav {
 .lhd .design-list .item:last-child {
   margin-bottom: 0;
 }
-
 .lhd .design-list .item .image {
   cursor: pointer;
   max-width: 500px;
@@ -324,41 +323,37 @@ nav {
   overflow: hidden;
   position: relative;
 }
-
 .lhd .design-list .desc {
   margin-top: 0.5em;
 }
-
+.lhd .design-list .desc a {
+  font-style: italic;
+  text-decoration: underline;
+}
 .lhd .design-list .desc p {
   margin: 0;
-}
-
-.lhd .design-list .desc p:first-child {
   font-weight: bold;
 }
-
 .lhd .design-list .detail {
   font-size: 10px;
 }
-
 .lhd .design-list .detail p {
   padding: 0.35em 0;
 }
-
+.lhd .design-list .detail table {
+  border-spacing: 0;
+}
 .lhd .design-list .image-panel {
   font-size: 0;
   clear: both;
 }
-
 .lhd .design-list .image-panel img {
   display: none;
   float: left;
 }
-
 .lhd .design-list .image-panel img:first-child {
   display: block;
 }
-
 .lhd .design-list .image-float .image-panel {
   position: absolute;
   left: 0;
