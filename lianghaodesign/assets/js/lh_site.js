@@ -124,6 +124,33 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
     return $openItem;
   }
 
+  /*
+  * replace image placeholders with img tags so images can be downloaded
+  * */
+  function retrieveImages($content) {
+    var $imagePlaceholders = $content.find('.image-placeholder');
+    if (!$imagePlaceholders.length) {
+      return;
+    }
+
+    $imagePlaceholders.each(function(index, imageHolder) {
+      var $imageHolder = $(imageHolder), $imageContainer = $imageHolder.parent(),
+        numbers = $imageHolder.data('numbers'),
+        path = $imageHolder.data('path'),
+        i, len = numbers && numbers.length;
+      if (!len) {
+        return;
+      }
+
+      for (i = 0; i < len; i++) {
+        var $img = $('<img>').attr('src', path + numbers[i] + '.jpg');
+        $imageContainer.append($img);
+      }
+    });
+
+    $imagePlaceholders.remove();
+  }
+
   /* retrieve section content by ajax */
   function retrieveSection($section, autoScroll) {
     var url = $section.data('url'), $loading = this._el.$pageLoading, self = this;
@@ -292,6 +319,7 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
       // show item content
       if (!$content.data('isMoved')) {
         $content.detach().insertBefore($previewContent).data('isMoved', true);
+        retrieveImages.call(this, $content);
       }
       $content.fadeIn(this.animateTime.NORMAL);
 
