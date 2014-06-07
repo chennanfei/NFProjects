@@ -78,6 +78,12 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
     return true;
   }
 
+  function updateLoadingPosition() {
+    var $parent = this._el.$designList.parent(), $loading = this._el.$pageLoading,
+      offset = $parent.offset().left + ($parent.width() - $loading.width()) / 2;
+    $loading.css('left', offset);
+  }
+
   /*
   * switch the selected status of menu items.
   * */
@@ -124,6 +130,9 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
     if (!url || hasPendingAjax) {
       return;
     }
+
+    // set the loading's position
+    updateLoadingPosition.call(this);
 
     this.makeAjax(url, {
       beforeSendHandler: function() {
@@ -270,6 +279,9 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
         return;
       }
 
+      var $designList = $content.parent(),
+        $previewContent = $designList.children('.preview-content');
+
       // look for selected sub menu item and reset its status
       $target.closest('.tm-sub-list').find('.' + selected).removeClass(selected);
       $target.addClass(selected);
@@ -278,11 +290,13 @@ TM.declare('lh.controller.ItemMenuController').inherit('lh.controller.BaseContro
       $content.siblings('.content-detail').hide();
 
       // show item content
+      if (!$content.data('isMoved')) {
+        $content.detach().insertBefore($previewContent).data('isMoved', true);
+      }
       $content.fadeIn(this.animateTime.NORMAL);
 
-      var $designList = $content.closest('.design-list');
       // hide the corresponding preview item
-      var $previewItems = $designList.find('.preview-content .item');
+      var $previewItems = $previewContent.find('.item');
       $previewItems.not(':visible').show();
       $previewItems.has('.image[data-content-id=' + contentId + ']').hide();
 
