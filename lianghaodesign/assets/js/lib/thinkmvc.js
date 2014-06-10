@@ -1,7 +1,7 @@
 (function() { // resolve compatibility problems
   if (!Array.prototype.indexOf) {
     Array.prototype.indexOf = function indexOf(element) {
-      if (typeof elment === 'undefined') {
+      if (typeof element === 'undefined') {
         return -1;
       }
       for (var i = 0; i < this.length; i++) {

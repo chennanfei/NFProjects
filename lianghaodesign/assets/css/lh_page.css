@@ -162,11 +162,11 @@ nav {
 }
 
 .lhd footer *::-moz-selection {
-  background-color: #E93D1B;
+  background-color: #EF5801;
 }
 
 .lhd footer *::selection {
-  background-color: #E93D1B;
+  background-color: #EF5801;
 }
 
 .lhd footer label {
@@ -263,10 +263,10 @@ nav {
   margin-bottom: 2em;
 }
 .lhd .design-list .content.content-detail *::-moz-selection {
-  background-color: #E93D1B;
+  background-color: #EF5801;
 }
 .lhd .design-list .content.content-detail *::selection {
-  background-color: #E93D1B;
+  background-color: #EF5801;
 }
 .lhd .design-list .content.content-detail .images {
   font-size: 0px;
