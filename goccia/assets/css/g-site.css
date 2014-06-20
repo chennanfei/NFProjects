@@ -1,0 +1,139 @@
+body {
+  color: #FFFFFF;
+}
+
+.gc .tm-container {
+  max-width: 3000px;
+  min-width: 1024px;
+  padding: 0;
+  position: relative;
+}
+
+.gc .g-full-image {
+  background-position: top center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+/* header */
+.gc .g-header {
+  border: 1px solid #FFFFFF;
+  height: 40px;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 10px;
+  width: 960px;
+  z-index: 1000;
+}
+
+.gc .g-site-log {
+  background: url('../images/site-logo.png') no-repeat;
+  background-size: 100px 34px;
+  height: 34px;
+  width: 100px;
+  position: absolute;
+  left: 10px;
+  top: 2px;
+}
+
+/* section */
+.gc .g-section {
+  display: block;
+  bottom: 0;
+  right: 0;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  position: absolute;
+}
+
+.gc .g-section-product {
+  background-image: url("../images/test-2.jpg");
+}
+
+.gc .g-section-experience {
+  background-image: url("../images/test-3.jpg");
+}
+
+/* carousel */
+.gc .g-carousel,
+.gc .g-carousel-items,
+.gc .g-carousel-item {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.gc .g-carousel-control {
+  bottom: 0;
+  color: #FFFFFF;
+  left: 0;
+  right: 0;
+  position: absolute;
+  z-index: 100;
+}
+
+.gc .g-carousel-control-inner {
+  margin: 0 auto;
+  padding: 10px;
+  text-align: center;
+}
+
+.gc .g-carousel-control-item,
+.gc .g-section-menu-item {
+  background-color: #008000;
+  border: 1px solid #008000;
+  border-radius: 10px;
+  cursor: pointer;
+  height: 10px;
+  width: 10px;
+}
+
+.gc .g-carousel-control-item:hover,
+.gc .g-section-menu-item:hover {
+  background-color: #FFFFFF;
+}
+
+.gc .g-carousel-control-active,
+.gc .g-section-menu-item-active {
+  background-color: #FFFFFF;
+}
+
+.gc .g-carousel-control-item {
+  display: inline-block;
+  margin: 0 5px;
+}
+
+.gc .g-carousel-home .g-carousel-item {
+  background-image: url("../images/test-1.jpg");
+}
+
+/* menu */
+.gc .g-section-menu {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  padding: 10px;
+  z-index: 1000;
+}
+
+.gc .g-section-menu-item {
+  display: block;
+  margin: 10px 0;
+  position: relative;
+}
+
+.gc .g-item-popover {
+  background-color: #333333;
+  display: none;
+  margin-top: -10px;
+  right: 15px;
+  padding: 10px;
+  position: absolute;
+  white-space: nowrap;
+}
+
+.gc .g-section-menu-item:hover > .g-item-popover {
+  display: block;
+}
