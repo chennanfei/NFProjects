@@ -56,7 +56,7 @@ TM.declare('gc.controller.MainController').inherit('gc.controller.BaseController
 });
 
 TM.declare('gc.controller.PageMenuController').inherit('gc.controller.BaseController').extend(function() {
-  var $win = $(window), $page = $('body'),
+  var $win = $(window), $page = $('html,body'),// in some browsers $(body).animate does not work
     ACTIVE_CLASS = 'g-section-menu-item-active';
 
   /* look for the section which is closest to the window top */
@@ -64,8 +64,12 @@ TM.declare('gc.controller.PageMenuController').inherit('gc.controller.BaseContro
     var $items = this._el.$menuItems, winTop = $win.scrollTop(), min;
 
     $items.each(function(index, el) {
-      var $el = $(el), $section = $('#' + $el.data('section')),
-        top = $section.offset().top, diff = Math.abs(top - winTop);
+      var $el = $(el), $section = $('#' + $el.data('section'));
+      if (!$section.length) {
+        return;
+      }
+
+      var top = $section.offset().top, diff = Math.abs(top - winTop);
       if (!min || diff < min.diff) {
         min = { $el: $el, diff: diff };
       }
@@ -110,7 +114,7 @@ TM.declare('gc.controller.PageMenuController').inherit('gc.controller.BaseContro
   }
 
   /* change the selected status of menu items */
-  function toggleMenuItemStatus($item) {
+  function toggleMenuItem($item) {
     var $items = this._el.$menuItems;
     if (!$item || $item.hasClass(ACTIVE_CLASS)) {
       return;
@@ -162,25 +166,39 @@ TM.declare('gc.controller.PageMenuController').inherit('gc.controller.BaseContro
       // if window scrolls fast, animation is invoked, but meanwhile window doesn't
       // stop scrolling yet. delay animation in order to avoid overlap of animation
       // and window scrolling
+      var alreadyDone = false, alreadyStarted = false;
       $page.delay(100).animate({scrollTop: top}, {
         duration: 500,
 
         done: function() {
-          toggleMenuItemStatus.call(self, $item);
+          if (alreadyDone) {
+            return;
+          }
+          alreadyDone = true;
+
+          toggleMenuItem.call(self, $item);
 
           // delay releasing lock bcz when animation stops,
           // the scroll event is triggered for one time anyway
-          if (self._isAnimationLocked) { // html and body both animate
-            setTimeout(function() {
-              self._isAnimationLocked = false;
-            }, 100);
-          }
+          setTimeout(function() {
+            self._isAnimationLocked = false;
+          }, 100);
 
           // restart the carousel in the section
           CarouselList.updateAutoTransition(sectionId, 'start');
+
+          // show the menu tooltip
+          $item.find('.g-item-popover').fadeIn().delay(600).fadeOut(function() {
+            $(this).removeAttr('style');
+          });
         },
 
         start: function() {
+          if (alreadyStarted) {
+            return;
+          }
+
+          alreadyStarted = true;
           // when switching to section, stop carousels in other sections
           CarouselList.updateOtherAutoTransitions(sectionId, 'stop');
         }
@@ -254,10 +272,7 @@ TM.declare('gc.model.CarouselList').share({
   },
 
   updateOtherAutoTransitions: function(id, action) {
-    var list = this.list,
-      callback = action === 'stop'
-        ? 'stopAutoTransition'
-        : action === 'start' ? 'startAutoTransition' : null;
+    var list = this.list;
     for (var k in list) {
       if (!list.hasOwnProperty(k) || k === id) {
         continue;
@@ -271,7 +286,6 @@ TM.declare('gc.model.CarouselList').share({
 TM.declare('gc.controller.CarouselController').inherit('gc.controller.BaseController').extend(function() {
   var $win = $(window), IMAGE_DIR = './assets/images/',
     ACTIVE_CLASS = 'g-carousel-control-active', AUTO_TRANS_TIME = 2000;
-    MODE = {auto: 1, manual: 2};
 
   function adjustItemWidth() {
     var el = this._el, wd = this._winWidth;
@@ -296,12 +310,12 @@ TM.declare('gc.controller.CarouselController').inherit('gc.controller.BaseContro
         $cItem.data('index', index);
       }
 
-      var url = 'url("' + IMAGE_DIR + $el.data('image') +'.jpg")';
+      var url = 'url("' + IMAGE_DIR + $el.data('image') +'")';
       $el.css('background-image', url);
     });
 
     // copy the first item to container tail
-    var $item = el.$items.eq(0).clone().data({index: 0, isCopy: true});
+    var $item = el.$items.eq(0).clone();
     el.$items.parent().append($item);
     el.$items = el.$items.add($item[0]);
 
@@ -321,14 +335,13 @@ TM.declare('gc.controller.CarouselController').inherit('gc.controller.BaseContro
     }
   }
 
-  function transformItem($item) {
-    var index = $item.data('index');
+  function transformItem(index) {
     if (index < 0) {
       return;
     }
 
-    toggleControlItem.call(this, index);
-    this._el.$itemContainer.css(getTransformProperties.call(this, index));
+    this._el.$itemContainer.removeClass('g-carousel-items-terminate')
+      .css(getTransformProperties.call(this, index));
   }
 
   function toggleControlItem(index) {
@@ -357,7 +370,6 @@ TM.declare('gc.controller.CarouselController').inherit('gc.controller.BaseContro
       this.rootNode = '#' + carouselId; // initialize the root node firstly
       this.invoke('gc.controller.BaseController:initialize');
 
-      this._mode = MODE.auto;
       this._winWidth = $win.width();
 
       initCarousel.call(this);
@@ -365,24 +377,27 @@ TM.declare('gc.controller.CarouselController').inherit('gc.controller.BaseContro
     },
 
     clickControlItem: function(event) {
-      var $target = $(event.currentTarget);
+      var $target = $(event.currentTarget), index = $target.data('index');
       if ($target.hasClass(ACTIVE_CLASS)) {
         return;
       }
 
       this.stopAutoTransition();
-      transformItem.call(this, $target);
+
+      toggleControlItem.call(this, index);
+      transformItem.call(this, index);
     },
 
     postTransition: function() {
       // last item in the carousel is the copy of the first one, need replace it
       // by updating the transform without transition
-      if (this._isLastItem) {
+      if (this._shouldResetToFirstItem) {
         this._el.$itemContainer.addClass('g-carousel-items-terminate')
           .css(getTransformProperties.call(this, 0));
+        this._shouldResetToFirstItem = false;
       }
 
-      if (!this._timer && this._mode !== MODE.manual) {
+      if (!this._timer) {
         this.startAutoTransition();
       }
     },
@@ -394,8 +409,9 @@ TM.declare('gc.controller.CarouselController').inherit('gc.controller.BaseContro
       adjustItemWidth.call(this);
 
       // adjust the position of active item
-      var $activeItem = this._el.$controlItems.filter('.' + ACTIVE_CLASS);
-      transformItem.call(this, $activeItem);
+      var index = this._el.$controlItems.filter('.' + ACTIVE_CLASS).data('index');
+      toggleControlItem.call(this, index);
+      transformItem.call(this, index);
     },
 
     startAutoTransition: function() {
@@ -409,11 +425,10 @@ TM.declare('gc.controller.CarouselController').inherit('gc.controller.BaseContro
       this._timer = setInterval(function() {
         // look for next item
         var index = $controlItems.filter('.' + ACTIVE_CLASS).data('index') + 1,
-          controlIndex = (self._isLastItem = index >= $controlItems.length) ? 0 : index;
-        toggleControlItem.call(self, controlIndex);
+          controlIndex = (self._shouldResetToFirstItem = index >= $controlItems.length) ? 0 : index;
 
-        $itemContainer.removeClass('g-carousel-items-terminate')
-          .css(getTransformProperties.call(self, index));
+        toggleControlItem.call(self, controlIndex);
+        transformItem.call(self, index);
       }, AUTO_TRANS_TIME);
     },
 

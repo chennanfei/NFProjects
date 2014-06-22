@@ -11,7 +11,7 @@
   <link href="assets/css/g-site.css" rel="stylesheet">
 </head>
 <body data-page="main">
-  <header class="tm-container g-header">
+  <header class="tm-container g-header g-border">
     <icon class="g-site-log"></icon>
     <div style="float:right; margin-right: 20px; height: 100%;">
       <span>中文</span>
@@ -25,25 +25,50 @@
   <div class="tm-container">
     <ul id="sectionMenu" class="g-section-menu">
       <li class="g-section-menu-item" data-section="home">
-        <div class="g-item-popover">首页</div>
+        <div class="g-item-popover">
+          <span class="g-triangle g-triangle-right"></span>
+          你身体的一部分
+        </div>
       </li>
-      <li class="g-section-menu-item" data-section="product">
-        <div class="g-item-popover">产品</div>
+      <li class="g-section-menu-item" data-section="activityCompanion">
+        <div class="g-item-popover">
+          <span class="g-triangle g-triangle-right"></span>
+          全球最小智能移动伴侣
+        </div>
       </li>
-      <li class="g-section-menu-item" data-section="experience">
-        <div class="g-item-popover">体验</div>
+      <li class="g-section-menu-item" data-section="digitalLight">
+        <div class="g-item-popover">
+          <span class="g-triangle g-triangle-right"></span>
+          数字之光无（限）线未来
+        </div>
+      </li>
+      <li class="g-section-menu-item" data-section="mobileApps">
+        <div class="g-item-popover">
+          <span class="g-triangle g-triangle-right"></span>
+          移动智能应用
+        </div>
+      </li>
+      <li class="g-section-menu-item" data-section="functionFeatures">
+        <div class="g-item-popover">
+          <span class="g-triangle g-triangle-right"></span>
+          功能特色
+        </div>
+      </li>
+      <li class="g-section-menu-item" data-section="changeWithYou">
+        <div class="g-item-popover">
+          <span class="g-triangle g-triangle-right"></span>
+          搭出你自己
+        </div>
       </li>
     </ul>
 
     <section id="home" class="g-section">
       <div id="homeCarousel" class="g-carousel g-carousel-home">
         <ul class="tm-row g-carousel-items">
-          <li class="g-carousel-item" data-image="test-1"></li>
-          <li class="g-carousel-item" data-image="test-2"></li>
-          <li class="g-carousel-item" data-image="test-3"></li>
-          <li class="g-carousel-item" data-image="test-4"></li>
-          <li class="g-carousel-item" data-image="test-5"></li>
-          <li class="g-carousel-item" data-image="test-6"></li>
+          <li class="g-carousel-item" data-image="home-1.jpg"></li>
+          <li class="g-carousel-item" data-image="home-2.jpg"></li>
+          <li class="g-carousel-item" data-image="home-3.jpg"></li>
+          <li class="g-carousel-item" data-image="home-4.jpg"></li>
         </ul>
         <div class="g-carousel-control">
           <ul class="g-carousel-control-inner">
@@ -51,16 +76,74 @@
             <li class="g-carousel-control-item"></li>
             <li class="g-carousel-control-item"></li>
             <li class="g-carousel-control-item"></li>
-            <li class="g-carousel-control-item"></li>
-            <li class="g-carousel-control-item"></li>
           </ul>
         </div>
       </div>
+      <div class="tm-text-center g-section-content">
+        <p class="g-subject-text-en">Part of Your Body</p>
+        <p class="g-subject-text-cn">你身体的一部分</p>
+        <p class="tm-top-spacing-large">
+          <span class="g-buy">BUY ONLINE</span>
+        </p>
+      </div>
     </section>
 
-    <section id="product" class="g-section g-section-product g-full-image"></section>
+    <section id="activityCompanion" class="g-section g-full-image">
+      <div class="g-section-subject tm-text-center">
+        <p class="g-subject-text-en">World smallest Smart Activity Companion</p>
+        <p class="g-subject-text-cn">全球最小智能伴侣</p>
+      </div>
+    </section>
 
-    <section id="experience" class="g-section g-section-experience g-full-image"></section>
+    <section id="digitalLight" class="g-section g-full-image">
+      <div class="g-section-subject tm-text-center">
+        <p class="g-subject-text-en">Digital meet light, design of future</p>
+        <p class="g-subject-text-cn">数字之光，无限未来</p>
+      </div>
+    </section>
+
+    <section id="mobileApps" class="g-section g-full-image">
+      <div class="g-section-subject tm-text-center">
+        <p class="g-subject-text-en">Mobile App</p>
+        <p class="g-subject-text-cn">移动智能应用</p>
+      </div>
+    </section>
+
+    <section id="functionFeatures" class="g-section g-full-image">
+      <div class="g-section-subject tm-text-center">
+        <p class="g-subject-text-en">Function features</p>
+        <p class="g-subject-text-cn">功能特色</p>
+      </div>
+    </section>
+
+    <section id="changeWithYou" class="g-section g-full-image">
+      <div class="g-section-subject tm-text-center">
+        <p class="g-subject-text-en">Change with you</p>
+        <p class="g-subject-text-cn">搭出你自己</p>
+        <p class="tm-top-spacing-large">
+          <span class="g-buy">BUY ONLINE</span>
+        </p>
+      </div>
+
+      <div class="g-footer tm-text-center">
+        <div class="g-footer-inner">
+          <ul class="g-footer-menu tm-spacing-base">
+            <li>About</li>
+            <li>Contacts</li>
+            <li>Help</li>
+            <li>Supports</li>
+          </ul>
+          <div class="g-subscribe g-border">
+            <p class="tm-spacing-base tm-top-spacing-none">Subscribe to our newsletter</p>
+            <p class="tm-spacing-none tm-top-spacing-none">
+              <input class="g-field-email" type="email" placeholder="Enter Email">
+              <input class="g-button" type="submit" value="Subscribe">
+            </p>
+          </div>
+          <p>&copy;2014 G-Wearables. All rights reserved</p>
+        </div>
+      </div>
+    </section>
   </div>
 </body>
 </html>

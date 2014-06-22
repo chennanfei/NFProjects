@@ -190,12 +190,20 @@ img {
   margin-bottom: 0.4em;
 }
 
+.tm-spacing-none {
+  margin-bottom: 0;
+}
+
 .tm-spacing-small {
   margin-bottom: 0.6em;
 }
 
 .tm-top-spacing-base {
   margin-top: 1em;
+}
+
+.tm-top-spacing-none {
+  margin-top: 0;
 }
 
 .tm-top-spacing-small {
