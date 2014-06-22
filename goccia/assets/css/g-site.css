@@ -10,9 +10,8 @@ body {
 }
 
 .gc .g-full-image {
-  background-position: top center;
+  background: top center no-repeat;
   background-size: cover;
-  background-repeat: no-repeat;
 }
 
 /* header */
@@ -62,7 +61,30 @@ body {
 .gc .g-carousel-item {
   height: 100%;
   width: 100%;
+  overflow: hidden;
   position: relative;
+}
+
+.gc .g-carousel-items {
+  -webkit-transition: -webkit-transform 0.8s ease-out;
+  -moz-transition: -moz-transform 0.8s ease-out;
+  -ms-transition: -ms-transform 0.8s ease-out;
+  -o-transition: -o-transform 0.8s ease-out;
+  transition: transform 0.8s ease-out;
+}
+
+.gc .g-carousel-items-terminate {
+  -webkit-transition: -webkit-transform 0s ease-out;
+  -moz-transition: -moz-transform 0s ease-out;
+  -ms-transition: -ms-transform 0s ease-out;
+  -o-transition: -o-transform 0s ease-out;
+  transition: transform 0s ease-out;
+}
+
+.gc .g-carousel-item {
+  background: top center no-repeat;
+  background-size: cover;
+  float: left;
 }
 
 .gc .g-carousel-control {
@@ -97,6 +119,7 @@ body {
 
 .gc .g-carousel-control-active,
 .gc .g-section-menu-item-active {
+  cursor: auto;
   background-color: #FFFFFF;
 }
 
@@ -105,7 +128,7 @@ body {
   margin: 0 5px;
 }
 
-.gc .g-carousel-home .g-carousel-item {
+.gc .g-carousel-home .g-carousel-item:first-child {
   background-image: url("../images/test-1.jpg");
 }
 
