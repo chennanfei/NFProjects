@@ -4,6 +4,14 @@ body {
   font-family: 'dotum','arial', '黑体',;
 }
 
+a {
+  color: #CCD3E9;
+  text-decoration: none;
+}
+a:hover {
+  color: #FFFFFF;
+}
+
 input {
   border: 1px solid #21283A;
   color: #CCD3E9;
@@ -39,7 +47,7 @@ input::-webkit-input-placeholder {
 }
 
 .gc .g-border {
-  border: 1px solid #CCD3E9;
+  border: 1px solid #FFFFFF;
 }
 
 .gc .g-full-image {
@@ -54,7 +62,7 @@ input::-webkit-input-placeholder {
   left: 0;
   right: 0;
   top: 10px;
-  width: 960px;
+  width: 980px;
   z-index: 1000;
 }
 
@@ -80,6 +88,41 @@ input::-webkit-input-placeholder {
   position: absolute;
 }
 
+/* icon */
+.gc .g-icon {
+  background: url('../images/close-btn.png') no-repeat;
+  background-size: 15px 15px;
+  cursor: pointer;
+  width: 15px;
+  height: 15px;
+  display: block;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
+/* popover */
+.gc .g-popover {
+  background-color: #000000;
+  border-radius: 4px;
+  display: none;
+  padding: 14px 18px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 900;
+}
+
+.gc .g-popover-info {
+  width: 400px;
+}
+
+.gc .g-popover-info p {
+  line-height: 1.7;
+  margin: 0;
+  text-align: justify;
+}
+
 /* carousel */
 .gc .g-carousel,
 .gc .g-carousel-items,
@@ -99,11 +142,11 @@ input::-webkit-input-placeholder {
 }
 
 .gc .g-carousel-items-terminate {
-  -webkit-transition: -webkit-transform 0s ease-out;
-  -moz-transition: -moz-transform 0s ease-out;
-  -ms-transition: -ms-transform 0s ease-out;
-  -o-transition: -o-transform 0s ease-out;
-  transition: transform 0s ease-out;
+  -webkit-transition: -webkit-transform 0s;
+  -moz-transition: -moz-transform 0s;
+  -ms-transition: -ms-transform 0s;
+  -o-transition: -o-transform 0s;
+  transition: transform 0s;
 }
 
 .gc .g-carousel-item {
@@ -187,7 +230,7 @@ input::-webkit-input-placeholder {
 }
 
 .gc .g-item-popover {
-  background-color: #333333;
+  border: 1px solid #FFFFFF;
   display: none;
   margin-top: -12px;
   right: 25px;
@@ -278,15 +321,10 @@ input::-webkit-input-placeholder {
 
 .gc .g-footer .g-subscribe .g-field-email {
   background-color: #1A212B;
-  width: 240px;
+  width: 250px;
 }
 
 .gc .g-footer .g-footer-menu li {
   display: inline;
   padding: 0 10px;
-  cursor: pointer;
-}
-
-.gc .g-footer .g-footer-menu li:hover {
-  color: #FFFFFF;
 }

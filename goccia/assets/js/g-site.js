@@ -43,6 +43,8 @@ TM.declare('gc.controller.MainController').inherit('gc.controller.BaseController
       this.U.getClass('gc.model.CarouselList').addCarousel('home',
         this.U.createInstance('gc.controller.CarouselController', 'homeCarousel')
       );
+
+      this.U.createInstance('gc.controller.PopoverController');
     },
 
     resizeWindow: function() {
@@ -170,6 +172,18 @@ TM.declare('gc.controller.PageMenuController').inherit('gc.controller.BaseContro
       $page.delay(100).animate({scrollTop: top}, {
         duration: 500,
 
+        complete: function() {
+          if (!self._isAnimationLocked) {
+            return;
+          }
+
+          // delay releasing lock bcz when animation stops,
+          // the scroll event is triggered for one time anyway
+          setTimeout(function() {
+            self._isAnimationLocked = false;
+          }, 100);
+        },
+
         done: function() {
           if (alreadyDone) {
             return;
@@ -178,17 +192,11 @@ TM.declare('gc.controller.PageMenuController').inherit('gc.controller.BaseContro
 
           toggleMenuItem.call(self, $item);
 
-          // delay releasing lock bcz when animation stops,
-          // the scroll event is triggered for one time anyway
-          setTimeout(function() {
-            self._isAnimationLocked = false;
-          }, 100);
-
           // restart the carousel in the section
           CarouselList.updateAutoTransition(sectionId, 'start');
 
           // show the menu tooltip
-          $item.find('.g-item-popover').fadeIn().delay(600).fadeOut(function() {
+          $item.find('.g-item-popover').show().delay(500).fadeOut(function() {
             $(this).removeAttr('style');
           });
         },
@@ -212,7 +220,6 @@ TM.declare('gc.controller.PageMenuController').inherit('gc.controller.BaseContro
       // press window scroll bar and scroll page. in this case,
       // look for the closest section
       if (!this._isMousePressed && this._isPressedScroll) {
-        this._isPressedScroll = false;
         showClosestSection.call(this);
       }
     },
@@ -224,10 +231,10 @@ TM.declare('gc.controller.PageMenuController').inherit('gc.controller.BaseContro
         return;
       }
 
-      if (this._isMousePressed) {
-        // set flag when mouse is pressed and window starts to scroll
-        this._isPressedScroll = true;
-      } else {
+      // set flag when mouse is pressed and window starts to scroll
+      this._isPressedScroll = this._isMousePressed ? true : false;
+
+      if (!this._isMousePressed) {
         // scroll the mouse or use up/down keyboard
         showNextSection.call(this, scrollTop);
       }
@@ -378,7 +385,7 @@ TM.declare('gc.controller.CarouselController').inherit('gc.controller.BaseContro
 
     clickControlItem: function(event) {
       var $target = $(event.currentTarget), index = $target.data('index');
-      if ($target.hasClass(ACTIVE_CLASS)) {
+      if ($target.hasClass(ACTIVE_CLASS) || this._shouldResetToFirstItem) {
         return;
       }
 
@@ -437,6 +444,97 @@ TM.declare('gc.controller.CarouselController').inherit('gc.controller.BaseContro
         clearInterval(this._timer);
       }
       this._timer = 0;
+  }
+};
+});
+
+TM.declare('gc.controller.PopoverController').inherit('gc.controller.BaseController').extend(function() {
+  var $doc = $(document), popovers = {}, eventsBound = false, hasOpenPopover = false;
+
+  function closePopover(event) {
+    if (!hasOpenPopover) {
+      return;
+    }
+
+    // check if the event is from popover itself
+    var $target = $(event.target);
+    if ($target.is('.g-popover-trigger') || $target.is('.g-popover')) {
+      return;
+    }
+
+    var $popover = $target.closest('.g-popover');
+    if ($popover.length) {
+      if ($target.is('.g-popover-close')) {
+        $popover.fadeOut();
+      }
+      return;
+    }
+
+    closeOpenPopover();
+  }
+
+  function closeOpenPopover() {
+    for (var k in popovers) {
+      if (popovers.hasOwnProperty(k) && popovers[k].is(':visible')) {
+        popovers[k].fadeOut();
+        hasOpenPopover = false;
+        break;
+      }
+    }
+  }
+
+  function showPopover(event) {
+    event.preventDefault();
+
+    var popoverId = $(event.currentTarget).data('popoverId'),
+      $popover = popovers.hasOwnProperty(popoverId) && popovers[popoverId];
+    if (!$popover) {
+      $popover = $('#' + popoverId);
+      if ($popover.length) {
+        popovers[popoverId] = $popover;
+      } else {
+        return;
+      }
+    }
+
+    if ($popover.is(':visible')) {
+      return;
+    }
+
+    closeOpenPopover();
+    updatePosition($popover);
+    $popover.fadeIn();
+
+    hasOpenPopover = true;
+  }
+
+  function updatePosition($popover) {
+    if (!($popover && $popover.length)) {
+      return;
+    }
+
+    $popover.css({
+      'margin-left': -1 * $popover.width() / 2,
+      'margin-top': -1 * $popover.height() / 2
+    });
+  }
+
+  return {
+    initialize: function() {
+      if (eventsBound) {
+        return;
+      }
+
+      $doc.on('click', closePopover).on('click', '.g-popover-trigger', showPopover);
+      eventsBound = true;
+    }
+  };
+});
+
+TM.declare('gc.controller.ChangeWithYouController').inherit('gc.controller.BaseController').extend(function() {
+  return {
+    initialize: function() {
+      this.invoke('gc.controller.BaseController:initialize');
     }
   };
 });
