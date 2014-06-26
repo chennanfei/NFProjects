@@ -50,9 +50,17 @@ input::-webkit-input-placeholder {
   border: 1px solid #FFFFFF;
 }
 
+.gc .g-color-highlight {
+  color: #FFFFFF;
+}
+
 .gc .g-full-image {
   background: top center no-repeat;
   background-size: cover;
+}
+
+.gc .g-padding-none {
+  padding: 0 !important;
 }
 
 /* header */
@@ -66,7 +74,7 @@ input::-webkit-input-placeholder {
   z-index: 1000;
 }
 
-.gc .g-site-log {
+.gc .g-site-logo {
   background: url('../images/site-logo.png') no-repeat;
   background-size: 100px 34px;
   height: 34px;
@@ -74,6 +82,23 @@ input::-webkit-input-placeholder {
   position: absolute;
   left: 10px;
   top: 2px;
+}
+
+.gc .g-site-links {
+  float: right;
+  list-style-type: none;
+  margin-right: 40px;
+}
+
+.gc .g-site-links li {
+  display: inline-block;
+  padding: 0 5px;
+  vertical-align: middle;
+}
+
+.gc .g-site-links li.g-divider {
+  border-left: 1px solid #FFFFFF;
+  height: 38px;
 }
 
 /* section */
@@ -90,15 +115,26 @@ input::-webkit-input-placeholder {
 
 /* icon */
 .gc .g-icon {
+  display: block;
+  opacity: 0.8;
+  position: absolute;
+}
+
+.gc .g-icon-close {
   background: url('../images/close-btn.png') no-repeat;
   background-size: 15px 15px;
   cursor: pointer;
   width: 15px;
   height: 15px;
-  display: block;
-  position: absolute;
   top: 5px;
   right: 5px;
+}
+
+/* triangle */
+.gc .g-triangle {
+  width: 0;
+  height: 0;
+  position: absolute;
 }
 
 /* popover */
@@ -108,8 +144,8 @@ input::-webkit-input-placeholder {
   display: none;
   padding: 14px 18px;
   position: absolute;
-  left: 50%;
-  top: 50%;
+  left: 0;
+  top: 0;
   z-index: 900;
 }
 
@@ -121,6 +157,17 @@ input::-webkit-input-placeholder {
   line-height: 1.7;
   margin: 0;
   text-align: justify;
+}
+
+.gc .g-popover .g-triangle {
+  border: 10px solid transparent;
+}
+
+.gc .g-popover .g-triangle-bottom {
+  border-top-color: #000000;
+  bottom: -20px;
+  left: 50%;
+  margin-left: -10px;
 }
 
 /* carousel */
@@ -234,20 +281,17 @@ input::-webkit-input-placeholder {
   display: none;
   margin-top: -12px;
   right: 25px;
-  padding: 10px;
+  padding: 5px 10px;
   position: absolute;
   white-space: nowrap;
 }
 
 .gc .g-item-popover .g-triangle {
   border: 7px solid transparent;
-  width: 0;
-  height: 0;
-  position: absolute;
 }
 
 .gc .g-item-popover .g-triangle-right {
-  border-left-color: #333333;
+  border-left-color: #FFFFFF;
   right: -14px;
   top: 50%;
   margin-top: -7px;

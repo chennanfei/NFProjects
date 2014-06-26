@@ -10,14 +10,14 @@
 </head>
 <body data-page="main">
   <header class="tm-container g-header g-border">
-    <icon class="g-site-log"></icon>
-    <div style="float:right; margin-right: 20px; height: 100%;">
-      <span>中文</span>
-      <span>-</span>
-      <span>EN</span>
-      |
-      <span>App Store</span>
-    </div>
+    <icon class="g-site-logo"></icon>
+    <ul class="g-site-links">
+      <li><a href="javascript:void(false)" class="g-color-highlight">中文</a></li>
+      <li class="g-padding-none">-</li>
+      <li><a href="javascript:void(false)">EN</a></li>
+      <li class="g-divider g-padding-none"></li>
+      <li><a href="javascript:void(false)">App Store</a></li>
+    </ul>
   </header>
 
   <div class="tm-container">
@@ -126,10 +126,18 @@
       <div class="g-footer tm-text-center">
         <div class="g-footer-inner">
           <ul class="g-footer-menu tm-spacing-base">
-            <li><a id="aboutTrigger" class="g-popover-trigger" href="javascript:void(false);" data-popover-id="about">About</a></li>
-            <li><a id="contactTrigger" class="g-popover-trigger" href="javascript:void(false);" data-popover-id="contact">Contacts</a></li>
-            <li><a href="javascript:void(false);">Help</a></li>
-            <li><a href="javascript:void(false);">Supports</a></li>
+            <li>
+              <a href="javascript:void(false);" class="g-popover-trigger" id="aboutTrigger" data-popover-id="about">About</a>
+            </li>
+            <li>
+              <a href="javascript:void(false);" class="g-popover-trigger" id="contactTrigger" data-popover-id="contact">Contacts</a>
+            </li>
+            <li>
+              <a href="javascript:void(false);" class="g-popover-trigger" id="helpTrigger" data-popover-id="help">Help</a>
+            </li>
+            <li>
+              <a href="javascript:void(false);" class="g-popover-trigger" id="supportTrigger" data-popover-id="support">Supports</a>
+            </li>
           </ul>
           <div class="g-subscribe g-border">
             <p class="tm-spacing-base tm-top-spacing-none">Subscribe to our newsletter</p>
@@ -141,20 +149,36 @@
           <p>&copy;2014 G-Wearables. All rights reserved</p>
         </div>
       </div>
-
-      <div id="about" class="g-popover g-popover-info">
-        <icon class="g-icon g-popover-close"></icon>
-        <h3>About Us</h3>
-        <p>Started in March 2013, G-Wearables is a tech start-up focused on fashionable and versatile electronic wearables. We are a united team with a passion for creativity and innovation, focusing on wearable electronic devices, technology and equipment R&D. Believing that all wearable electronics should gather information naturally and act smartly, our core competence lies in innovatively combining technology, engineering and design.</p>
-        <p>Starting from just a few members, G-Wearables is now a team of 19 located in both San Francisco and Beijing. Made up of coffee-loving engineers, experienced designers, fashionistas, and a stellar marketing team, all with an average of 10 years of experience in their respective fields, we are excited to introduce our products to the world.</p>
-      </div>
-
-      <div id="contact" class="g-popover g-popover-info">
-        <icon class="g-icon g-popover-close"></icon>
-        <h3>Contacts</h3>
-        <a href="mailto: help@g-wearables.com">help@g-wearables.com</a>
-      </div>
     </section>
+  </div>
+
+  <div id="about" class="g-popover g-popover-info">
+    <div class="g-triangle g-triangle-bottom"></div>
+    <icon class="g-icon g-icon-close g-popover-close"></icon>
+    <h2>About Us</h2>
+    <p>Started in March 2013, G-Wearables is a tech start-up focused on fashionable and versatile electronic wearables. We are a united team with a passion for creativity and innovation, focusing on wearable electronic devices, technology and equipment R&D. Believing that all wearable electronics should gather information naturally and act smartly, our core competence lies in innovatively combining technology, engineering and design.</p>
+    <p>Starting from just a few members, G-Wearables is now a team of 19 located in both San Francisco and Beijing. Made up of coffee-loving engineers, experienced designers, fashionistas, and a stellar marketing team, all with an average of 10 years of experience in their respective fields, we are excited to introduce our products to the world.</p>
+  </div>
+
+  <div id="contact" class="g-popover g-popover-info">
+    <div class="g-triangle g-triangle-bottom"></div>
+    <icon class="g-icon g-icon-close g-popover-close"></icon>
+    <h2>Contacts</h2>
+    <a href="mailto: help@g-wearables.com">help@g-wearables.com</a>
+  </div>
+
+  <div id="help" class="g-popover g-popover-info">
+    <div class="g-triangle g-triangle-bottom"></div>
+    <icon class="g-icon g-icon-close g-popover-close"></icon>
+    <h2>Help</h2>
+    <p>The content is unavailable right now. Coming soon.</p>
+  </div>
+
+  <div id="support" class="g-popover g-popover-info">
+    <div class="g-triangle g-triangle-bottom"></div>
+    <icon class="g-icon g-icon-close g-popover-close"></icon>
+    <h2>Supports</h2>
+    <p>The content is unavailable right now. Coming soon.</p>
   </div>
 </body>
 </html>

@@ -484,9 +484,7 @@ TM.declare('gc.controller.PopoverController').inherit('gc.controller.BaseControl
   }
 
   function showPopover(event) {
-    event.preventDefault();
-
-    var popoverId = $(event.currentTarget).data('popoverId'),
+    var $trigger = $(event.currentTarget), popoverId = $trigger.data('popoverId'),
       $popover = popovers.hasOwnProperty(popoverId) && popovers[popoverId];
     if (!$popover) {
       $popover = $('#' + popoverId);
@@ -502,20 +500,21 @@ TM.declare('gc.controller.PopoverController').inherit('gc.controller.BaseControl
     }
 
     closeOpenPopover();
-    updatePosition($popover);
+    updatePosition($popover, $trigger);
     $popover.fadeIn();
 
     hasOpenPopover = true;
   }
 
-  function updatePosition($popover) {
-    if (!($popover && $popover.length)) {
+  function updatePosition($popover, $trigger) {
+    if (!($popover && $popover.length && $trigger && $trigger.length)) {
       return;
     }
 
+    var offset = $trigger.offset();
     $popover.css({
-      'margin-left': -1 * $popover.width() / 2,
-      'margin-top': -1 * $popover.height() / 2
+      left: offset.left - $popover.width() / 2,
+      top: offset.top - $popover.outerHeight() - 10
     });
   }
 
