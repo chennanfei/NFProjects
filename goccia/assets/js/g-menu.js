@@ -1,6 +1,6 @@
-TM.declare('gc.controller.PageMenuController').inherit('thinkmvc.Controller').extend(function() {
+TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller').extend(function() {
   var $win = $(window), $page = $('html,body'),// in some browsers $(body).animate does not work
-    ACTIVE_CLASS = 'g-section-menu-item-active';
+    IMAGE_DIR = './assets/images/', ACTIVE_CLASS = 'g-section-menu-item-active';
 
   /* look for the section which is closest to the window top */
   function getClosestMenuItem() {
@@ -34,6 +34,49 @@ TM.declare('gc.controller.PageMenuController').inherit('thinkmvc.Controller').ex
     return $items.eq(nextIndex);
   }
 
+  function preloadImages($section) {
+    var $preload = $section.children('.g-preloading-images'),
+      imageNames = $preload.data('images');
+    if (!(imageNames && imageNames.length)) {
+      return;
+    }
+
+    $preload.detach();
+
+    var readyCount = 0, i, size = imageNames.length;
+    for (i = 0; i < size; i++) {
+      $('<img>').attr('src', IMAGE_DIR + imageNames[i] + '.jpg')
+        .load(function() {
+          readyCount++;
+
+          // when all images are downloaded, remove the loading spinner
+          if (readyCount === size) {
+            $section.children('.g-page-loading').fadeOut(function() {
+              $(this).remove();
+            });
+
+            $preload.remove();
+          }
+        })
+        .appendTo($preload);
+    }
+
+    $preload.appendTo($section);
+  }
+
+  function releaseAnimateLock() {
+    var self = this;
+    if (!self._isAnimationLocked) {
+      return;
+    }
+
+    // delay releasing lock bcz when animation stops,
+    // the scroll event is triggered for one time anyway
+    setTimeout(function() {
+      self._isAnimationLocked = false;
+    }, 100);
+  }
+
   function retrieveSectionContent($section) {
     var id = $section.attr('id'), url = $section.data('url');
     if (!(id && url)) {
@@ -63,6 +106,13 @@ TM.declare('gc.controller.PageMenuController').inherit('thinkmvc.Controller').ex
     if ($item) {
       $item.trigger('click');
     }
+  }
+
+  function showItemPopover($item) {
+    $item.find('.g-item-popover').show().delay(500)
+      .fadeOut(function() {
+        $(this).removeAttr('style');
+      });
   }
 
   /* change the selected status of menu items */
@@ -123,15 +173,7 @@ TM.declare('gc.controller.PageMenuController').inherit('thinkmvc.Controller').ex
         duration: 500,
 
         complete: function() {
-          if (!self._isAnimationLocked) {
-            return;
-          }
-
-          // delay releasing lock bcz when animation stops,
-          // the scroll event is triggered for one time anyway
-          setTimeout(function() {
-            self._isAnimationLocked = false;
-          }, 100);
+          releaseAnimateLock.call(self);
         },
 
         done: function() {
@@ -141,24 +183,20 @@ TM.declare('gc.controller.PageMenuController').inherit('thinkmvc.Controller').ex
           alreadyDone = true;
 
           toggleMenuItem.call(self, $item);
+          showItemPopover.call(self, $item);
+          preloadImages.call(self, $section);
+          retrieveSectionContent.call(self, $section);
 
           // restart the carousel in the section
           CarouselList.updateAutoTransition(sectionId, 'start');
-
-          // show the menu tooltip
-          $item.find('.g-item-popover').show().delay(500).fadeOut(function() {
-            $(this).removeAttr('style');
-          });
-
-          retrieveSectionContent.call(self, $section);
         },
 
         start: function() {
           if (alreadyStarted) {
             return;
           }
-
           alreadyStarted = true;
+
           // when switching to section, stop carousels in other sections
           CarouselList.updateOtherAutoTransitions(sectionId, 'stop');
         }
@@ -242,15 +280,21 @@ TM.declare('gc.view.SectionView').inherit('thinkmvc.View').extend(function() {
       }
 
       var $section = $('#' + data.sectionId)
-          .append((data.htmlContent))
+          .append(data.htmlContent)
           .data('url', null),
-        controller = SECTION_CONTROLLER[$section.attr('id')];
+        controller = SECTION_CONTROLLER[$section.attr('id')],
+        $secondaryBKs = $section.find('.g-background-secondary');
 
-      $section.find('.g-page-loading').fadeOut(function() {
-        $(this).remove();
-      });
+      // remove loading spinner if resources are ready
+      if (!$section.children('.g-preloading-images').length) {
+        $section.children('.g-page-loading').fadeOut(function() {
+          $(this).remove();
+        });
+      }
 
-      // initialize section events
+      this.U.getClass('gc.controller.BackgroundController').addElement($secondaryBKs);
+
+      // initialize section controller
       if (controller) {
         this.U.createInstance(controller);
       }

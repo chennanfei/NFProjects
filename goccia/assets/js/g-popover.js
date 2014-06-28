@@ -1,6 +1,7 @@
 TM.declare('gc.controller.PopoverController').inherit('thinkmvc.Controller').extend(function() {
   var $doc = $(document), $body = $('body'), popovers = {}, eventsBound = false, hasOpenPopover = false;
 
+  /* close popover when click event happens in document */
   function closePopover(event) {
     if (!hasOpenPopover) {
       return;
@@ -8,19 +9,15 @@ TM.declare('gc.controller.PopoverController').inherit('thinkmvc.Controller').ext
 
     // check if the event is from popover itself
     var $target = $(event.target);
-    if ($target.is('.g-popover-trigger') || $target.is('.g-popover')) {
+    if ($target.hasClass('g-popover-trigger') || $target.hasClass('g-popover')) {
       return;
     }
 
-    var $popover = $target.closest('.g-popover');
-    if ($popover.length) {
-      if ($target.is('.g-popover-close')) {
-        $popover.fadeOut();
-      }
-      return;
+    // check if the event is from popover inside
+    if (!$target.closest('.g-popover').length
+        || $target.hasClass('g-popover-close')) {
+      closeOpenPopover();
     }
-
-    closeOpenPopover();
   }
 
   function closeOpenPopover() {
@@ -33,30 +30,34 @@ TM.declare('gc.controller.PopoverController').inherit('thinkmvc.Controller').ext
     }
   }
 
-  function showPopover(event) {
-    var $trigger = $(event.currentTarget), popoverId = $trigger.data('popoverId'),
-      $popover = popovers.hasOwnProperty(popoverId) && popovers[popoverId];
-    if (!$popover) {
-      $popover = $('#' + popoverId);
-      if (!$popover.length) {
-        return;
-      }
-
-      if (!$popover.parent().is($body)) {
-        $popover.detach();
-        $body.append($popover);
-      }
-
-      popovers[popoverId] = $popover;
+  function getPopover(popoverId) {
+    var $popover = popovers.hasOwnProperty(popoverId) && popovers[popoverId];
+    if ($popover) {
+      return $popover;
     }
 
-    if ($popover.is(':visible')) {
+    $popover = $('#' + popoverId);
+    if (!$popover.length) {
+      return null;
+    }
+
+    if (!$popover.parent().is($body)) {
+      $popover.detach();
+      $body.append($popover);
+    }
+
+    return popovers[popoverId] = $popover;
+  }
+
+  function showPopover(event) {
+    var $trigger = $(event.currentTarget),
+      $popover = getPopover.call(this, $trigger.data('popoverId'));
+    if (!$popover || $popover.is(':visible')) {
       return;
     }
 
     closeOpenPopover();
-    updatePosition($popover, $trigger);
-    $popover.fadeIn();
+    updatePosition($popover.fadeIn(), $trigger);
 
     hasOpenPopover = true;
   }

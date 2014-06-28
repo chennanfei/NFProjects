@@ -3,10 +3,11 @@ TM.configure({
   debugEnabled: false,
 
   dependencies: {
-    first: ['jquery', 'carousel', 'menu', 'popover']
+    first: ['background', 'jquery', 'carousel', 'menu', 'popover']
   },
 
   modules: {
+    background: 'g-background.js',
     carousel: 'g-carousel.js',
     first: 'g-site.js',
     jquery: 'lib/jquery-1.11.0.js', // 'http://code.jquery.com/jquery-1.11.0.min.js'
@@ -37,8 +38,7 @@ TM.declare('gc.controller.MainController').inherit('thinkmvc.Controller').extend
     initialize: function() {
       this.invoke('thinkmvc.Controller:initialize');
       this.resizeWindow();
-
-      this.U.createInstance('gc.controller.PageMenuController');
+      this.U.createInstance('gc.controller.SectionMenuController');
     },
 
     resizeWindow: function() {
@@ -59,10 +59,8 @@ TM.declare('gc.controller.HomeController').inherit('thinkmvc.Controller').extend
   }
 });
 
-TM.declare('gc.controller.ChangeWithYouController').inherit('thinkmvc.Controller').extend(function() {
-  return {
-    initialize: function() {
-      this.U.createInstance('gc.controller.PopoverController');
-    }
-  };
+TM.declare('gc.controller.ChangeWithYouController').inherit('thinkmvc.Controller').extend({
+  initialize: function() {
+    this.U.createInstance('gc.controller.PopoverController');
+  }
 });

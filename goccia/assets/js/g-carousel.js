@@ -70,15 +70,17 @@ TM.declare('gc.controller.CarouselController').inherit('thinkmvc.Controller').ex
       if ($cItem) {
         $cItem.data('index', index);
       }
-
-      var url = 'url("' + IMAGE_DIR + $el.data('image') +'")';
-      $el.css('background-image', url);
     });
 
+    setBackgroundImages(el.$items);
+
     // copy the first item to container tail
-    var $item = el.$items.eq(0).clone();
+    var $item = el.$items.eq(0).clone(),
+      $secondaryBK = $item.find('.g-background-secondary');
     el.$items.parent().append($item);
     el.$items = el.$items.add($item[0]);
+
+    this.U.getClass('gc.controller.BackgroundController').addElement($secondaryBK);
 
     adjustItemWidth.call(this);
   }
@@ -93,6 +95,18 @@ TM.declare('gc.controller.CarouselController').inherit('thinkmvc.Controller').ex
       '-ms-transform': translateX,
       '-o-transform': translateX,
       transform: translateX
+    }
+  }
+
+  function setBackgroundImages($items) {
+    var i, size = $items.length, count;
+    for (count = 0; count < 2; count++) {
+      var selector = count === 0 ? '.g-background-primary' : '.g-background-secondary';
+      for (i = 0; i < size; i++) {
+        var $el = $items.eq(i).children(selector),
+          url = 'url("' + IMAGE_DIR + $el.data('image') + '")';
+        $el.css('background-image', url);
+      }
     }
   }
 
