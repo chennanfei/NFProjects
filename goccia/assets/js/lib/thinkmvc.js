@@ -197,10 +197,14 @@ window.TM = (function(document, window) {
           throw new Error('The class ' + className + ' was not declared.');
         }
 
-        var klass = createClass(srcFunc);
+        var klass = createClass(srcFunc), sharedObj;
         // static properties
         if (params.sharedObj) {
-          _pfCopy(klass, params.sharedObj);
+          sharedObj = params.sharedObj;
+          if (typeof sharedObj === 'function') {
+            sharedObj = sharedObj.call();
+          }
+          _pfCopy(klass, sharedObj);
         }
 
         return classes[className] = klass;
@@ -208,15 +212,14 @@ window.TM = (function(document, window) {
 
       function createClass(srcFunc) {
         if (!srcFunc) {
-          srcFunc = function() {
-          };
+          srcFunc = function() {};
         } else if (typeof srcFunc !== 'function') {
           throw new Error('Passed arg should be a function.');
         }
 
         var klass = function() {
           if ((typeof window !== 'undefined' && this === window)
-            || (typeof global !== 'undefined' && this === global)) {
+            || (typeof window.global !== 'undefined' && this === window.global)) {
             throw new Error('Please use new operator to create an object!');
           }
 
