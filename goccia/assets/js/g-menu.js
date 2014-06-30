@@ -109,7 +109,7 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
   }
 
   function showItemPopover($item) {
-    $item.find('.g-item-popover').show().delay(500)
+    $item.find('.g-menu-item-popover').show().delay(500)
       .fadeOut(function() {
         $(this).removeAttr('style');
       });
@@ -158,8 +158,12 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
     },
 
     clickMenuItem: function(event) {
-      var $item = $(event.currentTarget), sectionId = $item.data('section'),
-        $section = $('#' + sectionId), CarouselList = this.U.getClass('gc.model.CarouselList'),
+      var $item = $(event.currentTarget), sectionId = $item.data('section');
+      if (!sectionId) {
+        return;
+      }
+
+      var $section = $('#' + sectionId), CarouselList = this.U.getClass('gc.model.CarouselList'),
         top = $section.offset().top, self = this;
 
       // lock animation

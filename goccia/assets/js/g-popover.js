@@ -1,5 +1,5 @@
 TM.declare('gc.controller.PopoverController').inherit('thinkmvc.Controller').extend(function() {
-  var $doc = $(document), $body = $('body'), popovers = {}, eventsBound = false, hasOpenPopover = false;
+  var $doc = $(document), $win = $(window), $body = $('body'), popovers = {}, eventsBound = false, hasOpenPopover = false;
 
   /* close popover when click event happens in document */
   function closePopover(event) {
@@ -41,10 +41,12 @@ TM.declare('gc.controller.PopoverController').inherit('thinkmvc.Controller').ext
       return null;
     }
 
+    /*
     if (!$popover.parent().is($body)) {
       $popover.detach();
       $body.append($popover);
     }
+    */
 
     return popovers[popoverId] = $popover;
   }
@@ -57,7 +59,11 @@ TM.declare('gc.controller.PopoverController').inherit('thinkmvc.Controller').ext
     }
 
     closeOpenPopover();
-    updatePosition($popover.fadeIn(), $trigger);
+    updatePosition($popover, $trigger);
+
+    var $popoverInner = $popover.children('.g-popover-inner').hide();
+    $popover.show();
+    $popoverInner.fadeIn();
 
     hasOpenPopover = true;
   }
@@ -67,11 +73,17 @@ TM.declare('gc.controller.PopoverController').inherit('thinkmvc.Controller').ext
       return;
     }
 
-    var offset = $trigger.offset();
+    var $parent = $popover.parent(),
+      offset = $trigger.offset(), parentOffset = $parent.offset(),
+      bottom = parentOffset.top + $parent.height() - offset.top + 10,
+      left = offset.left - parentOffset.left + $trigger.width() / 2;
+    $popover.css('bottom', bottom).children('.g-triangle').css('left', left);
+    /*
     $popover.css({
-      left: offset.left - $popover.width() / 2,
+      left: offset.left - $popover.width() / 2 - 30,
       top: offset.top - $popover.outerHeight() - 10
     });
+    */
   }
 
   return {
