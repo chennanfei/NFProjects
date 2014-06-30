@@ -76,14 +76,8 @@ TM.declare('gc.controller.PopoverController').inherit('thinkmvc.Controller').ext
     var $parent = $popover.parent(),
       offset = $trigger.offset(), parentOffset = $parent.offset(),
       bottom = parentOffset.top + $parent.height() - offset.top + 10,
-      left = offset.left - parentOffset.left + $trigger.width() / 2;
+      left = offset.left - ($doc.width() - $popover.outerWidth() - $trigger.width()) / 2;
     $popover.css('bottom', bottom).children('.g-triangle').css('left', left);
-    /*
-    $popover.css({
-      left: offset.left - $popover.width() / 2 - 30,
-      top: offset.top - $popover.outerHeight() - 10
-    });
-    */
   }
 
   return {

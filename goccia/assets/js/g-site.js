@@ -43,13 +43,12 @@ TM.declare('gc.controller.MainController').inherit('thinkmvc.Controller').extend
 
     resizeWindow: function() {
       // initialize the section height and position
-      var height = $win.height(), totalHeight = 0;
+      var height = $win.height();
       this._el.$sections.each(function(index, el) {
         var $el = $(el), maxHeight = $el.data('maxHeight'),
           ht = maxHeight < height ? maxHeight : height;
 
         $(el).css({height: ht});
-        totalHeight += ht;
       });
     }
   };

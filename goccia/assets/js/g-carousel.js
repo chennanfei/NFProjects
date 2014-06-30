@@ -46,7 +46,7 @@ TM.declare('gc.model.CarouselList').share({
 
 TM.declare('gc.controller.CarouselController').inherit('thinkmvc.Controller').extend(function() {
   var $win = $(window), IMAGE_DIR = './assets/images/',
-    ACTIVE_CLASS = 'g-carousel-control-active', AUTO_TRANS_TIME = 3000;
+    ACTIVE_CLASS = 'g-carousel-control-active', AUTO_TRANS_TIME = 5000;
 
   function adjustItemWidth() {
     var el = this._el, wd = this._winWidth;
