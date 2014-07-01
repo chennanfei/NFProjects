@@ -162,6 +162,10 @@ img {
   border: none !important;
 }
 
+.tm-margin-center {
+  margin: 0 auto;
+}
+
 .tm-size-medium {
   font-size: 1.4em;
 }
