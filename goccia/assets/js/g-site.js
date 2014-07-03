@@ -39,6 +39,7 @@ TM.declare('gc.controller.MainController').inherit('thinkmvc.Controller').extend
       this.invoke('thinkmvc.Controller:initialize');
       this.resizeWindow();
       this.U.createInstance('gc.controller.SectionMenuController');
+      this.U.createInstance('gc.controller.PopoverController');
     },
 
     resizeWindow: function() {
@@ -59,11 +60,5 @@ TM.declare('gc.controller.HomeController').inherit('thinkmvc.Controller').extend
     this.U.getClass('gc.model.CarouselList').addCarousel('home',
       this.U.createInstance('gc.controller.CarouselController', 'homeCarousel')
     );
-  }
-});
-
-TM.declare('gc.controller.ChangeWithYouController').inherit('thinkmvc.Controller').extend({
-  initialize: function() {
-    this.U.createInstance('gc.controller.PopoverController');
   }
 });

@@ -110,6 +110,17 @@ input::-webkit-input-placeholder {
   background-image: url("../images/changyou-bk-color.jpg");
 }
 
+/* language */
+.g-lang-cn .g-show-en,
+.g-lang-en .g-show-cn {
+  display: none;
+}
+
+.g-lang-cn .g-highlight-cn,
+.g-lang-en .g-highlight-en {
+  color: #FFFFFF;
+}
+
 /* header */
 .g-header {
   height: 40px;
@@ -365,8 +376,13 @@ input::-webkit-input-placeholder {
 .g-popover .g-triangle-bottom {
   border-top-color: #FFFFFF;
   bottom: -20px;
-  left: 50%;
   margin-left: -10px;
+}
+
+.g-popover .g-triangle-top {
+  border-bottom-color: #FFFFFF;
+  margin-left: -10px;
+  top: -20px;
 }
 
 /* carousel */

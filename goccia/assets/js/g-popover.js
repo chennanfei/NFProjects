@@ -1,5 +1,18 @@
 TM.declare('gc.controller.PopoverController').inherit('thinkmvc.Controller').extend(function() {
-  var $doc = $(document), $win = $(window), $body = $('body'), popovers = {}, eventsBound = false, hasOpenPopover = false;
+  var $doc = $(document), $win = $(window), $body = $('body'),
+    popovers = {}, eventsBound = false, hasOpenPopover = false;
+
+  function canShowPopover($trigger, evtType) {
+    var data = $trigger.data();
+    if (!data) {
+      return false;
+    }
+
+    if (evtType === 'mouseenter') {
+      return data.activate === 'hover';
+    }
+    return true;
+  }
 
   /* close popover when click event happens in document */
   function closePopover(event) {
@@ -41,19 +54,20 @@ TM.declare('gc.controller.PopoverController').inherit('thinkmvc.Controller').ext
       return null;
     }
 
-    /*
-    if (!$popover.parent().is($body)) {
-      $popover.detach();
-      $body.append($popover);
-    }
-    */
-
     return popovers[popoverId] = $popover;
   }
 
   function showPopover(event) {
-    var $trigger = $(event.currentTarget),
-      $popover = getPopover.call(this, $trigger.data('popoverId'));
+    var $trigger = $(event.currentTarget), data = $trigger.data();
+    if (!data) {
+      return;
+    }
+
+    if (!canShowPopover($trigger, event.type)) {
+      return;
+    }
+
+    var $popover = getPopover(data.popoverId);
     if (!$popover || $popover.is(':visible')) {
       return;
     }
@@ -73,11 +87,16 @@ TM.declare('gc.controller.PopoverController').inherit('thinkmvc.Controller').ext
       return;
     }
 
-    var $parent = $popover.parent(),
-      offset = $trigger.offset(), parentOffset = $parent.offset(),
-      bottom = parentOffset.top + $parent.height() - offset.top + 10,
+    var $triangle = $popover.children('.g-triangle'), offset = $trigger.offset(),
       left = offset.left - ($doc.width() - $popover.outerWidth() - $trigger.width()) / 2;
-    $popover.css('bottom', bottom).children('.g-triangle').css('left', left);
+    if ($triangle.hasClass('g-triangle-bottom')) {
+      // trigger is below the popover
+      var $parent = $popover.parent(), parentOffset = $parent.offset(),
+        bottom = parentOffset.top + $parent.height() - offset.top + 10;
+      $popover.css('bottom', bottom).children('.g-triangle').css('left', left);
+    } else if ($triangle.hasClass('g-triangle-top')) {
+      // TODO
+    }
   }
 
   return {
@@ -86,7 +105,7 @@ TM.declare('gc.controller.PopoverController').inherit('thinkmvc.Controller').ext
         return;
       }
 
-      $doc.on('click', closePopover).on('click', '.g-popover-trigger', showPopover);
+      $doc.on('click', closePopover).on('click mouseenter', '.g-popover-trigger', showPopover);
       eventsBound = true;
     }
   };

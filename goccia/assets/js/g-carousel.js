@@ -49,7 +49,7 @@ TM.declare('gc.controller.CarouselController').inherit('thinkmvc.Controller').ex
     ACTIVE_CLASS = 'g-carousel-control-active', AUTO_TRANS_TIME = 5000;
 
   function adjustItemWidth() {
-    var el = this._el, wd = this._winWidth;
+    var el = this._el, wd = this._containerWidth;
 
     // adjust the item container's width so that all items can be in one row
     el.$itemContainer.width(wd * el.$items.length);
@@ -86,7 +86,7 @@ TM.declare('gc.controller.CarouselController').inherit('thinkmvc.Controller').ex
   }
 
   function getTransformProperties(index) {
-    var offset = -1 * this._winWidth * index,
+    var offset = -1 * this._containerWidth * index,
       translateX = 'translate(' + offset + 'px)';
 
     return {
@@ -145,7 +145,7 @@ TM.declare('gc.controller.CarouselController').inherit('thinkmvc.Controller').ex
       this.rootNode = '#' + carouselId; // initialize the root node firstly
       this.invoke('thinkmvc.Controller:initialize');
 
-      this._winWidth = $win.width();
+      this._containerWidth = this._$root.width();
 
       initCarousel.call(this);
       this.startAutoTransition();
@@ -178,7 +178,7 @@ TM.declare('gc.controller.CarouselController').inherit('thinkmvc.Controller').ex
     },
 
     resizeWindow: function() {
-      this._winWidth = $win.width();
+      this._containerWidth = this._$root.width();
 
       // reset the width of carousel items
       adjustItemWidth.call(this);

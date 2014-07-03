@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="g-lang-cn">
 <head>
   <meta charset="utf-8">
   <title>Goccia - World's smallest activity tracker</title>
@@ -7,18 +7,69 @@
   <!--<link rel="shortcut icon" href="assets/images/favicon.ico">-->
   <link href="assets/css/tm-base.css" rel="stylesheet">
   <link href="assets/css/g-site.css" rel="stylesheet">
+
+  <script type="text/javascript">
+    var GOCCIA = (function(doc, win) {
+      var localStorage = win.localStorage;
+      if (!localStorage) {
+        return;
+      }
+
+      function storage(name, value) {
+        if (!name) {
+          return;
+        }
+
+        if (arguments.length < 2) {
+          return localStorage.getItem(name) || 'cn';
+        } else {
+          localStorage.setItem(name, value);
+        }
+      }
+
+      function setLocale(locale) {
+        if (locale === storage('locale')) {
+          return;
+        }
+
+        updateHTMLCSS(locale);
+        storage('locale', locale);
+      }
+
+      function updateHTMLCSS(locale) {
+        var locale = locale || storage('locale');
+        if (locale !== 'cn' && locale !== 'en') {
+          locale = 'cn';
+        }
+
+        var html = doc.getElementsByTagName('html')[0];
+        html.className = 'g-lang-' + locale;
+      }
+
+      updateHTMLCSS();
+
+      return {
+        setLocale: setLocale
+      };
+    }(document, window));
+  </script>
 </head>
 <body data-page="main">
   <header class="tm-container g-header g-border">
     <icon class="g-icon g-icon-site-logo"></icon>
-    <icon class="g-icon g-icon-url-code"></icon>
+    <icon class="g-icon g-icon-url-code g-popover-trigger" id="urlCode" data-popover-id="downloadLinks" data-activate="hover"></icon>
     <ul class="g-site-links">
-      <li><a href="javascript:void(false)" class="g-color-highlight">中文</a></li>
+      <li><a href="javascript:void(false)" class="g-highlight-cn" onclick="GOCCIA.setLocale('cn');">中文</a></li>
       <li class="g-padding-none">-</li>
-      <li><a href="javascript:void(false)">EN</a></li>
+      <li><a href="javascript:void(false)" class="g-highlight-en" onclick="GOCCIA.setLocale('en');">EN</a></li>
       <li class="g-divider g-padding-none"></li>
       <li><a href="javascript:void(false)">App Store</a></li>
     </ul>
+    <div id="downloadLinks" class="g-popover">
+      <div class="g-triangle g-triangle-top"></div>
+      <p><a>Apple App Store</a></p>
+      <p><a>Google Play</a></p>
+    </div>
   </header>
 
   <div class="tm-container">
@@ -26,43 +77,52 @@
       <li class="g-section-menu-item g-icon g-icon-home" data-section="home">
         <div class="g-menu-item-popover">
           <span class="g-triangle g-triangle-right"></span>
-          首页
+          <span class="g-show-cn">首页</span>
+          <span class="g-show-en">Home</span>
         </div>
       </li>
       <li class="g-section-menu-item g-section-menu-item-icon" data-section="activityCompanion">
         <div class="g-menu-item-popover">
           <span class="g-triangle g-triangle-right"></span>
-          全球最小智能移动伴侣
+          <span class="g-show-cn">全球最小智能移动伴侣</span>
+          <span class="g-show-en">World smallest Smart Activity Companion</span>
         </div>
       </li>
       <li class="g-section-menu-item g-section-menu-item-icon" data-section="gocciaTime">
         <div class="g-menu-item-popover">
           <span class="g-triangle g-triangle-right"></span>
-          每时每刻
+          <span class="g-show-cn">每时每刻</span>
+          <span class="g-show-en">Goccia Time</span>
         </div>
       </li>
       <li class="g-section-menu-item g-section-menu-item-icon" data-section="mobileApps">
         <div class="g-menu-item-popover">
           <span class="g-triangle g-triangle-right"></span>
-          移动智能应用
+          <span class="g-show-cn">移动智能应用</span>
+          <span class="g-show-en">Mobile Apps</span>
         </div>
       </li>
       <li class="g-section-menu-item g-section-menu-item-icon" data-section="functionFeatures">
         <div class="g-menu-item-popover">
           <span class="g-triangle g-triangle-right"></span>
-          功能特色
+          <span class="g-show-cn">功能特色</span>
+          <span class="g-show-en">Function Features</span>
         </div>
       </li>
       <li class="g-section-menu-item g-section-menu-item-icon" data-section="changeWithYou">
         <div class="g-menu-item-popover">
           <span class="g-triangle g-triangle-right"></span>
-          搭出你自己
+          <span class="g-show-cn">搭出你自己</span>
+          <span class="g-show-en">Change With You</span>
         </div>
       </li>
       <li class="g-section-menu-item g-icon g-icon-cart">
         <div class="g-menu-item-popover">
           <span class="g-triangle g-triangle-right"></span>
-          <a>现在购买</a>
+          <a>
+            <span class="g-show-cn">现在购买</span>
+            <span class="g-show-en">Buy Now</span>
+          </a>
         </div>
       </li>
     </ul>
