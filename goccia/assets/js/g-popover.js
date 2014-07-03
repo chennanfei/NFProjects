@@ -77,7 +77,7 @@ TM.declare('gc.controller.PopoverController').inherit('thinkmvc.Controller').ext
 
     var $popoverInner = $popover.children('.g-popover-inner').hide();
     $popover.show();
-    $popoverInner.fadeIn();
+    $popoverInner.height($popover.height() - 52).fadeIn();
 
     hasOpenPopover = true;
   }

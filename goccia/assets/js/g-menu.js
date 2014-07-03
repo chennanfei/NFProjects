@@ -268,7 +268,7 @@ TM.declare('gc.model.Section').inherit('thinkmvc.Model').extend({
 
 TM.declare('gc.view.SectionView').inherit('thinkmvc.View').extend(function() {
   var SECTION_CONTROLLER = {
-    //changeWithYou: 'gc.controller.ChangeWithYouController',
+    changeWithYou: 'gc.controller.ChangeWithYouController',
     home: 'gc.controller.HomeController'
   };
 

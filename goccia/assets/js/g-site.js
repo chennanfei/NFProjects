@@ -3,12 +3,13 @@ TM.configure({
   debugEnabled: false,
 
   dependencies: {
-    first: ['background', 'jquery', 'carousel', 'menu', 'popover']
+    first: ['background', 'jquery', 'carousel', 'expander', 'menu', 'popover']
   },
 
   modules: {
     background: 'g-background.js',
     carousel: 'g-carousel.js',
+    expander: 'g-expander.js',
     first: 'g-site.js',
     jquery: 'lib/jquery-1.11.0.js', // 'http://code.jquery.com/jquery-1.11.0.min.js'
     menu: 'g-menu.js',
@@ -60,5 +61,54 @@ TM.declare('gc.controller.HomeController').inherit('thinkmvc.Controller').extend
     this.U.getClass('gc.model.CarouselList').addCarousel('home',
       this.U.createInstance('gc.controller.CarouselController', 'homeCarousel')
     );
+  }
+});
+
+TM.declare('gc.controller.ChangeWithYouController').inherit('thinkmvc.Controller').extend({
+  selectors: {
+    'data': '#changeYouPageData',
+    'expanderTemplate': '#expanderTemplate',
+    'support': '#support'
+  },
+
+  initialize: function() {
+    this.invoke('thinkmvc.Controller:initialize');
+    this.U.createInstance('gc.controller.ExpanderController');
+
+    var win = window, data = win.GOCCIA_CY_DATA;
+    this.initHelps(data.helps).initBackers(data.backers);
+
+    win.GOCCIA_CY_DATA = null;
+    this._el.$data.remove();
+  },
+
+  initBackers: function(backers) {
+    var $groups = this._el.$support.find('.g-backer-group'), $parent = $groups.parent(),
+      colNum = $groups.length;
+    if (!colNum) {
+      return;
+    }
+    $groups.detach();
+
+    backers.forEach(function(backer, index) {
+      $groups.eq([index % colNum]).append('<p>' + backer + '</p>');
+    });
+
+    $parent.append($groups);
+  },
+
+  initHelps: function(helps) {
+    var $template = this._el.$expanderTemplate,
+      $fragment = $(document.createDocumentFragment());
+    helps.forEach(function(help) {
+      var $help = $template.clone().show().removeAttr('id');
+      $help.find('.g-expander-title').html(help.title);
+      $help.find('.g-expander-content').html('<p>' + help.content + '</p>');
+      $fragment.append($help);
+    });
+
+    $template.parent().append($fragment);
+    $template.remove();
+    return this;
   }
 });

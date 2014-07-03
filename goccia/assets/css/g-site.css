@@ -344,7 +344,12 @@ input::-webkit-input-placeholder {
   box-sizing: border-box;
   color: #000000;
   display: none;
-  padding: 10px 40px 40px;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 10px 20px 20px;
   position: absolute;
   z-index: 900;
 }
@@ -352,6 +357,10 @@ input::-webkit-input-placeholder {
 .g-popover a,
 .g-popover a:hover {
   color: #000000;
+}
+
+.g-popover-inner {
+  overflow: auto;
 }
 
 .g-popover-info {
@@ -573,6 +582,45 @@ input::-webkit-input-placeholder {
 .g-section .g-section-subject .g-buy-cart .g-icon-cart {
   left: 5px;
   top: 5px;
+}
+
+/* expander */
+.g-expander {
+  border-bottom: 1px solid #C7BEB1;
+  margin-bottom: 5px;
+  position: relative;
+}
+.g-expander:last-child {
+  margin-bottom: 0;
+}
+.g-expander .g-expander-header {
+  background-color: #C7BEB1;
+  cursor: pointer;
+  padding: 5px 15px;
+}
+.g-expander .g-expander-title {
+  font-size: 1.2em;
+}
+.g-expander .g-expander-content {
+  padding: 10px;
+}
+.g-expander .g-expander-btn {
+  font-size: 18px;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.g-expander-collapsed .g-expander-btn {
+   padding: 2px 10px;
+ }
+.g-expander-collapsed .g-expander-content {
+  display: none;
+}
+.g-expander-expanded .g-expander-btn {
+  padding: 0px 10px;
+}
+.g-expander-expanded .g-expander-content {
+  display: block;
 }
 
 /* footer */

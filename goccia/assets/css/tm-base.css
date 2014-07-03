@@ -171,19 +171,19 @@ img {
 }
 
 .tm-spacing-base {
-  margin-bottom: 1.2em;
+  margin-bottom: 1.2em !important;
 }
 
 .tm-spacing-big {
-  margin-bottom: 2em;
+  margin-bottom: 2em !important;
 }
 
 .tm-spacing-extra-large {
-  margin-bottom: 3em;
+  margin-bottom: 3em !important;
 }
 
 .tm-spacing-large {
-  margin-bottom: 2.5em;
+  margin-bottom: 2.5em !important;
 }
 
 .tm-spacing-medium {
