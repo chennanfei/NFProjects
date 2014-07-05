@@ -1,12 +1,19 @@
 TM.declare('gc.model.CarouselList').share({
   list: {},
 
-  addCarousel: function(id, carousel) {
-    if (!(id && carousel)) {
-      throw new Error('Id or carousel is invalid.');
+  /* id: section which carousels live in */
+  add: function(id, carousel) {
+    if (!id) {
+      throw new Error('Id is invalid.');
     }
 
-    this.list[id] = carousel;
+    var carousels = Array.prototype.slice.call(arguments, 1);
+    if (!(carousels && carousels.length)) {
+      throw new Error('No carousels were passed in.');
+    }
+
+    this.list[id] = carousels;
+    return this;
   },
 
   updateAutoTransition: function(id, action) {
@@ -19,15 +26,19 @@ TM.declare('gc.model.CarouselList').share({
     }
 
     if (arguments.length) {
-      if (list.hasOwnProperty(id)) {
-        list[id][callback].call(list[id]);
+      if (list[id]) {
+        list[id].forEach(function(carousel) {
+          carousel[callback].call(carousel);
+        });
       }
       return;
     }
 
     for (var k in list) {
-      if (list.hasOwnProperty(k)) {
-        list[k][callback].call(list[k]);
+      if (list[k]) {
+        list[k].forEach(function(carousel) {
+          carousel[callback].call(carousel);
+        });
       }
     }
   },
@@ -54,6 +65,15 @@ TM.declare('gc.controller.CarouselController').inherit('thinkmvc.Controller').ex
     // adjust the item container's width so that all items can be in one row
     el.$itemContainer.width(wd * el.$items.length);
     el.$items.width(wd);
+  }
+
+  function getActiveItem() {
+    var $activeControlItem = this._el.$controlItems.filter('.' + ACTIVE_CLASS),
+      index = $activeControlItem && $activeControlItem.data('index'),
+      $activeItem = !isNaN(index) && this._el.$items.eq(index);
+    if ($activeItem && $activeItem.length) {
+      return $activeItem;
+    }
   }
 
   function initCarousel() {
@@ -98,13 +118,25 @@ TM.declare('gc.controller.CarouselController').inherit('thinkmvc.Controller').ex
     }
   }
 
+  function performCallback(cName) {
+    var callback = this._callbacks && this._callbacks[cName];
+    if (typeof callback === 'function') {
+      // pass current carousel instance and active item
+      callback(this, getActiveItem.call(this));
+    }
+  }
+
   function setBackgroundImages($items) {
     var i, size = $items.length, count;
     for (count = 0; count < 2; count++) {
-      var selector = count === 0 ? '.g-background-primary' : '.g-background-secondary';
       for (i = 0; i < size; i++) {
-        var $el = $items.eq(i).children(selector),
-          url = 'url("' + IMAGE_DIR + $el.data('image') + '")';
+        var $el = $items.eq(i).children('.g-background').eq(count),
+          image = $el.data('image');
+        if (!image) {
+          continue;
+        }
+
+        var url = 'url("' + IMAGE_DIR + image + '")';
         $el.css('background-image', url);
       }
     }
@@ -114,6 +146,8 @@ TM.declare('gc.controller.CarouselController').inherit('thinkmvc.Controller').ex
     if (index < 0) {
       return;
     }
+
+    performCallback.call(this, 'beforeSlide');
 
     this._el.$itemContainer.removeClass('g-carousel-items-terminate')
       .css(getTransformProperties.call(this, index));
@@ -141,11 +175,12 @@ TM.declare('gc.controller.CarouselController').inherit('thinkmvc.Controller').ex
       controlItems: '.g-carousel-control-item'
     },
 
-    initialize: function(carouselId) {
+    initialize: function(carouselId, callbacks) {
       this.rootNode = '#' + carouselId; // initialize the root node firstly
       this.invoke('thinkmvc.Controller:initialize');
 
       this._containerWidth = this._$root.width();
+      this._callbacks = callbacks;
 
       initCarousel.call(this);
       this.startAutoTransition();
@@ -164,6 +199,8 @@ TM.declare('gc.controller.CarouselController').inherit('thinkmvc.Controller').ex
     },
 
     postTransition: function() {
+      performCallback.call(this, 'afterSlide');
+
       // last item in the carousel is the copy of the first one, need replace it
       // by updating the transform without transition
       if (this._shouldResetToFirstItem) {

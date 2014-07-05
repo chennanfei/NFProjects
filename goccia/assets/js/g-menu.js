@@ -136,6 +136,7 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
       'click .g-section-menu-item': 'clickMenuItem',
       'mousedown window': 'pressMouse',
       'mouseup window': 'pressMouse',
+      'resize window': 'resizeWindow',
       'scroll window': 'scrollWindow'
     },
 
@@ -218,6 +219,10 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
       }
     },
 
+    resizeWindow: function() {
+      showClosestSection.call(this);
+    },
+
     scrollWindow: function() {
       var scrollTop = $win.scrollTop();
       if (this._isAnimationLocked) {
@@ -268,8 +273,11 @@ TM.declare('gc.model.Section').inherit('thinkmvc.Model').extend({
 
 TM.declare('gc.view.SectionView').inherit('thinkmvc.View').extend(function() {
   var SECTION_CONTROLLER = {
+    activityCompanion: 'gc.controller.ActivityController',
     changeWithYou: 'gc.controller.ChangeWithYouController',
-    home: 'gc.controller.HomeController'
+    gocciaTime: 'gc.controller.TimeController',
+    home: 'gc.controller.HomeController',
+    mobileApps: 'gc.controller.MobileController'
   };
 
   return {

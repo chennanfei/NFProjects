@@ -46,6 +46,7 @@ input::-webkit-input-placeholder {
   position: relative;
 }
 
+/* base */
 .g-border {
   border: 1px solid #FFFFFF;
 }
@@ -63,27 +64,35 @@ input::-webkit-input-placeholder {
   position: absolute;
 }
 
+.g-margin-none {
+  margin: 0 !important;
+}
+
 .g-padding-none {
   padding: 0 !important;
+}
+
+.g-middle {
+  bottom: auto !important;
+  left: 50% !important;
+  top: 50% !important;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 }
 
 /* image background */
 .g-background {
   background: top center no-repeat;
   background-size: cover;
+  text-align: center;
 }
 
 .g-background-secondary {
   opacity: 0;
   z-index: 10;
-}
-
-.g-background-activity.g-background-primary {
-  background-image: url("../images/activity-bk-gray.jpg");
-}
-
-.g-background-activity.g-background-secondary {
-  background-image: url("../images/activity-bk-color.jpg");
 }
 
 .g-background-mobile.g-background-primary {
@@ -243,16 +252,6 @@ input::-webkit-input-placeholder {
   background-position: -572px -30px;
 }
 
-.g-icon-close {
-  background-image: url('../images/close-btn.png');
-  background-size: 15px 15px;
-  cursor: pointer;
-  width: 15px;
-  height: 15px;
-  top: 5px;
-  right: 5px;
-}
-
 /* home products */
 .g-home-product {
   background: url("../images/home-products.png") no-repeat;
@@ -349,7 +348,7 @@ input::-webkit-input-placeholder {
   -o-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  padding: 10px 20px 20px;
+  padding: 10px 30px 30px 30px;
   position: absolute;
   z-index: 900;
 }
@@ -392,6 +391,16 @@ input::-webkit-input-placeholder {
   border-bottom-color: #FFFFFF;
   margin-left: -10px;
   top: -20px;
+}
+
+.g-popover-close {
+  font-size: 20px;
+  color: #000000;
+  cursor: pointer;
+  padding: 5px;
+  position: absolute;
+  top: 5px;
+  right: 5px;
 }
 
 /* carousel */
@@ -471,11 +480,20 @@ input::-webkit-input-placeholder {
   background-color: #21FF01;
 }
 
-.g-carousel-home img {
-  display: block;
-  margin: 0 auto;
-  height: 740px;
+.g-carousel-home img.g-product-image {
   width: 1024px;
+  height: 740px;
+}
+
+.g-carousel-activity img.g-product-image {
+  position: absolute;
+  width: 700px;
+  z-index: 30;
+}
+
+.g-carousel-mobile img.g-product-image {
+  left: 3px;
+  height: 387px;
 }
 
 /* menu */
@@ -546,12 +564,12 @@ input::-webkit-input-placeholder {
 }
 
 .g-section .g-section-content {
-  margin: 0 auto;
+  margin: 20px auto 0 auto;
   position: absolute;
   bottom: 60px;
   left: 0;
   right: 0;
-  top: 60px;
+  top: 40px;
   width: 980px;
   z-index: 30;
 }
@@ -658,6 +676,111 @@ input::-webkit-input-placeholder {
   top: -5px;
 }
 
+/* time clock */
+.g-clock {
+  background: url("../images/time-clock.png") no-repeat;
+  background-size: 620px 325px;
+  position: absolute;
+}
+.g-clock-shell {
+  background-position: 0px 0px;
+  width: 325px;
+  height: 325px;
+  margin-top: -60px;
+}
+.g-clock-content {
+  position: absolute;
+  white-space: nowrap;
+}
+.g-clock-time-desc h2 {
+  font-size: 32px;
+}
+.g-clock-time-desc p {
+  font-size: 20px;
+}
+.g-clock-time-desc p:last-child {
+  font-size: 16px;
+  font-style: italic;
+}
+.g-clock-content-1, .g-clock-content-4 {
+  right: 229px;
+  top: 290px;
+}
+.g-clock-content-1 .g-clock-time,
+.g-clock-content-4 .g-clock-time{
+  background-position: -340px -77px;
+  width: 32px;
+  height: 32px;
+  right: 0;
+  top: 0;
+}
+.g-clock-content-1 .g-clock-time-desc,
+.g-clock-content-4 .g-clock-time-desc{
+  margin-right: 25px;
+  margin-top: 30px;
+}
+.g-clock-content-2 {
+  top: 130px;
+  right: 310px;
+}
+.g-clock-content-2 .g-clock-time,
+.g-clock-content-5 .g-clock-time {
+  background-position: -410px -77px;
+  width: 32px;
+  height: 22px;
+  right: 0;
+  top: 20px;
+}
+.g-clock-content-2 .g-clock-time-desc,
+.g-clock-content-5 .g-clock-time-desc {
+  margin-right: 35px;
+}
+.g-clock-content-3 {
+  top: 142px;
+  left: 310px;
+}
+.g-clock-content-3 .g-clock-time {
+  background-position: -480px -77px;
+  width: 40px;
+  height: 20px;
+  top: 10px;
+}
+.g-clock-content-3 .g-clock-time-desc {
+  margin-left: 45px;
+}
+.g-clock-content-5 {
+  top: 55px;
+  right: 290px;
+}
+
+/* mobile phone */
+.g-mobile-phone {
+  height: 432px;
+  width: 207px;
+  position: relative;
+}
+.g-mobile-phone-1 {
+  float: left;
+  margin-left: 200px;
+}
+.g-mobile-phone-2 {
+  float: right;
+  margin-right: 200px;
+}
+.g-mobile-phone-inner {
+  height: 312px;
+  width: 177px;
+  left: 16px;
+  top: 61px;
+  position: relative;
+}
+.g-mobile-phone-shell {
+  background-image: url('../images/mobile-iphone.png');
+  position: absolute;
+  top: 0;
+  z-index: 30;
+}
+
 #home.g-section .g-section-subject {
   top: 38%;
 }
@@ -674,18 +797,18 @@ input::-webkit-input-placeholder {
   bottom: 120px;
 }
 
-#functionFeatures.g-section .g-section-content,
 #changeWithYou.g-section .g-section-content {
-  bottom: auto;
-  top: 50%;
-  -webkit-transform: translate(0, -50%);
-  -ms-transform: translate(0, -50%);
-  -moz-transform: translate(0, -50%);
-  -o-transform: translate(0, -50%);
-  transform: translate(0, -50%);
+  margin-top: -40px;
 }
 
+#mobileApps.g-section .g-section-subject,
 #functionFeatures.g-section .g-section-subject,
 #changeWithYou.g-section .g-section-subject {
   position: static;
+}
+
+@media screen and (min-height: 1200px) {
+  .g-carousel-activity img.g-product-image {
+    width: 1024px;
+  }
 }

@@ -58,8 +58,63 @@ TM.declare('gc.controller.MainController').inherit('thinkmvc.Controller').extend
 
 TM.declare('gc.controller.HomeController').inherit('thinkmvc.Controller').extend({
   initialize: function() {
-    this.U.getClass('gc.model.CarouselList').addCarousel('home',
+    this.U.getClass('gc.model.CarouselList').add('home',
       this.U.createInstance('gc.controller.CarouselController', 'homeCarousel')
+    );
+  }
+});
+
+TM.declare('gc.controller.ActivityController').inherit('thinkmvc.Controller').extend({
+  initialize: function() {
+    this.U.getClass('gc.model.CarouselList').add('activityCompanion',
+      this.U.createInstance('gc.controller.CarouselController', 'activityCarousel')
+    );
+  }
+});
+
+TM.declare('gc.controller.TimeController').inherit('thinkmvc.Controller').extend(function() {
+  function toggleTimes($activeItem) {
+    var index = $activeItem && $activeItem.data('index');
+    if (isNaN(index)) {
+      return;
+    }
+
+    var $clockTimes = this._el.$clockTimes,
+      $time = $clockTimes.eq(index);
+    if ($time) {
+      $clockTimes.filter(':visible').fadeOut();
+      $time.fadeIn();
+    }
+  }
+
+  return {
+    rootNode: '#gocciaTime',
+    selectors: {
+      clockTimes: '.g-clock-content'
+    },
+
+    initialize: function() {
+      this.invoke('thinkmvc.Controller:initialize');
+
+      var self = this,
+        carousel = this.U.createInstance('gc.controller.CarouselController', 'timeCarousel',
+          {
+            afterSlide: function(carouselObj, $activeItem) {
+              toggleTimes.call(self, $activeItem);
+            }
+          }
+        );
+
+      this.U.getClass('gc.model.CarouselList').add('gocciaTime', carousel);
+    }
+  };
+});
+
+TM.declare('gc.controller.MobileController').inherit('thinkmvc.Controller').extend({
+  initialize: function() {
+    this.U.getClass('gc.model.CarouselList').add('mobileApps',
+      this.U.createInstance('gc.controller.CarouselController', 'mobileCarousel1'),
+      this.U.createInstance('gc.controller.CarouselController', 'mobileCarousel2')
     );
   }
 });
