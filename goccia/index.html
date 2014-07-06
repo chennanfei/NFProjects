@@ -10,13 +10,9 @@
 
   <script type="text/javascript">
     var GOCCIA = (function(doc, win) {
-      var localStorage = win.localStorage;
-      if (!localStorage) {
-        return;
-      }
-
       function storage(name, value) {
-        if (!name) {
+        var localStorage = win.localStorage;
+        if (!name || !localStorage) {
           return;
         }
 
@@ -28,6 +24,11 @@
       }
 
       function setLocale(locale) {
+        // TODO: enable when EN is ready
+        if (true) {
+          return;
+        }
+
         if (locale === storage('locale')) {
           return;
         }
@@ -57,21 +58,32 @@
 <body data-page="main">
   <header class="tm-container g-header g-border">
     <icon class="g-icon g-icon-site-logo"></icon>
-    <icon class="g-icon g-icon-url-code g-popover-trigger" id="urlCode" data-popover-id="downloadLinks" data-activate="hover"></icon>
+    <icon class="g-icon g-icon-url-code g-cursor-pointer g-popover-trigger" id="urlCode" data-popover-id="urlCodePopover" data-auto-update="0"></icon>
+
     <ul class="g-site-links">
       <li><a href="javascript:void(false)" class="g-highlight-cn" onclick="GOCCIA.setLocale('cn');">中文</a></li>
       <li class="g-padding-none">-</li>
       <li><a href="javascript:void(false)" class="g-highlight-en" onclick="GOCCIA.setLocale('en');">EN</a></li>
       <li class="g-divider g-padding-none"></li>
-      <li><a href="javascript:void(false)">App Store</a></li>
+      <li><a href="javascript:void(false)" class="g-popover-trigger" id="appStoreLinks" data-popover-id="appStoreLinksPopover" data-auto-update="0">App Store</a></li>
     </ul>
-    <!--
-    <div id="downloadLinks" class="g-popover">
+
+    <div id="urlCodePopover" class="g-popover g-popover-url-code">
       <div class="g-triangle g-triangle-top"></div>
-      <p><a>Apple App Store</a></p>
-      <p><a>Google Play</a></p>
+      <icon class="g-icon g-icon-url-code"></icon>
     </div>
-    -->
+
+    <div id="appStoreLinksPopover" class="g-popover g-popover-download">
+      <div class="g-triangle g-triangle-top"></div>
+      <div class="tm-spacing-micro">
+        <a href="http://fir.im/goccia">
+          <icon class="g-icon g-icon-google-play"></icon>
+        </a>
+      </div>
+      <a href="http://fir.im/goccia">
+        <icon class="g-icon g-icon-apple-store"></icon>
+      </a>
+    </div>
   </header>
 
   <div class="tm-container">

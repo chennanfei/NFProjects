@@ -72,49 +72,18 @@ TM.declare('gc.controller.ActivityController').inherit('thinkmvc.Controller').ex
   }
 });
 
-TM.declare('gc.controller.TimeController').inherit('thinkmvc.Controller').extend(function() {
-  function toggleTimes($activeItem) {
-    var index = $activeItem && $activeItem.data('index');
-    if (isNaN(index)) {
-      return;
-    }
-
-    var $clockTimes = this._el.$clockTimes,
-      $time = $clockTimes.eq(index);
-    if ($time) {
-      $clockTimes.filter(':visible').fadeOut();
-      $time.fadeIn();
-    }
+TM.declare('gc.controller.TimeController').inherit('thinkmvc.Controller').extend({
+  initialize: function() {
+    this.invoke('thinkmvc.Controller:initialize');
+    this.U.getClass('gc.model.CarouselList').add('gocciaTime',
+      this.U.createInstance('gc.controller.TimeCarouselController'));
   }
-
-  return {
-    rootNode: '#gocciaTime',
-    selectors: {
-      clockTimes: '.g-clock-content'
-    },
-
-    initialize: function() {
-      this.invoke('thinkmvc.Controller:initialize');
-
-      var self = this,
-        carousel = this.U.createInstance('gc.controller.CarouselController', 'timeCarousel',
-          {
-            afterSlide: function(carouselObj, $activeItem) {
-              toggleTimes.call(self, $activeItem);
-            }
-          }
-        );
-
-      this.U.getClass('gc.model.CarouselList').add('gocciaTime', carousel);
-    }
-  };
 });
 
 TM.declare('gc.controller.MobileController').inherit('thinkmvc.Controller').extend({
   initialize: function() {
     this.U.getClass('gc.model.CarouselList').add('mobileApps',
-      this.U.createInstance('gc.controller.CarouselController', 'mobileCarousel1'),
-      this.U.createInstance('gc.controller.CarouselController', 'mobileCarousel2')
+      this.U.createInstance('gc.controller.CarouselController', 'mobileCarousel')
     );
   }
 });

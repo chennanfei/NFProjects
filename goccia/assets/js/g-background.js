@@ -1,5 +1,5 @@
 TM.declare('gc.controller.BackgroundController').share(function() {
-  var $elements = [], currentOpacity = 0, timer, INCREASE = 0.015, INTERVAL = 3000;
+  var $elements = [], currentOpacity = 0, timer, INCREASE = 0.07, INTERVAL = 2000;
 
   function removePrimaryBackgrounds() {
     $('.g-background-primary').remove();

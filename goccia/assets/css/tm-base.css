@@ -38,8 +38,10 @@ img {
 
 /* layout */
 .tm-container {
+  -o-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
-  box-sizing: border-box;
+  -ms-box-sizing: border-box;
   font-size: 1.2em;
   margin: 0 auto;
   max-width: 1280px;
@@ -58,8 +60,12 @@ img {
 
 /* grids */
 .tm-row {
+  -o-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
   box-sizing: border-box;
+  position: relative;
 }
 
 .tm-row:before, .tm-row:after {
@@ -166,8 +172,19 @@ img {
   margin: 0 auto;
 }
 
+.tm-position-abs {
+  position: absolute !important;
+}
+.tm-position-rel {
+  position: relative !important;
+}
+
 .tm-size-medium {
   font-size: 1.4em;
+}
+
+.tm-size-large {
+  font-size: 2em;
 }
 
 .tm-spacing-base {

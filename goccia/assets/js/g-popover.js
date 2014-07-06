@@ -87,6 +87,10 @@ TM.declare('gc.controller.PopoverController').inherit('thinkmvc.Controller').ext
       return;
     }
 
+    if ($trigger.data('autoUpdate') === 0) {
+      return;
+    }
+
     var $triangle = $popover.children('.g-triangle'), offset = $trigger.offset(),
       left = offset.left - ($doc.width() - $popover.outerWidth() - $trigger.width()) / 2;
     if ($triangle.hasClass('g-triangle-bottom')) {

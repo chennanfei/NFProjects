@@ -125,10 +125,10 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
     $items.filter('.' + ACTIVE_CLASS).removeClass(ACTIVE_CLASS);
     $item.addClass(ACTIVE_CLASS);
 
-    /*
-     // change the url in address bar
-     history.pushState({}, null, '#' + $item.data('section'));
-     */
+    // change the url in address bar
+    if (window.history) {
+      history.pushState({}, null, '#' + $item.data('section'));
+    }
   }
 
   return {

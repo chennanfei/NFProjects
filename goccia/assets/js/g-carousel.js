@@ -252,3 +252,79 @@ TM.declare('gc.controller.CarouselController').inherit('thinkmvc.Controller').ex
     }
   };
 });
+
+TM.declare('gc.controller.TimeCarouselController').inherit('thinkmvc.Controller').extend(function() {
+  var $win = $(window), AUTO_TRANS_TIME = 3000,
+    ITEM_LEFT_CLASS = 'g-time-carousel-item-left',
+    ITEM_RIGHT_CLASS = 'g-time-carousel-item-right',
+    ITEM_ACTIVE_CLASS = 'g-time-carousel-item-active';
+
+  function getNextItem($itemList, $item) {
+    var nextIndex = $item.data('index') + 1;
+    return $itemList.eq(nextIndex >= $itemList.length ? 0 : nextIndex);
+  }
+
+  return {
+    events: {
+      'resize window': 'resizeWindow'
+    },
+
+    rootNode: '#gocciaTimeCarousel',
+
+    selectors: {
+      items: '.g-time-carousel-item'
+    },
+
+    initialize: function() {
+      this.invoke('thinkmvc.Controller:initialize');
+
+      var width = $win.width();
+      this._el.$items.each(function(index, item) {
+        $(item).data('index', index).find('.g-background').width(width);
+      });
+
+      this.startAutoTransition();
+    },
+
+    resizeWindow: function() {
+      var width = $win.width();
+      this._el.$items.each(function(index, item) {
+        $(item).find('.g-background').width(width);
+      });
+    },
+
+    startAutoTransition: function() {
+      if (this._timer) {
+        return;
+      }
+
+      var self = this, $items = this._el.$items, size = $items.length;
+
+      this._timer = setInterval(function() {
+        var $activeItem = $items.filter('.' + ITEM_ACTIVE_CLASS),
+          $content = $('#' + $activeItem.data('contentId')),
+          $leftItem = $items.filter('.' + ITEM_LEFT_CLASS),
+          hasHalfItem = false, nextIndex = $activeItem.data('index') + 1;
+        if ($leftItem.length) {
+          $leftItem.removeClass(ITEM_LEFT_CLASS).hide();
+          hasHalfItem = true;
+        }
+
+        if (hasHalfItem) {
+          $content.fadeIn();
+        } else {
+          getNextItem($items, $activeItem).show().addClass(ITEM_ACTIVE_CLASS);
+          $activeItem.removeClass(ITEM_ACTIVE_CLASS).addClass(ITEM_LEFT_CLASS);
+          $content.fadeOut();
+        }
+      }, AUTO_TRANS_TIME);
+    },
+
+    stopAutoTransition: function() {
+      if (this._timer) {
+        clearInterval(this._timer);
+      }
+      this._timer = 0;
+    }
+  };
+});
