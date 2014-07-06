@@ -227,6 +227,8 @@ TM.declare('gc.controller.CarouselController').inherit('thinkmvc.Controller').ex
     },
 
     startAutoTransition: function() {
+      if (true) {return;}
+
       if (this._timer) {
         return;
       }
@@ -313,7 +315,7 @@ TM.declare('gc.controller.TimeCarouselController').inherit('thinkmvc.Controller'
         if (hasHalfItem) {
           $content.fadeIn();
         } else {
-          getNextItem($items, $activeItem).show().addClass(ITEM_ACTIVE_CLASS);
+          getNextItem($items, $activeItem).addClass(ITEM_ACTIVE_CLASS).show();
           $activeItem.removeClass(ITEM_ACTIVE_CLASS).addClass(ITEM_LEFT_CLASS);
           $content.fadeOut();
         }

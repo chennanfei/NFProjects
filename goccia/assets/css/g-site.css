@@ -191,7 +191,7 @@ input::-webkit-input-placeholder {
 
 .g-icon {
   background: url("../images/page-icons.png") no-repeat;
-  background-size: 620px 238px;
+  background-size: 880px 508px;
 }
 
 .g-icon:hover {
@@ -199,8 +199,8 @@ input::-webkit-input-placeholder {
 }
 
 .g-icon-site-logo {
-  background-size: 465px 178px;
-  background-position: -322px -85px;
+  background-size: 660px 381px;
+  background-position: -306px -65px;
   height: 30px;
   width: 92px;
   left: 20px;
@@ -208,8 +208,8 @@ input::-webkit-input-placeholder {
 }
 
 .g-icon-url-code {
-  background-size: 403px 155px;
-  background-position: -318px -19px;
+  background-size: 572px 330px;
+  background-position: -305px 0px;
   width: 40px;
   height: 40px;
   opacity: 1;
@@ -217,59 +217,56 @@ input::-webkit-input-placeholder {
 }
 
 .g-icon-rewards {
-  background-position: -20px -28px;
+  background-position: 0 0;
   height: 68px;
   width: 452px;
   right: 0;
 }
 
 .g-icon-google-play, .g-icon-apple-store,
-.g-icon-facebook, .g-icon-twitter, .g-icon-weixin {
+.g-icon-facebook, .g-icon-twitter, .g-icon-weixin,
+.g-icon-title-time, .g-icon-title-home, .g-icon-title-mobile, .g-icon-title-function, .g-icon-title-changeyou {
   display: inline-block;
   position: static;
 }
 
-.g-icon-google-play, .g-icon-apple-store {
-  background-size: 310px 119px;
-  height: 24px;
-}
-
 .g-icon-google-play {
-  background-position: -121px -83px;
-  width: 66px;
+  background-position: -127px -94px;
+  width: 72px;
+  height: 28px;
 }
 
 .g-icon-apple-store {
-  background-position: -201px -83px;
-  width: 78px;
+  background-position: -39px -94px;
+  width: 81px;
+  height: 28px;
 }
 
 .g-icon-facebook, .g-icon-twitter, .g-icon-weixin {
-  height: 30px;
+  height: 26px;
   margin: 0 10px;
 }
 
 .g-icon-facebook {
-  background-position: -290px -120px;
-  width: 20px;
+  background-position: -272px -94px;
+  width: 15px;
 }
 
 .g-icon-twitter {
-  background-position: -330px -120px;
+  background-position: -310px -94px;
   width: 30px;
 }
 
 .g-icon-weixin {
-  background-position: -375px -120px;
-  width: 34px;
+  background-position: -356px -94px;
+  width: 30px;
 }
 
 .g-icon-cart {
-  background-position: -573px -168px;
+  background-position: -740px -115px;
 }
 
-.g-icon-home,
-.g-icon-cart {
+.g-icon-home, .g-icon-cart {
   border: none;
   left: -3px;
   height: 15px;
@@ -277,26 +274,38 @@ input::-webkit-input-placeholder {
 }
 
 .g-icon-home {
-  background-position: -572px -30px;
+  background-position: -718px -115px;
 }
 
-/* home products */
-.g-home-product {
-  background: url("../images/home-products.png") no-repeat;
-  background-size: 1117px 329px;
-  left: 50%;
-  top: 38%;
-  margin-top: 210px;
-  position: absolute;
-  z-index: 30;
+/* title icons */
+.g-icon-title-time:hover, .g-icon-title-home:hover, .g-icon-title-mobile:hover,
+.g-icon-title-function:hover, .g-icon-title-changeyou:hover {
+  opacity: 0.8;
 }
-
-.g-home-product-text {
-  background-position: -120px -175px;
-  width: 880px;
-  height: 155px;
-  position: static;
-  margin: 0 auto;
+.g-icon-title-home {
+  background-position: 0px -150px;
+  width: 875px;
+  height: 148px;
+}
+.g-icon-title-time {
+  background-position: -540px 0;
+  width: 280px;
+  height: 100px;
+}
+.g-icon-title-mobile {
+  background-position: 0px -302px;
+  width: 572px;
+  height: 102px;
+}
+.g-icon-title-function {
+  background-position: -476px -409px;
+  width: 405px;
+  height: 100px;
+}
+.g-icon-title-changeyou {
+  background-position: 0px -409px;
+  width: 472px;
+  height: 102px;
 }
 
 /* ChangYou products */
@@ -572,7 +581,6 @@ input::-webkit-input-placeholder {
   left: auto;
 }
 
-
 /* menu */
 .g-section-menu {
   position: fixed;
@@ -689,7 +697,7 @@ input::-webkit-input-placeholder {
   margin-bottom: 0;
 }
 .g-expander .g-expander-header {
-  background-color: #C7BEB1;
+  background-color: #BEBEBE;
   cursor: pointer;
   padding: 5px 15px;
 }
@@ -750,7 +758,7 @@ input::-webkit-input-placeholder {
 .g-footer .g-download-icon-group {
   position: absolute;
   right: 0;
-  top: -5px;
+  top: -10px;
 }
 
 /* time clock */
@@ -836,7 +844,7 @@ input::-webkit-input-placeholder {
   float: left;
   height: 432px;
   width: 207px;
-  margin-left: 60px;
+  margin-left: 80px;
 }
 .g-mobile-phone-inner {
   height: 312px;
@@ -883,7 +891,6 @@ input::-webkit-input-placeholder {
 #mobileApps.g-section .g-section-content {
   height: 432px;
   margin: 0;
-  width: 700px;
 }
 
 #mobileApps.g-section .g-section-subject {
