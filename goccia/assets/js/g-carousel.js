@@ -227,8 +227,6 @@ TM.declare('gc.controller.CarouselController').inherit('thinkmvc.Controller').ex
     },
 
     startAutoTransition: function() {
-      if (true) {return;}
-
       if (this._timer) {
         return;
       }
