@@ -34,36 +34,6 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
     return $items.eq(nextIndex);
   }
 
-  function preloadImages($section) {
-    var $preload = $section.children('.g-preloading-images'),
-      imageNames = $preload.data('images');
-    if (!(imageNames && imageNames.length)) {
-      return;
-    }
-
-    $preload.detach();
-
-    var readyCount = 0, i, size = imageNames.length;
-    for (i = 0; i < size; i++) {
-      $('<img>').attr('src', IMAGE_DIR + imageNames[i] + '.jpg')
-        .load(function() {
-          readyCount++;
-
-          // when all images are downloaded, remove the loading spinner
-          if (readyCount === size) {
-            $section.children('.g-page-loading').fadeOut(function() {
-              $(this).remove();
-            });
-
-            $preload.remove();
-          }
-        })
-        .appendTo($preload);
-    }
-
-    $preload.appendTo($section);
-  }
-
   function releaseAnimateLock() {
     var self = this;
     if (!self._isAnimationLocked) {
@@ -189,7 +159,6 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
 
           toggleMenuItem.call(self, $item);
           showItemPopover.call(self, $item);
-          preloadImages.call(self, $section);
           retrieveSectionContent.call(self, $section);
 
           // restart the carousel in the section
@@ -272,13 +241,34 @@ TM.declare('gc.model.Section').inherit('thinkmvc.Model').extend({
 });
 
 TM.declare('gc.view.SectionView').inherit('thinkmvc.View').extend(function() {
-  var SECTION_CONTROLLER = {
-    activityCompanion: 'gc.controller.ActivityController',
-    changeWithYou: 'gc.controller.ChangeWithYouController',
-    gocciaTime: 'gc.controller.TimeController',
-    home: 'gc.controller.HomeController',
-    mobileApps: 'gc.controller.MobileController'
-  };
+  var $doc = $(document),
+    SECTION_CONTROLLER = {
+      activityCompanion: 'gc.controller.ActivityController',
+      changeWithYou: 'gc.controller.ChangeWithYouController',
+      gocciaTime: 'gc.controller.TimeController',
+      home: 'gc.controller.HomeController',
+      mobileApps: 'gc.controller.MobileController'
+    };
+
+  function postPreLoadImages($section) {
+    var controller = SECTION_CONTROLLER[$section.attr('id')],
+      $secondaryBKs = $section.find('.g-background-secondary');
+
+    $section.children('.g-preload-backgrounds').remove();
+    $section.children('.g-page-loading-cover').fadeOut(function() {
+      $(this).remove();
+    });
+
+    this.U.getClass('gc.controller.BackgroundController').addElement($secondaryBKs);
+    if (!$section.data('autoUpdate')) {
+      $doc.trigger('update-backgrounds');
+    }
+
+    // initialize section controller
+    if (controller) {
+      this.U.createInstance(controller);
+    }
+  }
 
   return {
     events: {
@@ -291,24 +281,17 @@ TM.declare('gc.view.SectionView').inherit('thinkmvc.View').extend(function() {
          return;
       }
 
-      var $section = $('#' + data.sectionId)
-          .append(data.htmlContent)
-          .data('url', null),
-        controller = SECTION_CONTROLLER[$section.attr('id')],
-        $secondaryBKs = $section.find('.g-background-secondary');
+      var self = this,
+        $section = $('#' + data.sectionId).append(data.htmlContent).data('url', null),
+        $items = $section.find('.g-carousel-item, .g-time-carousel-item'),
+        $images = $section.find('img.g-preload-image');
 
-      // remove loading spinner if resources are ready
-      if (!$section.children('.g-preloading-images').length) {
-        $section.children('.g-page-loading').fadeOut(function() {
-          $(this).remove();
+      if ($items.length || $images.length) {
+        this.U.createInstance('gc.controller.PreloadController', $items, $images, function() {
+          postPreLoadImages.call(self, $section);
         });
-      }
-
-      this.U.getClass('gc.controller.BackgroundController').addElement($secondaryBKs);
-
-      // initialize section controller
-      if (controller) {
-        this.U.createInstance(controller);
+      } else {
+        postPreLoadImages.call(self, $section);
       }
     }
   }

@@ -3,7 +3,7 @@ TM.configure({
   debugEnabled: false,
 
   dependencies: {
-    first: ['background', 'jquery', 'carousel', 'expander', 'menu', 'popover']
+    first: ['background', 'jquery', 'carousel', 'expander', 'menu', 'popover', 'preload']
   },
 
   modules: {
@@ -13,7 +13,8 @@ TM.configure({
     first: 'g-site.js',
     jquery: 'lib/jquery-1.11.0.js', // 'http://code.jquery.com/jquery-1.11.0.min.js'
     menu: 'g-menu.js',
-    popover: 'g-popover.js'
+    popover: 'g-popover.js',
+    preload: 'g-preload.js'
   },
 
   pages: {
@@ -58,9 +59,9 @@ TM.declare('gc.controller.MainController').inherit('thinkmvc.Controller').extend
 
 TM.declare('gc.controller.HomeController').inherit('thinkmvc.Controller').extend({
   initialize: function() {
-    this.U.getClass('gc.model.CarouselList').add('home',
-      this.U.createInstance('gc.controller.CarouselController', 'homeCarousel')
-    );
+    var carousel = this.U.createInstance('gc.controller.CarouselController',
+      'homeCarousel', {}, { manualStart: true });
+    this.U.getClass('gc.model.CarouselList').add('home', carousel);
   }
 });
 

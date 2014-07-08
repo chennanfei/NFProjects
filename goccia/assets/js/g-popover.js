@@ -27,8 +27,8 @@ TM.declare('gc.controller.PopoverController').inherit('thinkmvc.Controller').ext
     }
 
     // check if the event is from popover inside
-    if (!$target.closest('.g-popover').length
-        || $target.hasClass('g-popover-close')) {
+    if (!$target.closest('.g-popover-trigger').length
+        && (!$target.closest('.g-popover').length || $target.hasClass('g-popover-close'))) {
       closeOpenPopover();
     }
   }
@@ -104,13 +104,18 @@ TM.declare('gc.controller.PopoverController').inherit('thinkmvc.Controller').ext
   }
 
   return {
-    initialize: function() {
-      if (eventsBound) {
-        return;
-      }
+    events: {
+      'click body': 'closePopover',
+      'click .g-popover-trigger': 'showPopover',
+      'mouseenter .g-popover-trigger': 'showPopover'
+    },
 
-      $doc.on('click', closePopover).on('click mouseenter', '.g-popover-trigger', showPopover);
-      eventsBound = true;
+    closePopover: function(event) {
+      closePopover(event);
+    },
+
+    showPopover: function(event) {
+      showPopover(event);
     }
   };
 });

@@ -92,8 +92,6 @@ TM.declare('gc.controller.CarouselController').inherit('thinkmvc.Controller').ex
       }
     });
 
-    setBackgroundImages(el.$items);
-
     // copy the first item to container tail
     var $item = el.$items.eq(0).clone(),
       $secondaryBK = $item.find('.g-background-secondary');
@@ -123,22 +121,6 @@ TM.declare('gc.controller.CarouselController').inherit('thinkmvc.Controller').ex
     if (typeof callback === 'function') {
       // pass current carousel instance and active item
       callback(this, getActiveItem.call(this));
-    }
-  }
-
-  function setBackgroundImages($items) {
-    var i, size = $items.length, count;
-    for (count = 0; count < 2; count++) {
-      for (i = 0; i < size; i++) {
-        var $el = $items.eq(i).children('.g-background').eq(count),
-          image = $el.data('image');
-        if (!image) {
-          continue;
-        }
-
-        var url = 'url("' + IMAGE_DIR + image + '")';
-        $el.css('background-image', url);
-      }
     }
   }
 
@@ -175,12 +157,13 @@ TM.declare('gc.controller.CarouselController').inherit('thinkmvc.Controller').ex
       controlItems: '.g-carousel-control-item'
     },
 
-    initialize: function(carouselId, callbacks) {
+    initialize: function(carouselId, callbacks, options) {
       this.rootNode = '#' + carouselId; // initialize the root node firstly
       this.invoke('thinkmvc.Controller:initialize');
 
       this._containerWidth = this._$root.width();
-      this._callbacks = callbacks;
+      this._callbacks = callbacks || {};
+      this._options = options || { manualStart: false };
 
       initCarousel.call(this);
       this.startAutoTransition();
@@ -209,9 +192,7 @@ TM.declare('gc.controller.CarouselController').inherit('thinkmvc.Controller').ex
         this._shouldResetToFirstItem = false;
       }
 
-      if (!this._timer) {
-        this.startAutoTransition();
-      }
+      this.startAutoTransition();
     },
 
     resizeWindow: function() {
@@ -232,7 +213,7 @@ TM.declare('gc.controller.CarouselController').inherit('thinkmvc.Controller').ex
       }
 
       var $controlItems = this._el.$controlItems, $itemContainer = this._el.$itemContainer,
-        $items = this._el.$items, self = this;
+        $items = this._el.$items, self = this, $doc = $(document);
 
       this._timer = setInterval(function() {
         // look for next item
@@ -241,6 +222,9 @@ TM.declare('gc.controller.CarouselController').inherit('thinkmvc.Controller').ex
 
         toggleControlItem.call(self, controlIndex);
         transformItem.call(self, index);
+
+        // start to update backgrounds after the first image slides
+        $doc.trigger('update-backgrounds');
       }, AUTO_TRANS_TIME);
     },
 

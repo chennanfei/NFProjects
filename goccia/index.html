@@ -58,15 +58,15 @@
 </head>
 <body data-page="main">
   <header class="tm-container g-header g-border">
-    <icon class="g-icon g-icon-site-logo"></icon>
-    <icon class="g-icon g-icon-url-code g-cursor-pointer g-popover-trigger" id="urlCode" data-popover-id="urlCodePopover" data-auto-update="0"></icon>
+    <a href="index.html"><icon class="g-icon g-icon-site-logo"></icon></a>
+    <icon class="g-icon g-icon-url-code g-cursor-pointer g-popover-trigger" id="urlCode" data-popover-id="urlCodePopover" data-auto-update="0" data-activate="hover"></icon>
 
     <ul class="g-site-links">
       <li><a href="javascript:void(false)" class="g-highlight-cn" onclick="GOCCIA.setLocale('cn');">中文</a></li>
       <li class="g-padding-none">-</li>
       <li><a href="javascript:void(false)" class="g-highlight-en" onclick="GOCCIA.setLocale('en');">EN</a></li>
       <li class="g-divider g-padding-none"></li>
-      <li><a href="javascript:void(false)" class="g-popover-trigger" id="appStoreLinks" data-popover-id="appStoreLinksPopover" data-auto-update="0">App Store</a></li>
+      <li><a href="javascript:void(false)" class="g-popover-trigger" id="appStoreLinks" data-popover-id="appStoreLinksPopover" data-auto-update="0" data-activate="hover">App Store</a></li>
     </ul>
 
     <div id="urlCodePopover" class="g-popover g-popover-url-code">
@@ -89,49 +89,56 @@
 
   <div class="tm-container">
     <ul id="sectionMenu" class="g-section-menu">
-      <li class="g-section-menu-item g-icon g-icon-home" data-section="home">
+      <li class="g-section-menu-item" data-section="home">
+        <icon class="g-icon g-icon-home"></icon>
         <div class="g-menu-item-popover">
           <span class="g-triangle g-triangle-right"></span>
           <span class="g-show-cn">首页</span>
           <span class="g-show-en">Home</span>
         </div>
       </li>
-      <li class="g-section-menu-item g-section-menu-item-icon" data-section="activityCompanion">
+      <li class="g-section-menu-item" data-section="activityCompanion">
+        <div class="g-section-menu-item-icon"></div>
         <div class="g-menu-item-popover">
           <span class="g-triangle g-triangle-right"></span>
           <span class="g-show-cn">全球最小智能移动伴侣</span>
           <span class="g-show-en">World smallest Smart Activity Companion</span>
         </div>
       </li>
-      <li class="g-section-menu-item g-section-menu-item-icon" data-section="gocciaTime">
+      <li class="g-section-menu-item" data-section="gocciaTime">
+        <div class="g-section-menu-item-icon"></div>
         <div class="g-menu-item-popover">
           <span class="g-triangle g-triangle-right"></span>
           <span class="g-show-cn">每时每刻</span>
           <span class="g-show-en">Goccia Time</span>
         </div>
       </li>
-      <li class="g-section-menu-item g-section-menu-item-icon" data-section="mobileApps">
+      <li class="g-section-menu-item" data-section="mobileApps">
+        <div class="g-section-menu-item-icon"></div>
         <div class="g-menu-item-popover">
           <span class="g-triangle g-triangle-right"></span>
           <span class="g-show-cn">移动智能应用</span>
           <span class="g-show-en">Mobile Apps</span>
         </div>
       </li>
-      <li class="g-section-menu-item g-section-menu-item-icon" data-section="functionFeatures">
+      <li class="g-section-menu-item" data-section="functionFeatures">
+        <div class="g-section-menu-item-icon"></div>
         <div class="g-menu-item-popover">
           <span class="g-triangle g-triangle-right"></span>
           <span class="g-show-cn">功能特色</span>
           <span class="g-show-en">Function Features</span>
         </div>
       </li>
-      <li class="g-section-menu-item g-section-menu-item-icon" data-section="changeWithYou">
+      <li class="g-section-menu-item" data-section="changeWithYou">
+        <div class="g-section-menu-item-icon"></div>
         <div class="g-menu-item-popover">
           <span class="g-triangle g-triangle-right"></span>
           <span class="g-show-cn">搭出你自己</span>
           <span class="g-show-en">Change With You</span>
         </div>
       </li>
-      <li class="g-section-menu-item g-icon g-icon-cart">
+      <li class="g-section-menu-item">
+        <icon class="g-icon g-icon-cart"></icon>
         <div class="g-menu-item-popover">
           <span class="g-triangle g-triangle-right"></span>
           <a>
@@ -142,32 +149,52 @@
       </li>
     </ul>
 
-    <section class="g-section" id="home" data-url="ajax/home.html" data-max-height="740">
-      <div class="g-page-loading"></div>
-      <!--
-      <div class="g-preloading-images tm-hidden" data-images='["home-bk-gray", "home-bk-color"]'>
+    <section class="g-section" id="home" data-url="ajax/home.html" data-max-height="740" data-auto-update="1">
+      <div class="g-full-block g-page-loading-cover">
+        <div class="g-page-loading"></div>
       </div>
-      -->
+      <div class="g-preload-backgrounds">
+        <div class="g-background-home-p-1"></div>
+        <div class="g-background-home-s-1"></div>
+        <div class="g-background-home-p-2"></div>
+        <div class="g-background-home-s-2"></div>
+        <div class="g-background-home-p-3"></div>
+        <div class="g-background-home-s-3"></div>
+        <div class="g-background-home-p-4"></div>
+        <div class="g-background-home-s-4"></div>
+        <div class="g-background-home-p-5"></div>
+        <div class="g-background-home-s-5"></div>
+      </div>
     </section>
 
     <section class="g-section" id="activityCompanion" data-url="ajax/activity-companion.html">
-      <div class="g-page-loading"></div>
+      <div class="g-full-block g-page-loading-cover">
+        <div class="g-page-loading"></div>
+      </div>
     </section>
 
     <section class="g-section" id="gocciaTime" data-url="ajax/goccia-time.html">
-      <div class="g-page-loading"></div>
+      <div class="g-full-block g-page-loading-cover">
+        <div class="g-page-loading"></div>
+      </div>
     </section>
 
     <section class="g-section" id="mobileApps" data-url="ajax/mobile-apps.html">
-      <div class="g-page-loading"></div>
+      <div class="g-full-block g-page-loading-cover">
+        <div class="g-page-loading"></div>
+      </div>
     </section>
 
     <section class="g-section" id="functionFeatures" data-url="ajax/function-features.html">
-      <div class="g-page-loading"></div>
+      <div class="g-full-block g-page-loading-cover">
+        <div class="g-page-loading"></div>
+      </div>
     </section>
 
     <section class="g-section" id="changeWithYou" data-url="ajax/change-with-you.html">
-      <div class="g-page-loading"></div>
+      <div class="g-full-block g-page-loading-cover">
+        <div class="g-page-loading"></div>
+      </div>
     </section>
   </div>
 </body>
