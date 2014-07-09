@@ -44,16 +44,15 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
     // the scroll event is triggered for one time anyway
     setTimeout(function() {
       self._isAnimationLocked = false;
-    }, 100);
+    }, 200);
   }
 
   function retrieveSectionContent($section) {
     var id = $section.attr('id'), url = $section.data('url');
-    if (!(id && url)) {
-      return;
+    if (id && url) {
+      $section.find('.g-page-loading-cover').show();
+      this.U.createInstance('gc.model.Section', id, url);
     }
-
-    this.U.createInstance('gc.model.Section', id, url);
   }
 
   function showClosestSection() {
@@ -161,6 +160,12 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
           showItemPopover.call(self, $item);
           retrieveSectionContent.call(self, $section);
 
+          // if the section's height is smaller than the screen,
+          // try to retrieve next section, too
+          if ($section.outerHeight() < $win.height()) {
+            retrieveSectionContent.call(self, $section.next().data('loadOnNext', true));
+          }
+
           // restart the carousel in the section
           CarouselList.updateAutoTransition(sectionId, 'start');
         },
@@ -189,7 +194,17 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
     },
 
     resizeWindow: function() {
-      showClosestSection.call(this);
+      this._isWindowResized = true;
+
+      if (this._resizeDelayTimer) {
+        window.clearInterval(this._resizeDelayTimer);
+      }
+
+      // in case 'resize' event is triggered in short time
+      var self = this;
+      this._resizeDelayTimer = setTimeout(function() {
+        showClosestSection.call(self);
+      }, 500);
     },
 
     scrollWindow: function() {

@@ -57,7 +57,7 @@ TM.declare('gc.model.CarouselList').share({
 
 TM.declare('gc.controller.CarouselController').inherit('thinkmvc.Controller').extend(function() {
   var $win = $(window), IMAGE_DIR = './assets/images/',
-    ACTIVE_CLASS = 'g-carousel-control-active', AUTO_TRANS_TIME = 5000;
+    ACTIVE_CLASS = 'g-carousel-control-active', AUTO_TRANS_TIME = 4000;
 
   function adjustItemWidth() {
     var el = this._el, wd = this._containerWidth;
@@ -166,7 +166,10 @@ TM.declare('gc.controller.CarouselController').inherit('thinkmvc.Controller').ex
       this._options = options || { manualStart: false };
 
       initCarousel.call(this);
-      this.startAutoTransition();
+
+      if (!this._$root.closest('.g-section').data('loadOnNext')) {
+        this.startAutoTransition();
+      }
     },
 
     clickControlItem: function(event) {
@@ -282,24 +285,27 @@ TM.declare('gc.controller.TimeCarouselController').inherit('thinkmvc.Controller'
         return;
       }
 
-      var self = this, $items = this._el.$items, size = $items.length;
+      var self = this, $clockTick = $('#clockHalfTick'), $items = this._el.$items,
+        size = $items.length;
 
       this._timer = setInterval(function() {
         var $activeItem = $items.filter('.' + ITEM_ACTIVE_CLASS),
           $content = $('#' + $activeItem.data('contentId')),
-          $leftItem = $items.filter('.' + ITEM_LEFT_CLASS),
-          hasHalfItem = false, nextIndex = $activeItem.data('index') + 1;
+          $leftItem = $items.filter('.' + ITEM_LEFT_CLASS);
         if ($leftItem.length) {
           $leftItem.removeClass(ITEM_LEFT_CLASS).hide();
-          hasHalfItem = true;
-        }
 
-        if (hasHalfItem) {
+          if ($content.data('isHalf')) {
+            $clockTick.fadeIn();
+          }
           $content.fadeIn();
         } else {
           getNextItem($items, $activeItem).addClass(ITEM_ACTIVE_CLASS).show();
           $activeItem.removeClass(ITEM_ACTIVE_CLASS).addClass(ITEM_LEFT_CLASS);
           $content.fadeOut();
+          if ($clockTick.is(':visible')) {
+            $clockTick.fadeOut();
+          }
         }
       }, AUTO_TRANS_TIME);
     },
