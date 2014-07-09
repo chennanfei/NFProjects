@@ -30,16 +30,16 @@
       <li><a href="javascript:void(false);" class="g-popover-trigger" id="aboutTrigger" data-popover-id="about">
         <span class="g-show-cn">关于我们</span><span class="g-show-en">About</span>
       </a></li>
-      <li><a href="javascript:void(false);" class="g-popover-trigger" id="contactTrigger" data-popover-id="contact">
+      <li><a href="javascript:void(false);" class="g-popover-trigger" id="contactTrigger" data-popover-id="contacts">
         <span class="g-show-cn">联系我们</span><span class="g-show-en">Contacts</span>
       </a></li>
-      <li><a href="javascript:void(false);" class="g-popover-trigger" id="helpTrigger" data-popover-id="help">
+      <li><a href="javascript:void(false);" class="g-popover-trigger" id="helpTrigger" data-popover-id="helps">
         <span class="g-show-cn">帮助</span><span class="g-show-en">Help</span>
       </a></li>
-      <li><a href="javascript:void(false);" class="g-popover-trigger" id="supportTrigger" data-popover-id="support">
+      <li><a href="javascript:void(false);" class="g-popover-trigger" id="supportTrigger" data-popover-id="supports">
         <span class="g-show-cn">支持者</span><span class="g-show-en">Supports</span>
       </a></li>
-      <li><a href="javascript:void(false);" class="g-popover-trigger" id="jobTrigger" data-popover-id="job">
+      <li><a href="javascript:void(false);" class="g-popover-trigger" id="jobTrigger" data-popover-id="jobs">
         <span class="g-show-cn">加入我们</span><span class="g-show-en">Jobs</span>
       </a></li>
     </ul>
@@ -76,6 +76,7 @@
   </div>
 </div>
 
+<!-- about -->
 <div id="about" class="g-popover g-full-block g-popover-info">
   <div class="g-triangle g-triangle-bottom"></div>
   <icon class="g-popover-close">X</icon>
@@ -93,32 +94,152 @@
   </div>
 </div>
 
-<div id="contact" class="g-popover g-full-block g-popover-info">
+<!-- contacts -->
+<div id="contacts" class="g-popover g-full-block g-popover-info">
   <div class="g-triangle g-triangle-bottom"></div>
-  <div class="g-popover-inner">
+  <div class="g-popover-inner tm-row">
     <icon class="g-popover-close">X</icon>
-    <h2><span class="g-show-cn">联系我们</span><span class="g-show-en">Contacts</span></h2>
-    <a href="mailto:help@g-wearables.com">help@g-wearables.com</a>
+    <h2><span class="g-show-cn">联系我们</span><span class="g-show-en">Contact us</span></h2>
+
+    <div class="g-contact tm-row-col4">
+      <h4 class="g-contact-title">
+        <span class="g-show-en">Business Inquiry</span>
+        <span class="g-show-cn">商务合作</span>
+      </h4>
+      <p>
+        <label class="g-show-en">Tel:</label>
+        <label class="g-show-cn">电话:</label>
+        <span class="g-contact-phone">+86-10-6894 4663</span>
+      </p>
+      <p>
+        <label class="g-show-en">Email:</label>
+        <label class="g-show-cn">邮箱:</label>
+        <a class="g-contact-email" href="mailto:info@g-wearables.com">info@g-wearables.com</a>
+      </p>
+    </div>
+
+    <div class="g-contact tm-row-col4">
+      <h4 class="g-contact-title">
+        <span class="g-show-en">Human Resources</span>
+        <span class="g-show-cn">招聘热线</span>
+      </h4>
+      <p>
+        <label class="g-show-en">Tel:</label>
+        <label class="g-show-cn">电话:</label>
+        <span class="g-contact-phone">+86-10-6894 4663 ext. 8010</span>
+      </p>
+      <p>
+        <label class="g-show-en">Email:</label>
+        <label class="g-show-cn">邮箱:</label>
+        <a class="g-contact-email" href="mailto:hr@g-wearables.com">hr@g-wearables.com</a>
+      </p>
+    </div>
+
+    <div class="g-contact tm-row-col4 tm-row-col-last">
+      <h4 class="g-contact-title">
+        <span class="g-show-en">Product Related</span>
+        <span class="g-show-cn">产品相关</span>
+      </h4>
+      <p>
+        <label class="g-show-en">Email:</label>
+        <label class="g-show-cn">邮箱:</label>
+        <a class="g-contact-email" href="mailto:help@g-wearables.com">help@g-wearables.com</a>
+      </p>
+    </div>
   </div>
 </div>
 
-<div id="help" class="g-popover g-full-block g-popover-info">
+<!-- helps -->
+<div id="helps" class="g-popover g-full-block g-popover-info">
   <div class="g-triangle g-triangle-bottom"></div>
   <icon class="g-popover-close">X</icon>
-  <h2>FAQ about Goccia</h2>
+  <h2><span class="g-show-en">FAQ about Goccia</span><span class="g-show-cn">帮助</span></h2>
   <div class="g-popover-inner">
-    <div id="expanderTemplate" class="g-expander g-expander-collapsed tm-hidden">
+    <div class="g-expander g-expander-collapsed">
       <div class="g-expander-header">
         <div class="g-expander-btn">+</div>
-        <span class="g-expander-title"></span>
+        <span class="g-expander-title">
+          <span class="g-show-cn">如何给Goccia充电</span>
+          <span class="g-show-en">How to charge your Goccia</span>
+        </span>
       </div>
       <div class="g-expander-content">
+        <div class="g-show-cn">
+          <p>将底座和任意USB接口连接，这个接口可以是您的电脑USB口，也可以是您iPhone/Android设备的充电器。连接后，底座下方的绿灯会亮起。</p>
+          <p>将Goccia正向放在底座上，让Goccia上有LED灯的一面朝上。开始充电后，Goccia上的LED灯会轮流点亮。当充满电时，所有的LED灯会同时闪烁。</p>
+        </div>
+        <div class="g-show-en">
+          <p>First, connect the charging base to any USB port (computer, iPhone wall charger, etc). When the charger is plugged in, the green light on the bottom of the charging base will light up.</p>
+          <p>Place your Goccia face up on the wireless charger, with the LEDs facing you. When the charging starts, the LEDs will blink one by one. When the Goccia is fully charged, all of the LEDs on the Goccia will be lit.</p>
+        </div>
+        <p><img src="assets/images/help-charging.png"/></p>
+      </div>
+    </div>
+
+    <div class="g-expander g-expander-collapsed">
+      <div class="g-expander-header">
+        <div class="g-expander-btn">+</div>
+        <span class="g-expander-title">
+          <span class="g-show-cn">如何进行校准操作</span>
+          <span class="g-show-en">Calibrating your Goccia</span>
+        </span>
+      </div>
+      <div class="g-expander-content">
+        <div class="g-show-cn">
+          <p>Goccia应用有时会提示您的Goccia需要校准。这时候您需要跟随向导进行操作。</p>
+          <p>先点击屏幕中间的校准按钮，然后将扣子倒置在屏幕出现的圆圈里。</p>
+          <p>当校准完成后，拿起Goccia，看Goccia正面的LED灯光状态。如果12颗小LED灯闪烁，说明校准成功。如果没有闪烁，或者只有中间的一个LED灯闪烁，请重试一次</p>
+        </div>
+        <div class="g-show-en">
+          <p>The Goccia app will sometimes ask you to calibrate your Goccia. When you are asked to do this, please follow the instructions. First, click the round button on the screen and the circle will appear in the middle of the screen. Place your Goccia face down onto the circle (LED lights facing down). The calibration will take approximately 10 seconds. When it finishes, pick the Goccia up and check the LEDs on the front panel. If you see 12 LEDs blinking, the calibration is complete. If not, please try again.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="g-expander g-expander-collapsed">
+      <div class="g-expander-header">
+        <div class="g-expander-btn">+</div>
+        <span class="g-expander-title">
+          <span class="g-show-cn">如何进行数据同步</span>
+          <span class="g-show-en">Data synchronization</span>
+        </span>
+      </div>
+      <div class="g-expander-content">
+        <div class="g-show-cn">
+          <p>每当您想看Goccia收集到的新数据，您需要做一次同步。</p>
+          <p>把Goccia倒置在前置摄像头上，并保持静止3秒。这时扣子会发光，您可以从屏幕中的取景器看到Goccia发出的光照在了摄像头里。在光线从白色变成绿色的过程中，小幅调整Goccia，让白色光线消失在取景器的中心。然后您会看到清晰的彩色条纹，这些条纹就是您的运动数据。</p>
+          <p>保持Goccia的位置直到同步结束。如果同步成功，您会看到同步成功的提示。</p>
+        </div>
+        <div class="g-show-en">
+          <p>Every time you wish to view your activity data, you will need to sync with the Goccia app. To sync, place the Goccia face down on the front camera (LEDs facing down). After 3 seconds, the center LED will light up and you will see a white light in the viewfinder. The area of white light will shrink gradually and you will need to adjust your Goccia to make sure the white light is in the center of the viewfinder (seen on the screen). You will then see sharp colorful stripes in the viewfinder. These stripes are the activity data. Once the sync is complete your activity data will be displayed.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="g-expander g-expander-collapsed">
+      <div class="g-expander-header">
+        <div class="g-expander-btn">+</div>
+        <span class="g-expander-title">
+          <span class="g-show-cn">如何查看时间</span>
+          <span class="g-show-en">How to read time on your Goccia</span>
+        </span>
+      </div>
+      <div class="g-expander-content">
+        <div class="g-show-cn">
+          <p>Goccia上有12颗LED灯，您可以用Goccia来查看时间。</p>
+          <p>平放Goccia 3秒会触发时间显示。12颗灯中的一颗是一段圆弧，这颗灯是12点位。把它放在正上方。随后LED灯会从12点位闪烁至时针位，闪烁结束后时针保持常亮，分针闪烁3次。画面中展示的时间是5点50分。</p>
+        </div>
+        <div class="g-show-en">
+          <p>Goccia has 12 LED lights on the front panel which can be used to display time. Hold your Goccia flat for 3 seconds, which will trigger both the time and progress display. One of the 12 LEDs is arc-shaped while the others are small dots. The arc LED indicates the 12 o'clock position. The LEDs will first blink one by one to indicate hour and then the minute will blink 3 times. The pattern shown below indicates 5:50.</p>
+        </div>
+        <p><img src="assets/images/help-time.gif"></p>
       </div>
     </div>
   </div>
 </div>
 
-<div id="support" class="g-popover g-full-block g-popover-info">
+<!-- supports -->
+<div id="supports" class="g-popover g-full-block g-popover-info">
   <div class="g-triangle g-triangle-bottom"></div>
   <icon class="g-popover-close">X</icon>
   <h2>Backer Name</h2>
@@ -130,7 +251,8 @@
   </div>
 </div>
 
-<div id="job" class="g-popover g-full-block g-popover-info">
+<!-- jobs -->
+<div id="jobs" class="g-popover g-full-block g-popover-info">
   <div class="g-triangle g-triangle-bottom"></div>
   <icon class="g-popover-close">X</icon>
   <h2><span class="g-show-cn">加入我们</span><span class="g-show-en">Jobs</span></h2>
@@ -274,53 +396,6 @@
 
 <script id="changeYouPageData" type="text/javascript">
   window.GOCCIA_CY_DATA = {};
-
-  GOCCIA_CY_DATA.helps = [
-    {
-      title: 'Where can I purchase Goccia?',
-      content: 'As of right now Goccia is only available for Kickstarter backers. In the future Goccia will be available on G-Wearables.com and other major E-commerce websites.'
-    },
-    {
-      title: 'What do I do if Goccia breaks?',
-      content: 'We offer a 1 year guarantee for your Goccia! If it breaks, you can mail it back to us and we will bring it back to life.'
-    },
-    {
-      title: 'Is Goccia available in other sizes or colors?',
-      content: 'As of right now, no. As stated in our stretch goals, if we can reach $100,000 in funding we will offer the Goccia Black. If we are able to reach more than $150,000 in funding we will add the Goccia Air to the collection.'
-    },
-    {
-      title: 'Do I have to keep the iPhone app running when using Goccia?',
-      content: 'Absolutely not! Goccia works as an independent device. The app in your phone helps you to further analyze your daily activities.'
-    },
-    {
-      title: 'Are there any other functions for Goccia in the future?',
-      content: 'Yes! We have many interesting and innovative designs we hope to apply. Please continue to check our website for our newest breakthroughs!'
-    },
-    {
-      title: 'Is it possible to buy a customized Goccia?',
-      content: 'Definitely! We have designed Goccia to be worn 24/7 and welcome customized orders! Our vision is that wearable players need to play a more important role in the wearable electronic industry so please email us with any inquiries. '
-    },
-    {
-      title: 'Is Goccia compatible with Android devices and Windows phones?',
-      content: 'As of now Goccia is only compatible with iOS but we are looking to serve Android and Windows users in the future!'
-    },
-    {
-      title: 'How will I receive my Goccia?',
-      content: 'Goccia will be shipped from our factories in China to California before being delivered to you.'
-    },
-    {
-      title: 'How long does Goccia take to recharge?',
-      content: 'About 25 minutes for a full recharge. The Goccia can be charged from 0% to 80% in just 15 minutes.'
-    },
-    {
-      title: 'What is Goccia made of?',
-      content: 'Goccia is made of aluminum and the hard and durable Gorilla Glass. The wristband is made of either leather or cotton and the clasp is made of plastic.'
-    },
-    {
-      title: 'Will I be able to use Goccia with my Mac or PC?',
-      content: 'No, as of now we do not have any plans for computer support. If there is a strong demand for computer syncing we may look to add it in the future.'
-    }
-  ];
 
   GOCCIA_CY_DATA.backers = [
     'Aaron Lian',

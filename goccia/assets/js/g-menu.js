@@ -1,6 +1,6 @@
 TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller').extend(function() {
-  var $win = $(window), $page = $('html,body'),// in some browsers $(body).animate does not work
-    IMAGE_DIR = './assets/images/', ACTIVE_CLASS = 'g-section-menu-item-active';
+  var $doc = $(document), $win = $(window), $page = $('html,body'),// in some browsers $(body).animate does not work
+    IMAGE_DIR = './assets/images/', ACTIVE_CLASS = 'g-section-menu-item-active', isKeyDown = false;
 
   /* look for the section which is closest to the window top */
   function getClosestMenuItem() {
@@ -124,6 +124,10 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
       this._lastScrollTop = $win.scrollTop();
       this._timer = null;
 
+      $doc.off('keydown').on('keydown', function(event) {
+        isKeyDown = event.keyCode === 38 || event.keyCode === 40;
+      });
+
       showClosestSection.call(this);
     },
 
@@ -143,7 +147,7 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
       // stop scrolling yet. delay animation in order to avoid overlap of animation
       // and window scrolling
       var alreadyDone = false, alreadyStarted = false;
-      $page.delay(100).animate({scrollTop: top}, {
+      $page.animate({scrollTop: top}, {
         duration: 500,
 
         complete: function() {
@@ -218,11 +222,30 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
       this._isPressedScroll = this._isMousePressed ? true : false;
 
       if (!this._isMousePressed) {
-        // scroll the mouse or use up/down keyboard
-        showNextSection.call(this, scrollTop);
+        // up/down keyboard
+        if (isKeyDown) {
+          isKeyDown = false;
+          showNextSection.call(this, scrollTop);          
+          this._lastScrollTop = scrollTop;
+        } else {          
+          if (this._scrollTimer) {            
+            clearTimeout(this._scrollTimer);
+            
+            if (this._lastScrollTop !== scrollTop) {
+              var diff = this._lastScrollTop < scrollTop ? 1 : -1;
+              $win.scrollTop(this._lastScrollTop + diff);
+            }
+          }
+          
+          var self = this;
+          this._scrollTimer = setTimeout(function() {
+            showNextSection.call(self, scrollTop);
+            self._lastScrollTop = scrollTop;
+          }, 200);
+        }
+      } else {
+        this._lastScrollTop = scrollTop; // update after animation finished
       }
-
-      this._lastScrollTop = scrollTop;
     }
   };
 });

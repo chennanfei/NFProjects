@@ -644,7 +644,7 @@ input::-webkit-input-placeholder {
 
 .g-carousel-activity .g-product-image {
   position: absolute;
-  width: 1024px;
+  width: 980px;
   z-index: 30;
 }
 
@@ -856,6 +856,10 @@ input::-webkit-input-placeholder {
   position: absolute;
   white-space: nowrap;
 }
+.g-clock-time-desc {
+  padding: 0 5px 5px;
+  position: relative;
+}
 .g-clock-time-desc h2 {
   font-size: 32px;
 }
@@ -865,6 +869,11 @@ input::-webkit-input-placeholder {
 .g-clock-time-desc p:last-child {
   font-size: 16px;
   font-style: italic;
+}
+.g-clock-content-back {
+  background-color: #000000;
+  opacity: 0.6;
+  z-index: -1;
 }
 .g-clock-content-1, .g-clock-content-4 {
   right: 229px;
@@ -941,6 +950,11 @@ input::-webkit-input-placeholder {
 .g-job:last-child {
   border-bottom: none;
   margin-bottom: 0;
+}
+
+.g-contact a {
+  color: #064977;
+  text-decoration: underline;
 }
 
 #home.g-section .g-section-subject {

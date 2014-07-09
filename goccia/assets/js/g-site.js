@@ -26,10 +26,12 @@ TM.configure({
 });
 
 TM.declare('gc.controller.MainController').inherit('thinkmvc.Controller').extend(function() {
-  var $win = $(window);
+  var win = window, $win = $(win),
+    WIN_PARAMS = 'height=550, width=550, toolbar=no, menubar=0, scrollbars=1, resizable=1,location=0, status=0';
 
   return {
     events: {
+      'click .g-video-link': 'showWindowPopover',
       'resize window': 'resizeWindow'
     },
 
@@ -53,6 +55,16 @@ TM.declare('gc.controller.MainController').inherit('thinkmvc.Controller').extend
 
         $(el).css({height: ht});
       });
+    },
+
+    showWindowPopover: function(event) {
+      event.preventDefault();
+
+      var $link = $(event.currentTarget), url = $link.attr('href'),
+        title = $link.data('title') || 'Goccia';
+      if (url.match(/http(s?):\/\//)) {
+        win.open(url, title, WIN_PARAMS);
+      }
     }
   };
 });
@@ -101,7 +113,7 @@ TM.declare('gc.controller.ChangeWithYouController').inherit('thinkmvc.Controller
     this.U.createInstance('gc.controller.ExpanderController');
 
     var win = window, data = win.GOCCIA_CY_DATA;
-    this.initHelps(data.helps).initBackers(data.backers);
+    this.initBackers(data.backers);
 
     win.GOCCIA_CY_DATA = null;
     this._el.$data.remove();
@@ -120,20 +132,5 @@ TM.declare('gc.controller.ChangeWithYouController').inherit('thinkmvc.Controller
     });
 
     $parent.append($groups);
-  },
-
-  initHelps: function(helps) {
-    var $template = this._el.$expanderTemplate,
-      $fragment = $(document.createDocumentFragment());
-    helps.forEach(function(help) {
-      var $help = $template.clone().show().removeAttr('id');
-      $help.find('.g-expander-title').html(help.title);
-      $help.find('.g-expander-content').html('<p>' + help.content + '</p>');
-      $fragment.append($help);
-    });
-
-    $template.parent().append($fragment);
-    $template.remove();
-    return this;
   }
 });

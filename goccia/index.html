@@ -24,11 +24,6 @@
       }
 
       function setLocale(locale) {
-        // TODO: enable when EN is ready
-        if (true) {
-          return;
-        }
-
         if (locale === storage('locale')) {
           return;
         }
@@ -48,7 +43,7 @@
       }
 
       // enable later
-      //updateHTMLCSS();
+      updateHTMLCSS();
 
       return {
         setLocale: setLocale
