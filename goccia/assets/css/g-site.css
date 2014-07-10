@@ -41,7 +41,7 @@ input::-webkit-input-placeholder {
 
 .tm-container {
   max-width: 3000px;
-  min-width: 0;
+  min-width: 980px;
   padding: 0;
   position: relative;
 }
@@ -57,6 +57,10 @@ input::-webkit-input-placeholder {
 
 .g-color-highlight {
   color: #FFFFFF;
+}
+
+.g-color-black {
+  color: #000000;
 }
 
 .g-full-block {
@@ -875,6 +879,7 @@ input::-webkit-input-placeholder {
 }
 .g-clock-time-desc h2 {
   font-size: 32px;
+  font-family: 'regular';
 }
 .g-clock-time-desc p {
   font-size: 20px;
