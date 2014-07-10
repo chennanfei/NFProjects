@@ -55,7 +55,27 @@ TM.declare('gc.model.CarouselList').share({
   }
 });
 
-TM.declare('gc.controller.CarouselController').inherit('thinkmvc.Controller').extend(function() {
+TM.declare('gc.controller.BaseCarouselController').inherit('thinkmvc.Controller').extend({
+  controlTransition: function(event) {
+    var $target = $(event.currentTarget);
+    if ($target.data('isPaused')) {
+      $target.data('isPaused', 0).removeClass('g-icon-play').addClass('g-icon-pause');
+      this.startAutoTransition();
+    } else {
+      $target.data('isPaused', 1).removeClass('g-icon-pause').addClass('g-icon-play');
+      this.stopAutoTransition();
+    }
+  },
+
+  stopAutoTransition: function() {
+    if (this._timer) {
+      clearInterval(this._timer);
+    }
+    this._timer = 0;
+  }
+});
+
+TM.declare('gc.controller.CarouselController').inherit('gc.controller.BaseCarouselController').extend(function() {
   var $win = $(window), IMAGE_DIR = './assets/images/',
     ACTIVE_CLASS = 'g-carousel-control-active', AUTO_TRANS_TIME = 4000;
 
@@ -145,6 +165,7 @@ TM.declare('gc.controller.CarouselController').inherit('thinkmvc.Controller').ex
 
   return {
     events: {
+      'click .g-icon-trans-control': 'controlTransition',
       'click .g-carousel-control-item': 'clickControlItem',
       'resize window': 'resizeWindow',
       'transitionend .g-carousel-items': 'postTransition'
@@ -154,12 +175,13 @@ TM.declare('gc.controller.CarouselController').inherit('thinkmvc.Controller').ex
       itemContainer: '.g-carousel-items',
       items: '.g-carousel-item',
       control: '.g-carousel-control',
-      controlItems: '.g-carousel-control-item'
+      controlItems: '.g-carousel-control-item',
+      controlStatus: '.g-icon-trans-control'
     },
 
     initialize: function(carouselId, callbacks, options) {
       this.rootNode = '#' + carouselId; // initialize the root node firstly
-      this.invoke('thinkmvc.Controller:initialize');
+      this.invoke('gc.controller.BaseCarouselController:initialize');
 
       this._containerWidth = this._$root.width();
       this._callbacks = callbacks || {};
@@ -182,6 +204,17 @@ TM.declare('gc.controller.CarouselController').inherit('thinkmvc.Controller').ex
 
       toggleControlItem.call(this, index);
       transformItem.call(this, index);
+    },
+
+    controlTransition: function(event) {
+      var $target = $(event.currentTarget);
+      if ($target.data('isPaused')) {
+        $target.data('isPaused', false).removeClass('g-icon-play').addClass('g-icon-pause');
+        this.startAutoTransition();
+      } else {
+        $target.data('isPaused', true).removeClass('g-icon-pause').addClass('g-icon-play');
+        this.stopAutoTransition();
+      }
     },
 
     postTransition: function() {
@@ -211,7 +244,7 @@ TM.declare('gc.controller.CarouselController').inherit('thinkmvc.Controller').ex
     },
 
     startAutoTransition: function() {
-      if (this._timer) {
+      if (this._timer || this._el.$controlStatus.data('isPaused')) {
         return;
       }
 
@@ -229,18 +262,11 @@ TM.declare('gc.controller.CarouselController').inherit('thinkmvc.Controller').ex
         // start to update backgrounds after the first image slides
         $doc.trigger('update-backgrounds');
       }, AUTO_TRANS_TIME);
-    },
-
-    stopAutoTransition: function() {
-      if (this._timer) {
-        clearInterval(this._timer);
-      }
-      this._timer = 0;
     }
   };
 });
 
-TM.declare('gc.controller.TimeCarouselController').inherit('thinkmvc.Controller').extend(function() {
+TM.declare('gc.controller.TimeCarouselController').inherit('gc.controller.BaseCarouselController').extend(function() {
   var $win = $(window), AUTO_TRANS_TIME = 3000,
     ITEM_LEFT_CLASS = 'g-time-carousel-item-left',
     ITEM_RIGHT_CLASS = 'g-time-carousel-item-right',
@@ -263,7 +289,7 @@ TM.declare('gc.controller.TimeCarouselController').inherit('thinkmvc.Controller'
     },
 
     initialize: function() {
-      this.invoke('thinkmvc.Controller:initialize');
+      this.invoke('gc.controller.BaseCarouselController:initialize');
 
       var width = $win.width();
       this._el.$items.each(function(index, item) {
@@ -308,13 +334,6 @@ TM.declare('gc.controller.TimeCarouselController').inherit('thinkmvc.Controller'
           }
         }
       }, AUTO_TRANS_TIME);
-    },
-
-    stopAutoTransition: function() {
-      if (this._timer) {
-        clearInterval(this._timer);
-      }
-      this._timer = 0;
     }
   };
 });

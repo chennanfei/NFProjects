@@ -20,19 +20,19 @@ TM.declare('gc.controller.PreloadController').inherit('thinkmvc.Controller').ext
   function preloadImages($images, callback) {
     var size = 0, readyCount = 0, i;
     for (i = 0; i < $images.length; i++) {
-      var $img = $images.eq(i);
-      $img.attr('src', IMAGE_DIR + $img.data('src'));
-      if ($img.data('onLoad')) {
-        size++;
-
-        $img.load(function() {
-          readyCount++;
-
-          if (readyCount === size) {
-             callback && callback();
-          }
-        });
+      var $img = $images.eq(i), src = $img.data('src');
+      if (!(src && $img.attr('src', IMAGE_DIR + src).data('onLoad'))) {
+        continue;
       }
+
+      size++;
+      $img.load(function() {
+        readyCount++;
+
+        if (readyCount === size) {
+           callback && callback();
+        }
+      });
     }
   }
 

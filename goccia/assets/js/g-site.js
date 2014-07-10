@@ -105,7 +105,7 @@ TM.declare('gc.controller.ChangeWithYouController').inherit('thinkmvc.Controller
   selectors: {
     'data': '#changeYouPageData',
     'expanderTemplate': '#expanderTemplate',
-    'support': '#support'
+    'support': '#supports'
   },
 
   initialize: function() {
