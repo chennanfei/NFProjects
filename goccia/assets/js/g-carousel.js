@@ -58,12 +58,29 @@ TM.declare('gc.model.CarouselList').share({
 TM.declare('gc.controller.BaseCarouselController').inherit('thinkmvc.Controller').extend({
   controlTransition: function(event) {
     var $target = $(event.currentTarget);
-    if ($target.data('isPaused')) {
-      $target.data('isPaused', 0).removeClass('g-icon-play').addClass('g-icon-pause');
-      this.startAutoTransition();
+    if (this.isPaused()) {
+      $target.removeClass('g-icon-play').addClass('g-icon-pause');
+      this.isPaused(0).startAutoTransition(true);
     } else {
-      $target.data('isPaused', 1).removeClass('g-icon-pause').addClass('g-icon-play');
-      this.stopAutoTransition();
+      $target.removeClass('g-icon-pause').addClass('g-icon-play');
+      this.isPaused(1).stopAutoTransition();
+    }
+  },
+
+  isPaused: function(isPaused) {
+    if (!this._$root) {
+      return 0;
+    }
+
+    if (!this.hasOwnProperty('_isPaused')) {
+      this._isPaused = this._$root.find('.g-icon-trans-control').data('isPaused');
+    }
+
+    if (arguments.length < 1) {
+      return this._isPaused;
+    } else {
+      this._isPaused = isPaused;
+      return this;
     }
   },
 
@@ -76,7 +93,7 @@ TM.declare('gc.controller.BaseCarouselController').inherit('thinkmvc.Controller'
 });
 
 TM.declare('gc.controller.CarouselController').inherit('gc.controller.BaseCarouselController').extend(function() {
-  var $win = $(window), IMAGE_DIR = './assets/images/',
+  var $doc = $(document), $win = $(window), IMAGE_DIR = './assets/images/',
     ACTIVE_CLASS = 'g-carousel-control-active', AUTO_TRANS_TIME = 4000;
 
   function adjustItemWidth() {
@@ -144,6 +161,19 @@ TM.declare('gc.controller.CarouselController').inherit('gc.controller.BaseCarous
     }
   }
 
+  function runTransition() {
+    // look for next item
+    var $controlItems = this._el.$controlItems,
+      index = $controlItems.filter('.' + ACTIVE_CLASS).data('index') + 1,
+      controlIndex = (this._shouldResetToFirstItem = index >= $controlItems.length) ? 0 : index;
+
+    toggleControlItem.call(this, controlIndex);
+    transformItem.call(this, index);
+
+    // start to update backgrounds after the first image slides
+    $doc.trigger('update-backgrounds');
+  }
+
   function transformItem(index) {
     if (index < 0) {
       return;
@@ -174,9 +204,9 @@ TM.declare('gc.controller.CarouselController').inherit('gc.controller.BaseCarous
     selectors: {
       itemContainer: '.g-carousel-items',
       items: '.g-carousel-item',
+      itemsWrapper: '.g-carousel-items-wrapper',
       control: '.g-carousel-control',
-      controlItems: '.g-carousel-control-item',
-      controlStatus: '.g-icon-trans-control'
+      controlItems: '.g-carousel-control-item'
     },
 
     initialize: function(carouselId, callbacks, options) {
@@ -186,6 +216,11 @@ TM.declare('gc.controller.CarouselController').inherit('gc.controller.BaseCarous
       this._containerWidth = this._$root.width();
       this._callbacks = callbacks || {};
       this._options = options || { manualStart: false };
+
+      this._el.$itemsWrapper.css({
+        height: this._$root.height(),
+        width: this._containerWidth
+      });
 
       initCarousel.call(this);
 
@@ -204,17 +239,6 @@ TM.declare('gc.controller.CarouselController').inherit('gc.controller.BaseCarous
 
       toggleControlItem.call(this, index);
       transformItem.call(this, index);
-    },
-
-    controlTransition: function(event) {
-      var $target = $(event.currentTarget);
-      if ($target.data('isPaused')) {
-        $target.data('isPaused', false).removeClass('g-icon-play').addClass('g-icon-pause');
-        this.startAutoTransition();
-      } else {
-        $target.data('isPaused', true).removeClass('g-icon-pause').addClass('g-icon-play');
-        this.stopAutoTransition();
-      }
     },
 
     postTransition: function() {
@@ -243,24 +267,18 @@ TM.declare('gc.controller.CarouselController').inherit('gc.controller.BaseCarous
       transformItem.call(this, index);
     },
 
-    startAutoTransition: function() {
-      if (this._timer || this._el.$controlStatus.data('isPaused')) {
+    startAutoTransition: function(runAtOnce) {
+      if (this._timer || this.isPaused()) {
         return;
       }
 
-      var $controlItems = this._el.$controlItems, $itemContainer = this._el.$itemContainer,
-        $items = this._el.$items, self = this, $doc = $(document);
+      var self = this;
+      if (runAtOnce) {
+        runTransition.call(self);
+      }
 
       this._timer = setInterval(function() {
-        // look for next item
-        var index = $controlItems.filter('.' + ACTIVE_CLASS).data('index') + 1,
-          controlIndex = (self._shouldResetToFirstItem = index >= $controlItems.length) ? 0 : index;
-
-        toggleControlItem.call(self, controlIndex);
-        transformItem.call(self, index);
-
-        // start to update backgrounds after the first image slides
-        $doc.trigger('update-backgrounds');
+        runTransition.call(self);
       }, AUTO_TRANS_TIME);
     }
   };
@@ -277,8 +295,31 @@ TM.declare('gc.controller.TimeCarouselController').inherit('gc.controller.BaseCa
     return $itemList.eq(nextIndex >= $itemList.length ? 0 : nextIndex);
   }
 
+  function runTransition($clockTick, $items) {
+    var $activeItem = $items.filter('.' + ITEM_ACTIVE_CLASS),
+      $content = $('#' + $activeItem.data('contentId')),
+      $leftItem = $items.filter('.' + ITEM_LEFT_CLASS);
+    if ($leftItem.length) {
+      $leftItem.removeClass(ITEM_LEFT_CLASS).hide();
+
+      if ($content.data('isHalf')) {
+        $clockTick.fadeIn();
+      }
+      $content.fadeIn();
+    } else {
+      getNextItem($items, $activeItem).addClass(ITEM_ACTIVE_CLASS).show();
+      $activeItem.removeClass(ITEM_ACTIVE_CLASS).addClass(ITEM_LEFT_CLASS);
+
+      $content.fadeOut();
+      if ($clockTick.is(':visible')) {
+        $clockTick.fadeOut();
+      }
+    }
+  }
+
   return {
     events: {
+      'click .g-icon-trans-control': 'controlTransition',
       'resize window': 'resizeWindow'
     },
 
@@ -307,32 +348,15 @@ TM.declare('gc.controller.TimeCarouselController').inherit('gc.controller.BaseCa
     },
 
     startAutoTransition: function() {
-      if (this._timer) {
+      if (this._timer || this.isPaused()) {
         return;
       }
 
-      var self = this, $clockTick = $('#clockHalfTick'), $items = this._el.$items,
-        size = $items.length;
+      var $clockTick = $('#clockHalfTick'), $items = this._el.$items;
+      runTransition($clockTick, $items);
 
       this._timer = setInterval(function() {
-        var $activeItem = $items.filter('.' + ITEM_ACTIVE_CLASS),
-          $content = $('#' + $activeItem.data('contentId')),
-          $leftItem = $items.filter('.' + ITEM_LEFT_CLASS);
-        if ($leftItem.length) {
-          $leftItem.removeClass(ITEM_LEFT_CLASS).hide();
-
-          if ($content.data('isHalf')) {
-            $clockTick.fadeIn();
-          }
-          $content.fadeIn();
-        } else {
-          getNextItem($items, $activeItem).addClass(ITEM_ACTIVE_CLASS).show();
-          $activeItem.removeClass(ITEM_ACTIVE_CLASS).addClass(ITEM_LEFT_CLASS);
-          $content.fadeOut();
-          if ($clockTick.is(':visible')) {
-            $clockTick.fadeOut();
-          }
-        }
+        runTransition($clockTick, $items);
       }, AUTO_TRANS_TIME);
     }
   };

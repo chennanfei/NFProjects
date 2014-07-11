@@ -32,10 +32,12 @@ TM.declare('gc.controller.MainController').inherit('thinkmvc.Controller').extend
   return {
     events: {
       'click .g-video-link': 'showWindowPopover',
-      'resize window': 'resizeWindow'
+      'resize window': 'resizeWindow',
+      'scroll window': 'scrollWindow'
     },
 
     selectors: {
+      pageHeader: '#pageHeader',
       sections: '.g-section'
     },
 
@@ -55,6 +57,12 @@ TM.declare('gc.controller.MainController').inherit('thinkmvc.Controller').extend
 
         $(el).css({height: ht});
       });
+    },
+
+    scrollWindow: function() {
+      if (this._el.$pageHeader.width() > $win.width()) {
+        this._el.$pageHeader.css('left', -1 * $win.scrollLeft());
+      }
     },
 
     showWindowPopover: function(event) {

@@ -33,17 +33,17 @@ input::-webkit-input-placeholder {
   font-style: italic;
 }
 
-.g-button {
-  background-color: #000000;
-  cursor: pointer;
-  font-size: 14px;
-}
-
 .tm-container {
   max-width: 3000px;
   min-width: 980px;
   padding: 0;
   position: relative;
+}
+
+.g-button {
+  background-color: #000000;
+  cursor: pointer;
+  font-size: 14px;
 }
 
 /* base */
@@ -576,12 +576,15 @@ input::-webkit-input-placeholder {
 .g-carousel-item {
   height: 100%;
   width: 100%;
-  overflow: hidden;
   position: relative;
 }
 
 .g-carousel {
   z-index: 20;
+}
+
+.g-carousel-items-wrapper {
+  overflow: hidden;
 }
 
 .g-carousel-items, .g-time-carousel-item {
@@ -668,6 +671,20 @@ input::-webkit-input-placeholder {
 .g-carousel-mobile .g-product-image {
   left: 3px;
   height: 387px;
+}
+
+.g-carousel-mobile .g-carousel-control {
+  bottom: -90px;
+}
+
+.g-carousel-mobile .g-carousel-control-inner {
+  padding: 0;
+}
+
+.g-time-carousel .g-icon-trans-control {
+  bottom: 10px;
+  top: auto;
+  z-index: 100;
 }
 
 .g-time-carousel-item-right, .g-time-carousel-item-left {
@@ -820,7 +837,7 @@ input::-webkit-input-placeholder {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 10px;
+  bottom: 0;
   z-index: 60;
 }
 
@@ -995,8 +1012,11 @@ input::-webkit-input-placeholder {
   bottom: 0;
 }
 
+#functionFeatures.g-section .g-section-content,
 #changeWithYou.g-section .g-section-content {
-  margin-top: -40px;
+  bottom: auto;
+  top: 50%;
+  margin-top: -260px;
 }
 
 #changeWithYou .g-social-icon-group {

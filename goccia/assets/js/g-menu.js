@@ -1,6 +1,56 @@
 TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller').extend(function() {
   var $doc = $(document), $win = $(window), $page = $('html,body'),// in some browsers $(body).animate does not work
-    IMAGE_DIR = './assets/images/', ACTIVE_CLASS = 'g-section-menu-item-active', isKeyDown = false;
+    IMAGE_DIR = './assets/images/', ACTIVE_CLASS = 'g-section-menu-item-active';
+
+  function animateSection($item, sectionId) {
+    var $section = $('#' + sectionId), CarouselList = this.U.getClass('gc.model.CarouselList'),
+      top = $section.offset().top, self = this;
+
+    // lock animation
+    self._isAnimationLocked = true;
+
+    // if window scrolls fast, animation is invoked, but meanwhile window doesn't
+    // stop scrolling yet. delay animation in order to avoid overlap of animation
+    // and window scrolling
+    var alreadyDone = false, alreadyStarted = false;
+    $page.animate({scrollTop: top}, {
+      duration: 300,
+
+      complete: function() {
+        releaseAnimateLock.call(self);
+      },
+
+      done: function() {
+        if (alreadyDone) {
+          return;
+        }
+        alreadyDone = true;
+
+        toggleMenuItem.call(self, $item);
+        showItemPopover.call(self, $item);
+        retrieveSectionContent.call(self, $section);
+
+        // if the section's height is smaller than the screen,
+        // try to retrieve next section, too
+        if ($section.outerHeight() < $win.height()) {
+          retrieveSectionContent.call(self, $section.next().data('loadOnNext', true));
+        }
+
+        // restart the carousel in the section
+        CarouselList.updateAutoTransition(sectionId, 'start');
+      },
+
+      start: function() {
+        if (alreadyStarted) {
+          return;
+        }
+        alreadyStarted = true;
+
+        // when switching to section, stop carousels in other sections
+        CarouselList.updateOtherAutoTransitions(sectionId, 'stop');
+      }
+    });
+  }
 
   /* look for the section which is closest to the window top */
   function getClosestMenuItem() {
@@ -56,22 +106,14 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
   }
 
   function showClosestSection() {
-    var $root = this._$root, self = this;
-    $root.queue(function() {
-      var $item = getClosestMenuItem.call(self);
-      if ($item) {
-        $item.trigger('click');
-      }
-    }).delay(100).dequeue();
+    var $root = this._$root, $item = getClosestMenuItem.call(this);
+    if ($item) {
+      $item.trigger('click');
+    }
   }
 
-  function showNextSection(curScroll) {
-    var lastScroll = this._lastScrollTop;
-    if (curScroll === lastScroll) {
-      return;
-    }
-
-    var $item = getNextMenuItem.call(this, curScroll > lastScroll);
+  function showNextSection(isPageDown) {
+    var $item = getNextMenuItem.call(this, isPageDown);
     if ($item) {
       $item.trigger('click');
     }
@@ -79,9 +121,7 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
 
   function showItemPopover($item) {
     $item.find('.g-menu-item-popover').show().delay(500)
-      .fadeOut(function() {
-        $(this).removeAttr('style');
-      });
+      .fadeOut(function() { $(this).removeAttr('style'); });
   }
 
   /* change the selected status of menu items */
@@ -123,9 +163,11 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
       this._isPressedScroll = false;
       this._lastScrollTop = $win.scrollTop();
       this._timer = null;
+      this._isFirstLoaded = true;
 
+      var self = this;
       $doc.off('keydown').on('keydown', function(event) {
-        isKeyDown = event.keyCode === 38 || event.keyCode === 40;
+        self._isKeyDown = event.keyCode === 38 || event.keyCode === 40;
       });
 
       showClosestSection.call(this);
@@ -137,53 +179,7 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
         return;
       }
 
-      var $section = $('#' + sectionId), CarouselList = this.U.getClass('gc.model.CarouselList'),
-        top = $section.offset().top, self = this;
-
-      // lock animation
-      self._isAnimationLocked = true;
-
-      // if window scrolls fast, animation is invoked, but meanwhile window doesn't
-      // stop scrolling yet. delay animation in order to avoid overlap of animation
-      // and window scrolling
-      var alreadyDone = false, alreadyStarted = false;
-      $page.animate({scrollTop: top}, {
-        duration: 500,
-
-        complete: function() {
-          releaseAnimateLock.call(self);
-        },
-
-        done: function() {
-          if (alreadyDone) {
-            return;
-          }
-          alreadyDone = true;
-
-          toggleMenuItem.call(self, $item);
-          showItemPopover.call(self, $item);
-          retrieveSectionContent.call(self, $section);
-
-          // if the section's height is smaller than the screen,
-          // try to retrieve next section, too
-          if ($section.outerHeight() < $win.height()) {
-            retrieveSectionContent.call(self, $section.next().data('loadOnNext', true));
-          }
-
-          // restart the carousel in the section
-          CarouselList.updateAutoTransition(sectionId, 'start');
-        },
-
-        start: function() {
-          if (alreadyStarted) {
-            return;
-          }
-          alreadyStarted = true;
-
-          // when switching to section, stop carousels in other sections
-          CarouselList.updateOtherAutoTransitions(sectionId, 'stop');
-        }
-      });
+      animateSection.call(this, $item, sectionId);
     },
 
     pressMouse: function(event) {
@@ -201,7 +197,7 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
       this._isWindowResized = true;
 
       if (this._resizeDelayTimer) {
-        window.clearInterval(this._resizeDelayTimer);
+        clearInterval(this._resizeDelayTimer);
       }
 
       // in case 'resize' event is triggered in short time
@@ -211,41 +207,46 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
       }, 500);
     },
 
-    scrollWindow: function() {
-      var scrollTop = $win.scrollTop();
-      if (this._isAnimationLocked) {
+    scrollWindow: function(event) {
+      var self = this;
+      if (!this._isAnimationLocked && this._isFirstLoaded) {
+        $win.scrollTop(this._lastScrollTop);
+        setTimeout(function() { self._isFirstLoaded = false; }, 100);
+        return;
+      }
+
+      var scrollTop = $win.scrollTop(), isPageDown = scrollTop > this._lastScrollTop;
+      if (scrollTop === this._lastScrollTop) {
+        return;
+      }
+
+      this._isPressedScroll = this._isMousePressed ? true : false;
+
+      // 1. if the section is animating or user is scrolling the vertical bar,
+      // do nothing but just record the scrollTop
+      // 2. if user press up/down on keyboard, reset the flag and switch sections
+      if (this._isAnimationLocked || this._isPressedScroll || this._isKeyDown) {
+        if (this._isKeyDown) {
+          this._isKeyDown = false;
+          showNextSection.call(this, isPageDown);
+        }
+
         this._lastScrollTop = scrollTop;
         return;
       }
 
-      // set flag when mouse is pressed and window starts to scroll
-      this._isPressedScroll = this._isMousePressed ? true : false;
-
-      if (!this._isMousePressed) {
-        // up/down keyboard
-        if (isKeyDown) {
-          isKeyDown = false;
-          showNextSection.call(this, scrollTop);          
-          this._lastScrollTop = scrollTop;
-        } else {          
-          if (this._scrollTimer) {            
-            clearTimeout(this._scrollTimer);
-            
-            if (this._lastScrollTop !== scrollTop) {
-              var diff = this._lastScrollTop < scrollTop ? 1 : -1;
-              $win.scrollTop(this._lastScrollTop + diff);
-            }
-          }
-          
-          var self = this;
-          this._scrollTimer = setTimeout(function() {
-            showNextSection.call(self, scrollTop);
-            self._lastScrollTop = scrollTop;
-          }, 200);
-        }
-      } else {
-        this._lastScrollTop = scrollTop; // update after animation finished
+      // when user scrolls fast, the page is moving and the animation also starts to run.
+      // their moves happen at the same time, the page will jump unexpectedly.
+      // this prevents the section animation responds twice in short time.
+      if (this._scrollTimer) {
+        clearTimeout(this._scrollTimer);
+        $win.scrollTop(this._lastScrollTop);
       }
+
+      this._scrollTimer = setTimeout(function() {
+        showNextSection.call(self, isPageDown);
+        self._lastScrollTop = scrollTop;
+      }, 500);
     }
   };
 });
