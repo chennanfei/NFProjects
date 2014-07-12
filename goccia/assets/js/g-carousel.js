@@ -99,6 +99,11 @@ TM.declare('gc.controller.CarouselController').inherit('gc.controller.BaseCarous
   function adjustItemWidth() {
     var el = this._el, wd = this._containerWidth;
 
+    el.$itemsWrapper.css({
+      height: this._$root.height(),
+      width: wd
+    });
+
     // adjust the item container's width so that all items can be in one row
     el.$itemContainer.width(wd * el.$items.length);
     el.$items.width(wd);
@@ -216,11 +221,6 @@ TM.declare('gc.controller.CarouselController').inherit('gc.controller.BaseCarous
       this._containerWidth = this._$root.width();
       this._callbacks = callbacks || {};
       this._options = options || { manualStart: false };
-
-      this._el.$itemsWrapper.css({
-        height: this._$root.height(),
-        width: this._containerWidth
-      });
 
       initCarousel.call(this);
 

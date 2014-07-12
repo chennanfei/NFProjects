@@ -1,6 +1,7 @@
 TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller').extend(function() {
   var doc = document, win = window, $doc = $(doc), $win = $(window),
-    $page = $('html,body'), IMAGE_DIR = './assets/images/', ACTIVE_CLASS = 'g-section-menu-item-active';
+    $page = $('html,body'), IMAGE_DIR = './assets/images/', ACTIVE_CLASS = 'g-section-menu-item-active',
+    userAgent = navigator.userAgent.toLowerCase();
 
   function animateSection($item, sectionId) {
     var $section = $('#' + sectionId), CarouselList = this.U.getClass('gc.model.CarouselList'),
@@ -108,7 +109,7 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
       }
 
       self._wheelTimer = setTimeout(function() {
-        showNextSection.call(self, delta < 0)
+        showNextSection.call(self, delta < 0);
       }, 500);
     };
 
@@ -119,13 +120,14 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
     }
   }
 
-  function onMouseWheel(event) {
-
+  function isIE() {
+    // the first condition works for IE10 or less but not for IE 11
+    return userAgent.match(/msie\s([\d\.]+)/) || userAgent.match(/trident\/7\./);
   }
 
   function releaseAnimateLock() {
     var self = this;
-    if (!self._isAnimationLocked) {
+    if (!self._lockScrolling) {
       return;
     }
 
@@ -157,6 +159,9 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
   in this moment, keep the page static by setting it in last position
   */
   function shouldLockScrolling() {
+    if (isIE()) {
+      return false;
+    }
     return this._lockScrolling || this._isAnimationLocked;
   }
 
@@ -285,7 +290,10 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
       // this prevents the section animation responds twice in short time.
       if (this._scrollTimer) {
         clearTimeout(this._scrollTimer);
-        $win.scrollTop(this._lastScrollTop);
+
+        if (!isIE()) {
+          $win.scrollTop(this._lastScrollTop);
+        }
       }
 
       this._scrollTimer = setTimeout(function() {

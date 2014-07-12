@@ -263,8 +263,7 @@ input::-webkit-input-placeholder {
 }
 
 .g-icon-url-code {
-  background-size: 572px 440px;
-  background-position: -305px 0px;
+  background-position: -482px -1px;
   width: 40px;
   height: 40px;
   opacity: 1;
@@ -310,7 +309,7 @@ input::-webkit-input-placeholder {
 .g-icon-facebook, .g-icon-twitter, .g-icon-weixin, .g-icon-video-play,
 .g-icon-title-time, .g-icon-title-home, .g-icon-title-mobile,
 .g-icon-title-function, .g-icon-title-changeyou, .g-icon-title-more-about-apps,
-.g-icon-weixin-2d, .g-icon-weibo {
+.g-icon-weixin-2d, .g-icon-weibo, .g-icon-download-url-2d {
   display: inline-block;
   position: static;
 }
@@ -354,10 +353,15 @@ input::-webkit-input-placeholder {
   width: 30px;
 }
 
-.g-icon-weixin-2d {
-  background-position: -460px -567px;
+.g-icon-weixin-2d , .g-icon-download-url-2d {
   width: 100px;
   height: 100px;
+}
+.g-icon-weixin-2d {
+  background-position: -599px -573px;
+}
+.g-icon-download-url-2d {
+  background-position: -477px -575px;
 }
 
 .g-icon-weibo {
@@ -536,24 +540,13 @@ input::-webkit-input-placeholder {
 }
 
 .g-popover-url-code {
-  height: 94px;
-  width: 94px;
-  padding-top: 28px;
+  padding: 5px;
   right: 0;
 }
 .g-header .g-popover-url-code, .g-header .g-popover-download {
   top: 50px;
+  width: 110px;
 }
-.g-popover-url-code .g-icon-url-code {
-  top: 28px;
-  left: 24px;
-  -webkit-transform: scale(2.5, 2.5);
-  -ms-transform: scale(2.5, 2.5);
-  -moz-transform: scale(2.5, 2.5);
-  -o-transform: scale(2.5, 2.5);
-  transform: scale(2.5, 2.5);
-}
-
 .g-popover-url-code .g-triangle-top {
   left: auto;
   right: 10px;
@@ -561,13 +554,12 @@ input::-webkit-input-placeholder {
 
 .g-popover-weixin {
   bottom: 40px;
-  padding: 5px;
   right: 70px;
+  padding: 5px;
 }
 
 .g-popover-download {
-  padding: 14px 10px;
-  right: 20px;
+  right: 0;
 }
 
 /* carousel */
