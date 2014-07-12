@@ -1,6 +1,6 @@
 TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller').extend(function() {
-  var $doc = $(document), $win = $(window), $page = $('html,body'),// in some browsers $(body).animate does not work
-    IMAGE_DIR = './assets/images/', ACTIVE_CLASS = 'g-section-menu-item-active';
+  var doc = document, win = window, $doc = $(doc), $win = $(window),
+    $page = $('html,body'), IMAGE_DIR = './assets/images/', ACTIVE_CLASS = 'g-section-menu-item-active';
 
   function animateSection($item, sectionId) {
     var $section = $('#' + sectionId), CarouselList = this.U.getClass('gc.model.CarouselList'),
@@ -38,6 +38,10 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
 
         // restart the carousel in the section
         CarouselList.updateAutoTransition(sectionId, 'start');
+      },
+
+      progress: function() {
+        self._lastScrollTop = $win.scrollTop();
       },
 
       start: function() {
@@ -84,6 +88,41 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
     return $items.eq(nextIndex);
   }
 
+  function initDocEvents() {
+    var self = this;
+    $doc.off('keydown').on('keydown', function(event) {
+      self._isKeyDown = event.keyCode === 38 || event.keyCode === 40;
+    });
+
+    // the purpose of binding this event is to fix the page jumps
+    // when scroll event is firstly triggered
+    var callback = function(event) {
+      var delta = event.delta || event.wheelDelta;
+      if (delta === 0) {
+        return;
+      }
+
+      self._lockScrolling = true;
+      if (self._wheelTimer) {
+        clearTimeout(self._wheelTimer);
+      }
+
+      self._wheelTimer = setTimeout(function() {
+        showNextSection.call(self, delta < 0)
+      }, 500);
+    };
+
+    if (win.attachEvent) {
+      win.attachEvent('mousewheel', callback);
+    } else if (win.addEventListener) {
+      win.addEventListener('mousewheel', callback, false);
+    }
+  }
+
+  function onMouseWheel(event) {
+
+  }
+
   function releaseAnimateLock() {
     var self = this;
     if (!self._isAnimationLocked) {
@@ -94,6 +133,7 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
     // the scroll event is triggered for one time anyway
     setTimeout(function() {
       self._isAnimationLocked = false;
+      self._lockScrolling = false;
     }, 200);
   }
 
@@ -110,6 +150,14 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
     if ($item) {
       $item.trigger('click');
     }
+  }
+
+  /*
+  in case when animation is running, the scroll event is triggered.
+  in this moment, keep the page static by setting it in last position
+  */
+  function shouldLockScrolling() {
+    return this._lockScrolling || this._isAnimationLocked;
   }
 
   function showNextSection(isPageDown) {
@@ -163,13 +211,14 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
       this._isPressedScroll = false;
       this._lastScrollTop = $win.scrollTop();
       this._timer = null;
-      this._isFirstLoaded = true;
+      this._lockScrolling = false;
 
       var self = this;
       $doc.off('keydown').on('keydown', function(event) {
         self._isKeyDown = event.keyCode === 38 || event.keyCode === 40;
       });
 
+      initDocEvents.call(this);
       showClosestSection.call(this);
     },
 
@@ -194,28 +243,24 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
     },
 
     resizeWindow: function() {
-      this._isWindowResized = true;
-
+      // in case 'resize' event is triggered in short time
       if (this._resizeDelayTimer) {
         clearInterval(this._resizeDelayTimer);
       }
 
-      // in case 'resize' event is triggered in short time
       var self = this;
       this._resizeDelayTimer = setTimeout(function() {
         showClosestSection.call(self);
       }, 500);
     },
 
-    scrollWindow: function(event) {
-      var self = this;
-      if (!this._isAnimationLocked && this._isFirstLoaded) {
+    scrollWindow: function(event, releaseLock) {
+      if (shouldLockScrolling.call(this)) {
         $win.scrollTop(this._lastScrollTop);
-        setTimeout(function() { self._isFirstLoaded = false; }, 100);
         return;
       }
 
-      var scrollTop = $win.scrollTop(), isPageDown = scrollTop > this._lastScrollTop;
+      var scrollTop = $win.scrollTop(), isPageDown = scrollTop > this._lastScrollTop, self = this;
       if (scrollTop === this._lastScrollTop) {
         return;
       }
