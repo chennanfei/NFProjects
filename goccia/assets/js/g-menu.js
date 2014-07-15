@@ -12,20 +12,10 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
 
     var $section = $('#' + sectionId), CarouselList = this.U.getClass('gc.model.CarouselList'),
       top = -$section.data('top'), self = this;
-
-    // if window scrolls fast, animation is invoked, but meanwhile window doesn't
-    // stop scrolling yet. delay animation in order to avoid overlap of animation
-    // and window scrolling
-    var alreadyDone = false, alreadyStarted = false;
     $page.animate({top: top}, {
       duration: 500,
 
       done: function() {
-        if (alreadyDone) {
-          return;
-        }
-        alreadyDone = true;
-
         toggleMenuItem.call(self, $item);
         showItemPopover.call(self, $item);
         retrieveSectionContent.call(self, $section);
@@ -42,16 +32,7 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
         self._lockScrolling = false;
       },
 
-      progress: function() {
-        self._lastScrollTop = $win.scrollTop();
-      },
-
       start: function() {
-        if (alreadyStarted) {
-          return;
-        }
-        alreadyStarted = true;
-
         // when switching to section, stop carousels in other sections
         CarouselList.updateOtherAutoTransitions(sectionId, 'stop');
       }
