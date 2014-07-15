@@ -37,6 +37,7 @@ TM.declare('gc.controller.MainController').inherit('thinkmvc.Controller').extend
     },
 
     selectors: {
+      main: '#mainContent',
       pageHeader: '#pageHeader',
       sections: '.g-section'
     },
@@ -46,16 +47,23 @@ TM.declare('gc.controller.MainController').inherit('thinkmvc.Controller').extend
       this.resizeWindow();
       this.U.createInstance('gc.controller.SectionMenuController');
       this.U.createInstance('gc.controller.PopoverController');
+
+      this._el.$main.css('position', 'fixed');
     },
 
     resizeWindow: function() {
       // initialize the section height and position
-      var height = $win.height();
+      var height = $win.height(), width = $win.width(), totalHeight = 0;
       this._el.$sections.each(function(index, el) {
         var $el = $(el), maxHeight = $el.data('maxHeight'),
           ht = maxHeight < height ? maxHeight : height;
 
-        $(el).css({height: ht});
+        $el.data('top', totalHeight).css({
+          height: ht,
+          width: width
+        });
+
+        totalHeight += ht;
       });
     },
 

@@ -220,13 +220,13 @@ input::-webkit-input-placeholder {
   z-index: 110;
 }
 .g-page-loading {
-  background: url('../images/page-loading.gif') no-repeat;
-  height: 100px;
-  width: 100px;
+  display: block;
+  height: 120px;
+  width: 120px;
   left: 50%;
   top: 50%;
-  margin-top: -50px;
-  margin-left: -50px;
+  margin-top: -60px;
+  margin-left: -60px;
   position: absolute;
 }
 
@@ -888,7 +888,7 @@ input::-webkit-input-placeholder {
 }
 .g-clock-time-desc h2 {
   font-size: 32px;
-  font-family: 'regular';
+  font-family: 'regular', 'Lucida Grande';
 }
 .g-clock-time-desc p {
   font-size: 20px;

@@ -1,25 +1,24 @@
 TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller').extend(function() {
   var doc = document, win = window, $doc = $(doc), $win = $(window),
-    $page = $('html,body'), IMAGE_DIR = './assets/images/', ACTIVE_CLASS = 'g-section-menu-item-active',
+    $page = $('#mainContent'), IMAGE_DIR = './assets/images/', ACTIVE_CLASS = 'g-section-menu-item-active',
     userAgent = navigator.userAgent.toLowerCase();
 
   function animateSection($item, sectionId) {
-    var $section = $('#' + sectionId), CarouselList = this.U.getClass('gc.model.CarouselList'),
-      top = $section.offset().top, self = this;
+    if (this._lockScrolling) {
+      return;
+    }
 
-    // lock animation
-    self._isAnimationLocked = true;
+    this._lockScrolling = true;
+
+    var $section = $('#' + sectionId), CarouselList = this.U.getClass('gc.model.CarouselList'),
+      top = -$section.data('top'), self = this;
 
     // if window scrolls fast, animation is invoked, but meanwhile window doesn't
     // stop scrolling yet. delay animation in order to avoid overlap of animation
     // and window scrolling
     var alreadyDone = false, alreadyStarted = false;
-    $page.animate({scrollTop: top}, {
-      duration: 300,
-
-      complete: function() {
-        releaseAnimateLock.call(self);
-      },
+    $page.animate({top: top}, {
+      duration: 500,
 
       done: function() {
         if (alreadyDone) {
@@ -39,6 +38,8 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
 
         // restart the carousel in the section
         CarouselList.updateAutoTransition(sectionId, 'start');
+
+        self._lockScrolling = false;
       },
 
       progress: function() {
@@ -86,57 +87,58 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
       }
     });
 
-    return $items.eq(nextIndex);
+    if (nextIndex >= 0 && nextIndex < $items.length - 1) {
+      return $items.eq(nextIndex);
+    }
   }
 
   function initDocEvents() {
     var self = this;
     $doc.off('keydown').on('keydown', function(event) {
-      self._isKeyDown = event.keyCode === 38 || event.keyCode === 40;
+      if (event.keyCode === 40) {
+        showNextSection.call(self, true);
+      } else if (event.keyCode === 38) {
+        showNextSection.call(self, false);
+      }
     });
 
     // the purpose of binding this event is to fix the page jumps
     // when scroll event is firstly triggered
     var callback = function(event) {
-      var delta = event.delta || event.wheelDelta;
-      if (delta === 0) {
+      if (this._lockScrolling) {
         return;
       }
 
-      self._lockScrolling = true;
+      var delta = event.delta || event.wheelDelta || (event.type === 'DOMMouseScroll' && -event.detail);
+      if (isNaN(delta) || delta === 0) {
+        return;
+      }
+
       if (self._wheelTimer) {
         clearTimeout(self._wheelTimer);
       }
 
       self._wheelTimer = setTimeout(function() {
         showNextSection.call(self, delta < 0);
-      }, 500);
+      }, 100);
     };
 
     if (win.attachEvent) {
       win.attachEvent('mousewheel', callback);
+      win.attachEvent('DOMMouseScroll', callback);
     } else if (win.addEventListener) {
       win.addEventListener('mousewheel', callback, false);
+      win.addEventListener('DOMMouseScroll', callback, false);
     }
   }
 
   function isIE() {
     // the first condition works for IE10 or less but not for IE 11
-    return userAgent.match(/msie\s([\d\.]+)/) || userAgent.match(/trident\/7\./);
+    return /msie\s([\d\.]+)/.test(userAgent) || /trident\/7\./.test(userAgent);
   }
 
-  function releaseAnimateLock() {
-    var self = this;
-    if (!self._lockScrolling) {
-      return;
-    }
-
-    // delay releasing lock bcz when animation stops,
-    // the scroll event is triggered for one time anyway
-    setTimeout(function() {
-      self._isAnimationLocked = false;
-      self._lockScrolling = false;
-    }, 200);
+  function isMacSafari() {
+    return /mac os.*safari/.test(userAgent);
   }
 
   function retrieveSectionContent($section) {
@@ -159,10 +161,10 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
   in this moment, keep the page static by setting it in last position
   */
   function shouldLockScrolling() {
-    if (isIE()) {
+    if (isIE() || isMacSafari()) {
       return false;
     }
-    return this._lockScrolling || this._isAnimationLocked;
+    return true;
   }
 
   function showNextSection(isPageDown) {
@@ -196,10 +198,7 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
   return {
     events: {
       'click .g-section-menu-item': 'clickMenuItem',
-      'mousedown window': 'pressMouse',
-      'mouseup window': 'pressMouse',
-      'resize window': 'resizeWindow',
-      'scroll window': 'scrollWindow'
+      'resize window': 'resizeWindow'
     },
 
     rootNode: '#sectionMenu',
@@ -211,17 +210,9 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
     initialize: function() {
       this.invoke('thinkmvc.Controller:initialize');
 
-      this._isAnimationLocked = false;
       this._isMousePressed = false;
-      this._isPressedScroll = false;
       this._lastScrollTop = $win.scrollTop();
       this._timer = null;
-      this._lockScrolling = false;
-
-      var self = this;
-      $doc.off('keydown').on('keydown', function(event) {
-        self._isKeyDown = event.keyCode === 38 || event.keyCode === 40;
-      });
 
       initDocEvents.call(this);
       showClosestSection.call(this);
@@ -236,17 +227,6 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
       animateSection.call(this, $item, sectionId);
     },
 
-    pressMouse: function(event) {
-      // record the mouse press status
-      this._isMousePressed = event.type === 'mousedown';
-
-      // press window scroll bar and scroll page. in this case,
-      // look for the closest section
-      if (!this._isMousePressed && this._isPressedScroll) {
-        showClosestSection.call(this);
-      }
-    },
-
     resizeWindow: function() {
       // in case 'resize' event is triggered in short time
       if (this._resizeDelayTimer) {
@@ -257,51 +237,9 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
       this._resizeDelayTimer = setTimeout(function() {
         showClosestSection.call(self);
       }, 500);
-    },
-
-    scrollWindow: function(event, releaseLock) {
-      if (shouldLockScrolling.call(this)) {
-        $win.scrollTop(this._lastScrollTop);
-        return;
-      }
-
-      var scrollTop = $win.scrollTop(), isPageDown = scrollTop > this._lastScrollTop, self = this;
-      if (scrollTop === this._lastScrollTop) {
-        return;
-      }
-
-      this._isPressedScroll = this._isMousePressed ? true : false;
-
-      // 1. if the section is animating or user is scrolling the vertical bar,
-      // do nothing but just record the scrollTop
-      // 2. if user press up/down on keyboard, reset the flag and switch sections
-      if (this._isAnimationLocked || this._isPressedScroll || this._isKeyDown) {
-        if (this._isKeyDown) {
-          this._isKeyDown = false;
-          showNextSection.call(this, isPageDown);
-        }
-
-        this._lastScrollTop = scrollTop;
-        return;
-      }
-
-      // when user scrolls fast, the page is moving and the animation also starts to run.
-      // their moves happen at the same time, the page will jump unexpectedly.
-      // this prevents the section animation responds twice in short time.
-      if (this._scrollTimer) {
-        clearTimeout(this._scrollTimer);
-
-        if (!isIE()) {
-          $win.scrollTop(this._lastScrollTop);
-        }
-      }
-
-      this._scrollTimer = setTimeout(function() {
-        showNextSection.call(self, isPageDown);
-        self._lastScrollTop = scrollTop;
-      }, 500);
     }
   };
+
 });
 
 TM.declare('gc.model.Section').inherit('thinkmvc.Model').extend({
