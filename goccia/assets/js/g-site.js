@@ -44,11 +44,12 @@ TM.declare('gc.controller.MainController').inherit('thinkmvc.Controller').extend
 
     initialize: function() {
       this.invoke('thinkmvc.Controller:initialize');
+
+      this._el.$main.css('position', 'fixed');
+
       this.resizeWindow();
       this.U.createInstance('gc.controller.SectionMenuController');
       this.U.createInstance('gc.controller.PopoverController');
-
-      this._el.$main.css('position', 'fixed');
     },
 
     resizeWindow: function() {
@@ -58,11 +59,7 @@ TM.declare('gc.controller.MainController').inherit('thinkmvc.Controller').extend
         var $el = $(el), maxHeight = $el.data('maxHeight'),
           ht = maxHeight < height ? maxHeight : height;
 
-        $el.data('top', totalHeight).css({
-          height: ht,
-          width: width
-        });
-
+        $el.data('top', totalHeight).height(ht);
         totalHeight += ht;
       });
     },

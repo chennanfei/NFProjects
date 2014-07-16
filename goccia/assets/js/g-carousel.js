@@ -100,8 +100,7 @@ TM.declare('gc.controller.CarouselController').inherit('gc.controller.BaseCarous
     var el = this._el, wd = this._containerWidth;
 
     el.$itemsWrapper.css({
-      height: this._$root.height(),
-      width: wd
+      height: this._$root.height()
     });
 
     // adjust the item container's width so that all items can be in one row

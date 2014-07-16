@@ -91,6 +91,7 @@ input::-webkit-input-placeholder {
   transform: translate(-50%, -50%);
 }
 
+
 /* image background */
 .g-background {
   background: top center no-repeat;
@@ -197,6 +198,11 @@ input::-webkit-input-placeholder {
   z-index: 1000;
 }
 
+.g-main-content {
+  position: fixed;
+  width: 100%;
+}
+
 .g-site-links {
   float: right;
   list-style-type: none;
@@ -235,6 +241,7 @@ input::-webkit-input-placeholder {
   display: block;
   overflow: hidden;
   position: relative;
+  width: 100%;
 }
 
 /* icon */

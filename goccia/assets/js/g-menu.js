@@ -75,6 +75,8 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
 
   function initDocEvents() {
     var self = this;
+
+    // handle key up/down
     $doc.off('keydown').on('keydown', function(event) {
       if (event.keyCode === 40) {
         showNextSection.call(self, true);
@@ -83,18 +85,18 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
       }
     });
 
-    // the purpose of binding this event is to fix the page jumps
-    // when scroll event is firstly triggered
+    // handle mouse scroll
     var callback = function(event) {
-      if (this._lockScrolling) {
+      if (self._lockScrolling) {
         return;
       }
 
-      var delta = event.delta || event.wheelDelta || (event.type === 'DOMMouseScroll' && -event.detail);
+      var delta = event.delta || event.wheelDelta || -event.detail;
       if (isNaN(delta) || delta === 0) {
         return;
       }
 
+      // mouse scroll event is triggered for times in short time
       if (self._wheelTimer) {
         clearTimeout(self._wheelTimer);
       }
@@ -135,17 +137,6 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
     if ($item) {
       $item.trigger('click');
     }
-  }
-
-  /*
-  in case when animation is running, the scroll event is triggered.
-  in this moment, keep the page static by setting it in last position
-  */
-  function shouldLockScrolling() {
-    if (isIE() || isMacSafari()) {
-      return false;
-    }
-    return true;
   }
 
   function showNextSection(isPageDown) {
