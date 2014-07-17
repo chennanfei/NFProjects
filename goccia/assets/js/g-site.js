@@ -73,11 +73,8 @@ TM.declare('gc.controller.MainController').inherit('thinkmvc.Controller').extend
     showWindowPopover: function(event) {
       event.preventDefault();
 
-      var $link = $(event.currentTarget), url = $link.attr('href'),
-        title = $link.data('title') || 'Goccia';
-      if (url.match(/http(s?):\/\//)) {
-        win.open(url, title, WIN_PARAMS);
-      }
+      var $link = $(event.currentTarget), title = $link.data('title') || 'Goccia';
+      win.open($link.attr('href'), title, WIN_PARAMS);
     }
   };
 });

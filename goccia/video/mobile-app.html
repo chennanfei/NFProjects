@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <title>Goccia App使用说明</title>
+</head>
+<body>
+  <script type="text/javascript">
+    var embed = document.createElement('embed'),
+        url = 'http://static.video.qq.com/TencentPlayer.swf?vid={vid}&auto=1&outhost=http://cf.qq.com/',
+        vid = 'm0132ebsnzc';
+
+    embed.setAttribute('width', 500);
+    embed.setAttribute('height', 500);
+    embed.setAttribute('allowfullscreen', false);
+    embed.setAttribute('src', url.replace('{vid}', vid));
+
+    document.body.appendChild(embed);
+  </script>
+</body>
+</html>

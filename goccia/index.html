@@ -45,6 +45,9 @@
       updateHTMLCSS();
 
       return {
+        getLocale: function() {
+          return storage('locale');
+        },
         setLocale: setLocale
       };
     }(document, window));

@@ -13,7 +13,7 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
     var $section = $('#' + sectionId), CarouselList = this.U.getClass('gc.model.CarouselList'),
       top = -$section.data('top'), self = this;
     $page.animate({top: top}, {
-      duration: 500,
+      duration: 400,
 
       done: function() {
         toggleMenuItem.call(self, $item);
@@ -29,7 +29,10 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
         // restart the carousel in the section
         CarouselList.updateAutoTransition(sectionId, 'start');
 
-        self._lockScrolling = false;
+        setTimeout(function() {
+          self._lockScrolling = false;
+          self._completeTime = new Date().getTime();
+        }, 100);
       },
 
       start: function() {
@@ -89,6 +92,14 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
     var callback = function(event) {
       if (self._lockScrolling) {
         return;
+      } else if (isMacSafari()) {
+        // mac touch panel still triggers mousewheel event once the animation
+        // stops, so need check the interval between two events
+        var time = new Date().getTime();
+        if (time - self._completeTime < 100) {
+          self._completeTime = time;
+          return;
+        }
       }
 
       var delta = event.delta || event.wheelDelta || -event.detail;
@@ -96,14 +107,7 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
         return;
       }
 
-      // mouse scroll event is triggered for times in short time
-      if (self._wheelTimer) {
-        clearTimeout(self._wheelTimer);
-      }
-
-      self._wheelTimer = setTimeout(function() {
-        showNextSection.call(self, delta < 0);
-      }, 100);
+      showNextSection.call(self, delta < 0);
     };
 
     if (win.attachEvent) {
@@ -182,8 +186,7 @@ TM.declare('gc.controller.SectionMenuController').inherit('thinkmvc.Controller')
     initialize: function() {
       this.invoke('thinkmvc.Controller:initialize');
 
-      this._isMousePressed = false;
-      this._lastScrollTop = $win.scrollTop();
+      this._completeTime = 0;
       this._timer = null;
 
       initDocEvents.call(this);
