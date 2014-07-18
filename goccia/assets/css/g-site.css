@@ -253,7 +253,7 @@ input::-webkit-input-placeholder {
 
 .g-icon {
   background: url("../images/page-icons.png") no-repeat;
-  background-size: 880px 678px;
+  background-size: 951px 678px;
 }
 
 .g-icon:hover {
@@ -262,9 +262,9 @@ input::-webkit-input-placeholder {
 
 .g-icon-site-logo {
   background-size: 660px 508px;
-  background-position: -306px -65px;
+  background-position: -284px -63px;
   height: 30px;
-  width: 92px;
+  width: 86px;
   left: 20px;
   top: 4px;
 }
@@ -301,7 +301,7 @@ input::-webkit-input-placeholder {
 .g-icon-trans-control {
   cursor: pointer;
   top: -10px;
-  right: 20px;
+  right: 18px;
   width: 35px;
   height: 35px;
 }
@@ -395,12 +395,12 @@ input::-webkit-input-placeholder {
 }
 .g-icon-title-mobile {
   background-position: 0px -302px;
-  width: 572px;
+  width: 610px;
   height: 102px;
 }
 .g-icon-title-function {
   background-position: -476px -409px;
-  width: 405px;
+  width: 475px;
   height: 100px;
 }
 .g-icon-title-changeyou {

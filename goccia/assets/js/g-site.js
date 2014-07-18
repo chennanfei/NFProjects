@@ -27,7 +27,7 @@ TM.configure({
 
 TM.declare('gc.controller.MainController').inherit('thinkmvc.Controller').extend(function() {
   var win = window, $win = $(win),
-    WIN_PARAMS = 'height=550, width=550, toolbar=no, menubar=0, scrollbars=1, resizable=1,location=0, status=0';
+    WIN_PARAMS = 'height=550, width=1000, toolbar=no, menubar=no, scrollbars=yes, resizable=yes,location=no, status=no';
 
   return {
     events: {

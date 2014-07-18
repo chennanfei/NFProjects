@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Goccia</title>
+  <style>
+    body {
+      background-color: #000000;
+    }
+    embed {
+      display: block;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 90%;
+      height: 90%;
+      margin: auto;
+    }
+  </style>
+</head>
+<body>
+<script type="text/javascript">
+  (function(doc, win) {
+    var URL_TEMPLATE = 'http://static.video.qq.com/TencentPlayer.swf?vid={vid}&auto=1&outhost=http://cf.qq.com/',
+        TITLES = {
+          mobileApp: { cn: 'Goccia应用使用说明', en: 'Goccia App' },
+          product: { cn: 'Goccia介绍', en: 'Goccia Introduction' }
+        },
+        VIDEO_IDS = {
+          mobileApp: { default: 'm0132ebsnzc' },
+          product: { cn: 'o013202apel', en: 'k0132vspj15' }
+        },
+        locale = win.localStorage && win.localStorage.getItem('locale') || 'cn', videoEmbed;
+
+    function getVideoUrl(videoName) {
+      var video = VIDEO_IDS[videoName], videoId = video && (video[locale] || video['default']);
+      if (!videoId) {
+        return null;
+      }
+
+      return URL_TEMPLATE.replace('{vid}', videoId);
+    }
+
+    function getTitle(videoName) {
+      var title = TITLES[videoName];
+      return title && (title[locale] || title['default']);
+    }
+
+    function initEvents() {
+      if (win.attachEvent) {
+        win.attachEvent('resize', adjustVideoSize);
+      } else if (win.addEventListener) {
+        win.addEventListener('resize', adjustVideoSize);
+      }
+    }
+
+    function pageLoad() {
+      var result = win.location.href.match('video=(.+)'), videoName = result[1];
+      if (!videoName) {
+        return;
+      }
+
+      doc.title = getTitle(videoName);
+
+      var url = getVideoUrl(videoName);
+      if (!url) {
+        return;
+      }
+
+      videoEmbed = doc.createElement('embed');
+      videoEmbed.setAttribute('src', url);
+      doc.body.appendChild(videoEmbed);
+    }
+
+    pageLoad();
+  })(document, window);
+</script>
+</body>
+</html>
