@@ -2,6 +2,9 @@
 <html class="g-lang-cn">
 <head>
   <meta charset="utf-8">
+  <meta name="keywords" content="goccia,可穿戴设备,活动追踪器,electronic wearables,activity tracker">
+  <meta name="description" content="全球最小最轻的智能活动伴侣,World's smallest activity tracker">
+  <meta name="author" content="Lianghao Studio">
   <title>Goccia - World's smallest activity tracker</title>
   <script type="text/javascript" src="assets/js/lib/thinkmvc.js" data-first="assets/js/g-site.js" async></script>
   <link href="assets/css/tm-base.css" rel="stylesheet">
@@ -41,13 +44,9 @@
         html.className = 'g-lang-' + locale;
       }
 
-      // enable later
       updateHTMLCSS();
 
       return {
-        getLocale: function() {
-          return storage('locale');
-        },
         setLocale: setLocale
       };
     }(document, window));

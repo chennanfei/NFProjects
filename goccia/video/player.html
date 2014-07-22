@@ -4,9 +4,7 @@
   <meta charset="UTF-8">
   <title>Goccia</title>
   <style>
-    body {
-      background-color: #000000;
-    }
+    body { background-color: #000000; }
     embed {
       display: block;
       position: absolute;
@@ -14,8 +12,8 @@
       right: 0;
       top: 0;
       bottom: 0;
-      width: 90%;
-      height: 90%;
+      width: 95%;
+      height: 95%;
       margin: auto;
     }
   </style>
@@ -29,7 +27,7 @@
           product: { cn: 'Goccia介绍', en: 'Goccia Introduction' }
         },
         VIDEO_IDS = {
-          mobileApp: { default: 'm0132ebsnzc' },
+          mobileApp: { default: 'b0132scmlia' },
           product: { cn: 'o013202apel', en: 'k0132vspj15' }
         },
         locale = win.localStorage && win.localStorage.getItem('locale') || 'cn', videoEmbed;
@@ -48,16 +46,8 @@
       return title && (title[locale] || title['default']);
     }
 
-    function initEvents() {
-      if (win.attachEvent) {
-        win.attachEvent('resize', adjustVideoSize);
-      } else if (win.addEventListener) {
-        win.addEventListener('resize', adjustVideoSize);
-      }
-    }
-
     function pageLoad() {
-      var result = win.location.href.match('video=(.+)'), videoName = result[1];
+      var result = win.location.href.match('video=(.+)&?'), videoName = result[1];
       if (!videoName) {
         return;
       }
