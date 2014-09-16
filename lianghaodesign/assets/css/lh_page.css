@@ -239,8 +239,6 @@ nav {
 }
 
 .lhd .page-loading {
-  font-size: 1.2em;
-  font-weight: bold;
   display: none;
   margin-top: -0.85em;
   padding: 0.5em;
