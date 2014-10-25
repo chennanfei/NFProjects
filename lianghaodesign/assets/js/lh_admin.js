@@ -1,3 +1,24 @@
+TM.configure({
+    baseUrl: 'assets/js',
+    debugEnabled: false,
+
+    dependencies: {
+        first: ['jquery']
+    },
+
+    modules: {
+        first: 'lh_admin.js',
+        jquery: 'lib/jquery-1.11.0.js'
+    },
+
+    pages: {
+        adminLogin: {
+            controller: 'lh.controller.AdminLoginController',
+            module: 'first'
+        }
+    }
+});
+
 TM.declare('lh.controller.AdminLoginController').inherit('thinkmvc.Controller').extend({
   events: {
     'submit #loginForm': 'login'
