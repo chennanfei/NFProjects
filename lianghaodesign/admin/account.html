@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html class="lhd">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Lianghao Management System</title>
+  <script type="text/javascript" src="../assets/js/lib/thinkmvc.js" data-config="assets/js/app_config.js" async></script>
+  <link href="../assets/css/tm_base.css" rel="stylesheet">
+  <link href="../assets/css/lh_admin.css" rel="stylesheet">
+</head>
+<body class="background-primary">
+<header class="header header-fixed">
+  <div class="header-inner tm-row">
+    <div class="tm-row-col10 brand">Lianghao Management System</div>
+    <div class="tm-row-col2 tm-row-col-last tm-text-right">
+      <a href="index.html">Logout</a>
+    </div>
+  </div>
+</header>
+<div class="tm-container">
+  <div class="tm-content tm-row">
+    <nav class="tm-row-col2 background-clear tm-top-spacing-base">
+      <ul class="tm-list menu-list">
+        <li><a href="create.html">New project</a></li>
+        <li><a href="projects.html">View projects</a></li>
+        <li><a href="update-gateway.html">Update gateway images</a></li>
+        <li><a href="update-team.html">Update team</a></li>
+        <li><a href="account.html">Change password</a></li>
+      </ul>
+    </nav>
+    <div class="tm-row-col5 tm-row-col-last">
+      <h3>Change the password</h3>
+      <form action="account.html" method="post">
+        <div class="tm-input-group tm-row">
+          <label class="tm-input-label tm-row-col3">User ID</label>
+          <input class="tm-input-control tm-row-col9 tm-row-col-last" type="text" name="user_ID" autofocus>
+        </div>
+        <div class="tm-input-group tm-row">
+          <label class="tm-input-label tm-row-col3">Old password</label>
+          <input class="tm-input-control tm-row-col9 tm-row-col-last" type="password" name="old_password">
+        </div>
+        <div class="tm-input-group tm-row">
+          <label class="tm-input-label tm-row-col3">New password</label>
+          <input class="tm-input-control tm-row-col9 tm-row-col-last" type="password" name="new_password">
+        </div>
+        <div class="tm-input-group tm-row">
+          <label class="tm-input-label tm-row-col3">Confirm password</label>
+          <input class="tm-input-control tm-row-col9 tm-row-col-last" type="password" name="confirm_password">
+        </div>
+        <div class="tm-input-group tm-text-right">
+          <input class="tm-button tm-button-primary" type="submit" value="Change password">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</body>
+</html>

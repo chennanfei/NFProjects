@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html class="lhd">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Lianghao Management System</title>
+  <script type="text/javascript" src="../assets/js/lib/thinkmvc.js" data-config="assets/js/app_config.js" async></script>
+  <link href="../assets/css/tm_base.css" rel="stylesheet">
+  <link href="../assets/css/lh_admin.css" rel="stylesheet">
+</head>
+<body class="background-primary">
+<header class="header header-fixed">
+  <div class="header-inner tm-row">
+    <div class="tm-row-col10 brand">Lianghao Management System</div>
+    <div class="tm-row-col2 tm-row-col-last tm-text-right">
+      <a href="index.html">Logout</a>
+    </div>
+  </div>
+</header>
+<div class="tm-container">
+  <div class="tm-content tm-row">
+    <nav class="tm-row-col2 background-clear tm-top-spacing-base">
+      <ul class="tm-list menu-list">
+        <li><a href="create.html">New project</a></li>
+        <li><a href="projects.html">View projects</a></li>
+        <li><a href="update-gateway.html">Update gateway images</a></li>
+        <li><a href="update-team.html">Update team</a></li>
+        <li><a href="account.html">Change password</a></li>
+      </ul>
+    </nav>
+    <div class="tm-row-col10 tm-row-col-last">
+      <h3>Create a new project</h3>
+      <form id="itemForm" class="tm-width-large" action="project.html" method="post">
+        <div class="tm-alert tm-alert-error tm-hidden"></div>
+        <div class="tm-input-group tm-row">
+          <label class="tm-input-label tm-row-col3">*Chinese title</label>
+          <input class="tm-input-control tm-row-col9 tm-row-col-last" type="text" name="cn_title" autofocus>
+        </div>
+        <div class="tm-input-group tm-row">
+          <label class="tm-input-label tm-row-col3">*Engligh title</label>
+          <input class="tm-input-control tm-row-col9 tm-row-col-last" type="text" name="en_title" autofocus>
+        </div>
+        <div class="tm-input-group tm-row">
+          <label class="tm-input-label tm-row-col3">*Channel</label>
+          <select class="tm-input-control tm-row-col4 tm-row-col-last">
+            <option value="work" selected>Work － 工作</option>
+            <option value="life">Life － 生活</option>
+          </select>
+        </div>
+        <div class="tm-input-group tm-row">
+          <label class="tm-input-label tm-row-col3">*Program</label>
+          <select class="tm-input-control tm-row-col4 tm-row-col-last">
+            <option value="guide" selected>wayfinding system - 环境导向系统</option>
+            <option value="brand">branding &  VI system － 品牌形象设计</option>
+            <option value="website">website design - 网站设计</option>
+            <option value="book">other design － 其他设计</option>
+          </select>
+        </div>
+        <div class="tm-input-group tm-row">
+          <label class="tm-input-label tm-row-col3">Date</label>
+          <input class="tm-input-control tm-row-col4" type="date" name="date">
+          <span class="tm-row-col5 tm-row-col-last tm-alert tm-alert-info">e.g yyyy-mm-dd</span>
+        </div>
+        <div class="tm-input-group tm-row">
+          <label class="tm-input-label tm-row-col3">Address</label>
+          <input class="tm-input-control tm-row-col9 tm-row-col-last" type="text" name="address">
+        </div>
+        <div class="tm-input-group tm-row">
+          <label class="tm-input-label tm-row-col3">Chinese description</label>
+          <textarea class="tm-input-control tm-row-col9 tm-row-col-last" name="cn_description"></textarea>
+        </div>
+        <div class="tm-input-group tm-row">
+          <label class="tm-input-label tm-row-col3">English description</label>
+          <textarea class="tm-input-control tm-row-col9 tm-row-col-last" name="en_description"></textarea>
+        </div>
+        <div class="tm-input-group tm-row">
+          <label class="tm-input-label" style="margin-left: 24.5%;">
+            <input type="checkbox" class="tm-input-control" name="preview_description">
+            Show description on level-2 page?
+          </label>
+        </div>
+        <div class="tm-input-group tm-text-right">
+          <input class="tm-button tm-button-primary" type="submit" value="Continue">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</body>
+</html>

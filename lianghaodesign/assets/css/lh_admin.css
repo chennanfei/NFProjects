@@ -1,3 +1,7 @@
+.lhd a {
+  text-decoration: none;
+}
+
 .lhd li {
   list-style-type: none;
 }
