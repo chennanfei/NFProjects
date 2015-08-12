@@ -197,14 +197,10 @@ window.TM = (function(document, window) {
           throw new Error('The class ' + className + ' was not declared.');
         }
 
-        var klass = createClass(srcFunc), sharedObj;
+        var klass = createClass(srcFunc);
         // static properties
         if (params.sharedObj) {
-          sharedObj = params.sharedObj;
-          if (typeof sharedObj === 'function') {
-            sharedObj = sharedObj.call();
-          }
-          _pfCopy(klass, sharedObj);
+          _pfCopy(klass, params.sharedObj);
         }
 
         return classes[className] = klass;
@@ -212,14 +208,15 @@ window.TM = (function(document, window) {
 
       function createClass(srcFunc) {
         if (!srcFunc) {
-          srcFunc = function() {};
+          srcFunc = function() {
+          };
         } else if (typeof srcFunc !== 'function') {
           throw new Error('Passed arg should be a function.');
         }
 
         var klass = function() {
           if ((typeof window !== 'undefined' && this === window)
-            || (typeof window.global !== 'undefined' && this === window.global)) {
+            || (typeof global !== 'undefined' && this === global)) {
             throw new Error('Please use new operator to create an object!');
           }
 
@@ -661,14 +658,16 @@ window.TM = (function(document, window) {
             scriptParent = script.parentNode;
           }
 
-          var firstUrl = script.getAttribute('data-first');
-          if (!firstUrl) {
+          var configUrl = script.getAttribute('data-config');
+          if (!configUrl) {
             return;
           }
 
-          var script = getScript('first');
-          if (!script) {
-            scriptParent.appendChild(createScript(firstUrl, 'first'));
+          var script = getScript('config');
+          if (script) {
+            //script.onload();
+          } else {
+            scriptParent.appendChild(createScript(configUrl, 'config'));
           }
           return false;
         });

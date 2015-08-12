@@ -3,26 +3,32 @@ TM.configure({
   debugEnabled: false,
 
   dependencies: {
-    first: ['jquery']
+    lh_admin: ['jquery'],
+    lh_app: ['jquery']
   },
 
   modules: {
-    first: 'lh-site-min.js',
+    lh_admin: 'lh_admin.js',
+    lh_app: 'lh_site.js',
     jquery: 'lib/jquery-1.11.0.js' // 'http://code.jquery.com/jquery-1.11.0.min.js'
   },
 
   pages: {
+    adminLogin: {
+      controller: 'lh.controller.AdminLoginController',
+      module: 'lh_admin'
+    },
     loading: {
       controller: 'lh.controller.LoadingController',
-      module: 'first'
+      module: 'lh_app'
     },
     life: {
       controller: 'lh.controller.LifeController',
-      module: 'first'
+      module: 'lh_app'
     },
     work: {
       controller: 'lh.controller.WorkController',
-      module: 'first'
+      module: 'lh_app'
     }
   }
 });

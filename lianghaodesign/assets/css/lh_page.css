@@ -200,16 +200,21 @@ nav {
   z-index: 100;
   top: 50%;
   left: 50%;
-  margin-top: -158px;
-  margin-left: -323px;
+  margin-top: -130px;
+  margin-left: -150px;
 }
 
 .lhd .loading .image {
   display: block;
+  height: 240px;
   max-width: 100%;
   overflow: hidden;
   text-align: center;
-  width: 646px;
+  width: 300px;
+}
+
+.lhd .loading img {
+  height: 240px;
 }
 
 .lhd .loading .text {
@@ -234,6 +239,8 @@ nav {
 }
 
 .lhd .page-loading {
+  font-size: 1.2em;
+  font-weight: bold;
   display: none;
   margin-top: -0.85em;
   padding: 0.5em;
