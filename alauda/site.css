@@ -10,6 +10,11 @@ body {
     height: 100%;
 }
 
+.a-container {
+    height: auto;
+    min-height: 100%;
+}
+
 .a-header {
     background-color: #38afe5;
     width: 100%;
@@ -101,6 +106,9 @@ body {
     width: 100%;
     color: white;
     padding-top: 10px;
+    position: relative;
+    margin-top: -140px;
+    height: 140px;
 }
 
 .a-footer a {
