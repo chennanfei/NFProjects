@@ -8,11 +8,11 @@ body {
 .a-header {
     background-color: #38afe5;
     width: 100%;
-    padding: 15px;
+    padding: 15px 0;
 }
 
 .a-header .a-header-content {
-    width: 1140px;
+    width: 1000px;
     margin: auto;
 }
 
