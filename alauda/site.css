@@ -43,6 +43,10 @@ body {
     color: #38afe5;
 }
 
+.a-header .a-header-content div {
+    padding: 0;
+}
+
 .a-content {
     margin: 70px auto 0;
     width: 1000px;
