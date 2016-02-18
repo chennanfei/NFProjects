@@ -2,13 +2,14 @@ body {
     margin: 0;
     padding: 0;
     font-family: "DIN Next Ultra Light","Helvetica Neue",Helvetica,Arial,"Lantinghei SC","Hiragino Sans GB",STHeiti,"Noto Sans S Chinese","Microsoft Yahei","Microsoft Sans Serif","WenQuanYi Micro Hei",sans-serif;
+    position: relative;
 }
 
 .a-header {
     background-color: #38afe5;
     width: 100%;
-    min-height: 63px;
     padding: 15px;
+    min-height: 63px;
 }
 
 .a-header .a-header-content {
@@ -43,8 +44,9 @@ body {
 }
 
 .a-content {
-    margin: 70px auto;
+    margin: 70px auto 0;
     width: 1000px;
+    padding-bottom: 200px
 }
 
 .a-products td, .a-products tr {
@@ -84,4 +86,36 @@ body {
     font-weight: bold;
     font-size: 14px;
     padding: 8px;
+}
+
+.a-footer {
+    background-color: #38afe5;
+    width: 100%;
+    color: white;
+    padding-top: 10px;
+    position: absolute;
+    bottom: 0;
+}
+
+.a-footer a {
+    color: white;
+}
+
+.a-footer p {
+    margin: 0;
+    padding-bottom: 5px;
+    text-align: center;
+}
+
+.a-info h2 {
+    letter-spacing: -1px;
+    font-size: 22px;
+    margin: 20px 0;
+    line-height: normal;
+    font-family: "Open Sans",Arial,Helvetica,Sans-Serif;
+    font-weight: 300;
+}
+
+.a-info .a-info-date {
+    margin-bottom: 20px;
 }
